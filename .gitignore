@@ -1,0 +1,10 @@
+node_modules/
+site/
+.cache/
+*.log
+.env
+.dev.vars
+worker/node_modules/
+worker/.wrangler/
+Thumbs.db
+.DS_Store

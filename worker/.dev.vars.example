@@ -1,0 +1,8 @@
+# Copy to .dev.vars (gitignored) for `npx wrangler dev`. Values here override wrangler.toml [vars] locally.
+# Turnstile's documented test secrets: 1x...AA always passes, 2x...AA always fails. They report
+# hostname "example.com", which is why it is allowed here and never in wrangler.toml.
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+TURNSTILE_HOSTNAMES=example.com,localhost
+# Point at the local mock (node scripts/mock-github.mjs) so dev never touches the real inbox.
+GITHUB_API=http://127.0.0.1:8788
+GITHUB_TOKEN=dev-token-not-real

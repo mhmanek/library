@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Real Goodreads RSS for user 113503174, fetched 11 Oct 2026. TRIMMED: items selected, book_description and description emptied. -->
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" >
+  <channel>
+    <xhtml:meta xmlns:xhtml="http://www.w3.org/1999/xhtml" name="robots" content="noindex" />
+    <title>Malhar's bookshelf: read</title>
+    <copyright><![CDATA[Copyright (C) 2026 Goodreads LLC. All rights reserved.]]>
+    </copyright>
+    <link><![CDATA[https://www.goodreads.com/review/list_rss/113503174?shelf=read&per_page=200&page=1&sort=date_added]]></link>
+    <atom:link href="https://www.goodreads.com/review/list_rss/113503174?shelf=read&amp;per_page=200&amp;page=1&amp;sort=date_added" rel="self" type="application/rss+xml" />
+    <description><![CDATA[Malhar's bookshelf: read]]></description>
+    <language>en-US</language>
+    <lastBuildDate>Mon, 31 Aug 2026 05:35:46 -0700</lastBuildDate>
+    <ttl>60</ttl>
+    <image>
+      <title>Malhar's bookshelf: read</title>
+      <link><![CDATA[https://www.goodreads.com/review/list_rss/113503174?shelf=read&per_page=200&page=1&sort=date_added]]></link>
+      <width>144</width>
+      <height>41</height>
+      <url>https://www.goodreads.com/images/layout/goodreads_logo_144.jpg</url>
+    </image>
+    
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8272673374?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Tue, 27 Jan 2026 21:12:31 -0800]]></pubDate>
+    <title>Lucas&apos; wars</title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8272673374?utm_medium=api&utm_source=rss]]></link>
+    <book_id>212959736</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1715023336l/212959736._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1715023336l/212959736._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1715023336l/212959736._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1715023336l/212959736._SX318_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="212959736">
+      <num_pages>205</num_pages>
+    </book>
+    <author_name>Renaud Roche</author_name>
+    <isbn>9002281145</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Tue, 27 Jan 2026 21:12:31 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 17 Jan 2026 15:49:38 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.58</average_rating>
+    <book_published>2023</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8064244194?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Tue, 11 Nov 2025 20:03:18 -0800]]></pubDate>
+    <title><![CDATA[Five Dialogues: Euthyphro, Apology, Crito, Meno, Phaedo]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8064244194?utm_medium=api&utm_source=rss]]></link>
+    <book_id>30292</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580212202l/30292._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580212202l/30292._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580212202l/30292._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580212202l/30292._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="30292">
+      <num_pages>156</num_pages>
+    </book>
+    <author_name>Plato</author_name>
+    <isbn>0872206335</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>3</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Tue, 11 Nov 2025 20:03:18 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Tue, 11 Nov 2025 20:03:18 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.17</average_rating>
+    <book_published>-385</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8071438017?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Fri, 14 Nov 2025 15:49:41 -0800]]></pubDate>
+    <title>How to Live with Statistics</title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8071438017?utm_medium=api&utm_source=rss]]></link>
+    <book_id>150713547</book_id>
+    <book_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-1b903c9eac1b2ba789662c08a0ae41e6.png]]></book_image_url>
+    <book_small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-1b903c9eac1b2ba789662c08a0ae41e6.png]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-675b3b2743c83e96e2540d2929d5f4d2.png]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-675b3b2743c83e96e2540d2929d5f4d2.png]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="150713547">
+      <num_pages>0</num_pages>
+    </book>
+    <author_name>Darrell Huff</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Fri, 14 Nov 2025 15:49:41 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Fri, 14 Nov 2025 15:49:37 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>3.33</average_rating>
+    <book_published>1954</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7978736447?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Thu, 27 Nov 2025 18:04:28 -0800]]></pubDate>
+    <title><![CDATA[Zen and the Art of Motorcycle Maintenance: An Inquiry Into Values (Phaedrus, #1)]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7978736447?utm_medium=api&utm_source=rss]]></link>
+    <book_id>629</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1410136019l/629._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1410136019l/629._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1410136019l/629._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1410136019l/629.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="629">
+      <num_pages>540</num_pages>
+    </book>
+    <author_name>Robert M. Pirsig</author_name>
+    <isbn>0060589469</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Thu, 27 Nov 2025 18:04:28 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 08 Oct 2025 20:56:34 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>3.77</average_rating>
+    <book_published>1974</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7964366062?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:28:07 -0700]]></pubDate>
+    <title>The MANIAC</title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7964366062?utm_medium=api&utm_source=rss]]></link>
+    <book_id>137893498</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1682096815l/137893498._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1682096815l/137893498._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1682096815l/137893498._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1682096815l/137893498._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="137893498">
+      <num_pages>368</num_pages>
+    </book>
+    <author_name>Benjamín Labatut</author_name>
+    <isbn>059365448X</isbn>
+    <user_name>Malhar</user_name>
+    <!-- HAND EDIT: user_rating 5 -> 4.75 (quarter stars, Oct 2026) --><user_rating>4.75</user_rating>
+    <user_read_at><![CDATA[Sat, 4 Oct 2025 00:00:00 +0000]]></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:28:07 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Fri, 03 Oct 2025 07:04:25 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.39</average_rating>
+    <book_published>2023</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8053002430?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Fri, 07 Nov 2025 14:37:55 -0800]]></pubDate>
+    <title><![CDATA[Chip War: The Fight for the World's Most Critical Technology]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8053002430?utm_medium=api&utm_source=rss]]></link>
+    <book_id>60321447</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1662566820l/60321447._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1662566820l/60321447._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1662566820l/60321447._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1662566820l/60321447.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="60321447">
+      <num_pages>431</num_pages>
+    </book>
+    <author_name>Chris   Miller</author_name>
+    <isbn>1982172002</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Fri, 07 Nov 2025 14:37:55 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Fri, 07 Nov 2025 14:37:55 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.34</average_rating>
+    <book_published>2022</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7978745104?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Wed, 08 Oct 2025 21:02:27 -0700]]></pubDate>
+    <title><![CDATA[Alchemy: The Surprising Power of Ideas That Don't Make Sense]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7978745104?utm_medium=api&utm_source=rss]]></link>
+    <book_id>26210508</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1549539347l/26210508._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1549539347l/26210508._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1549539347l/26210508._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1549539347l/26210508._SX318_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="26210508">
+      <num_pages>384</num_pages>
+    </book>
+    <author_name>Rory Sutherland</author_name>
+    <isbn>0753556510</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Wed, 08 Oct 2025 21:02:27 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 08 Oct 2025 21:01:51 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <!-- HAND EDIT: injected script and onclick --><user_review><![CDATA[<script>alert(1)</script><span onclick="steal()">The author</span> is the vice-chairman of Ogilvy, one of the largest advertising agencies in the world. A wonderful read on the underappreciated role of perception in creating value. Great ideas on creativity too. Watch some of the author’s talks to get a taste for his ideas<br /><br />My interview with him: <a target="_blank" href="https://malharmanek.substack.com/p/rorysutherland" rel="nofollow noopener">https://malharmanek.substack.com/p/ro...</a>]]></user_review>
+    <average_rating>4.20</average_rating>
+    <book_published>2019</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8064324888?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Thu, 26 Feb 2026 03:15:19 -0800]]></pubDate>
+    <title><![CDATA[Buffett: The Making of an American Capitalist by Roger Lowenstein(2008-04-29)]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8064324888?utm_medium=api&utm_source=rss]]></link>
+    <book_id>137252761</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1696904517l/137252761._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1696904517l/137252761._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1696904517l/137252761._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1696904517l/137252761._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="137252761">
+      <num_pages>0</num_pages>
+    </book>
+    <author_name>Roger Lowenstein</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Thu, 26 Feb 2026 03:15:19 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Tue, 11 Nov 2025 20:39:20 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.33</average_rating>
+    <book_published>1995</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8064324385?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Tue, 11 Nov 2025 20:39:05 -0800]]></pubDate>
+    <title><![CDATA[Buffett: The Making of an American Capitalist]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8064324385?utm_medium=api&utm_source=rss]]></link>
+    <book_id>1155</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388278264l/1155._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388278264l/1155._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388278264l/1155._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388278264l/1155.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="1155">
+      <num_pages>475</num_pages>
+    </book>
+    <author_name>Roger Lowenstein</author_name>
+    <isbn>0385484917</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Tue, 11 Nov 2025 20:39:05 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Tue, 11 Nov 2025 20:39:05 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.18</average_rating>
+    <book_published>1995</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8286675318?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Wed, 21 Jan 2026 15:21:30 -0800]]></pubDate>
+    <title><![CDATA[By Maggie Mahar - Bull: A History of the Boom and Bust, 1982-2004 (9.12.2004)]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8286675318?utm_medium=api&utm_source=rss]]></link>
+    <book_id>161794573</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1698885189l/161794573._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1698885189l/161794573._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1698885189l/161794573._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1698885189l/161794573._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="161794573">
+      <num_pages>0</num_pages>
+    </book>
+    <author_name>Maggie Mahar</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Wed, 21 Jan 2026 15:21:30 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 21 Jan 2026 15:21:29 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.00</average_rating>
+    <book_published></book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8045048787?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Thu, 13 Aug 2026 17:21:57 -0700]]></pubDate>
+    <title><![CDATA[The Infinity Machine: Demis Hassabis, DeepMind, and the Quest for Superintelligence]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8045048787?utm_medium=api&utm_source=rss]]></link>
+    <book_id>242105169</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1774819392l/242105169._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1774819392l/242105169._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1774819392l/242105169._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1774819392l/242105169._SX318_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="242105169">
+      <num_pages>16</num_pages>
+    </book>
+    <author_name>Sebastian Mallaby</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>3</user_rating>
+    <user_read_at><![CDATA[Tue, 14 Apr 2026 00:00:00 +0000]]></user_read_at>
+    <user_date_added><![CDATA[Thu, 13 Aug 2026 17:21:57 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Tue, 04 Nov 2025 09:39:55 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.24</average_rating>
+    <book_published></book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8513719772?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 11 Apr 2026 07:23:52 -0700]]></pubDate>
+    <title><![CDATA[The Infinity Machine: Demis Hassabis, DeepMind, and the Quest for Superintelligence]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8513719772?utm_medium=api&utm_source=rss]]></link>
+    <book_id>241434373</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1759148143l/241434373._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1759148143l/241434373._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1759148143l/241434373._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1759148143l/241434373._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="241434373">
+      <num_pages>480</num_pages>
+    </book>
+    <author_name>Sebastian Mallaby</author_name>
+    <isbn>0593831845</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>3</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 11 Apr 2026 07:23:52 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 11 Apr 2026 07:23:43 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.37</average_rating>
+    <book_published></book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8187845584?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sun, 28 Dec 2025 21:40:46 -0800]]></pubDate>
+    <title><![CDATA[An Enquiry Concerning Human Understanding]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8187845584?utm_medium=api&utm_source=rss]]></link>
+    <book_id>130119</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348617665l/130119._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348617665l/130119._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348617665l/130119._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348617665l/130119.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="130119">
+      <num_pages>96</num_pages>
+    </book>
+    <author_name>David Hume</author_name>
+    <isbn>1420926993</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sun, 28 Dec 2025 21:40:46 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Sun, 28 Dec 2025 21:40:46 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>3.94</average_rating>
+    <book_published>1748</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8187844901?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sun, 28 Dec 2025 21:40:31 -0800]]></pubDate>
+    <title><![CDATA[An Enquiry Concerning Human Understanding: with Hume's Abstract of A Treatise of Human Nature and A Letter from a Gentleman to His Friend in Edinburgh (Hackett Classics)]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8187844901?utm_medium=api&utm_source=rss]]></link>
+    <book_id>448832</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1332582369l/448832._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1332582369l/448832._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1332582369l/448832._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1332582369l/448832.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="448832">
+      <num_pages>142</num_pages>
+    </book>
+    <author_name>David Hume</author_name>
+    <isbn>0872202291</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sun, 28 Dec 2025 21:40:31 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Sun, 28 Dec 2025 21:40:31 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>3.84</average_rating>
+    <book_published>1748</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7924426207?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:27:28 -0700]]></pubDate>
+    <title><![CDATA[Gödel, Escher, Bach: An Eternal Golden Braid]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7924426207?utm_medium=api&utm_source=rss]]></link>
+    <book_id>24113</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="24113">
+      <num_pages>777</num_pages>
+    </book>
+    <author_name>Douglas R. Hofstadter</author_name>
+    <isbn>0465026567</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:27:28 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Thu, 18 Sep 2025 02:51:29 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.28</average_rating>
+    <book_published>1979</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7967094619?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:44:10 -0700]]></pubDate>
+    <title><![CDATA[The Black Swan: The Impact of the Highly Improbable by Nassim Nicholas Taleb | Key Takeaways, Analysis & Review]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7967094619?utm_medium=api&utm_source=rss]]></link>
+    <book_id>28226413</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1450285034l/28226413._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1450285034l/28226413._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1450285034l/28226413._SY160_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1450285034l/28226413._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="28226413">
+      <num_pages>26</num_pages>
+    </book>
+    <author_name>Instaread Summaries</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:44:10 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 04 Oct 2025 10:44:10 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.29</average_rating>
+    <book_published></book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7967065602?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:30:07 -0700]]></pubDate>
+    <title><![CDATA[Totto-chan: The Little Girl at the Window]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7967065602?utm_medium=api&utm_source=rss]]></link>
+    <book_id>328802</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1630471482l/328802._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1630471482l/328802._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1630471482l/328802._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1630471482l/328802._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="328802">
+      <num_pages>232</num_pages>
+    </book>
+    <author_name>Tetsuko Kuroyanagi</author_name>
+    <isbn>4770020678</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:30:07 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 04 Oct 2025 10:30:04 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.38</average_rating>
+    <book_published>1981</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7967087038?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:40:30 -0700]]></pubDate>
+    <title><![CDATA["Surely You're Joking, Mr. Feynman!": Adventures of a Curious Character]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7967087038?utm_medium=api&utm_source=rss]]></link>
+    <book_id>35167685</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1504936953l/35167685._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1504936953l/35167685._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1504936953l/35167685._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1504936953l/35167685.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="35167685">
+      <num_pages>400</num_pages>
+    </book>
+    <author_name>Richard P. Feynman</author_name>
+    <isbn>0393355624</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:40:30 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 04 Oct 2025 10:40:30 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.24</average_rating>
+    <book_published>1985</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7978739746?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Wed, 08 Oct 2025 20:58:35 -0700]]></pubDate>
+    <title><![CDATA[Feynman's Rainbow: A Search for Beauty in Physics and in Life]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7978739746?utm_medium=api&utm_source=rss]]></link>
+    <book_id>45776</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388864700l/45776._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388864700l/45776._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388864700l/45776._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388864700l/45776.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="45776">
+      <num_pages>192</num_pages>
+    </book>
+    <author_name>Leonard Mlodinow</author_name>
+    <isbn>0446692514</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Wed, 08 Oct 2025 20:58:35 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 08 Oct 2025 20:58:35 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.04</average_rating>
+    <book_published>2005</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8066250397?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Wed, 12 Nov 2025 15:33:23 -0800]]></pubDate>
+    <title><![CDATA[Invent and Wander: The Collected Writings of Jeff Bezos]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8066250397?utm_medium=api&utm_source=rss]]></link>
+    <book_id>54505323</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1600744841l/54505323._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1600744841l/54505323._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1600744841l/54505323._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1600744841l/54505323.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="54505323">
+      <num_pages>288</num_pages>
+    </book>
+    <author_name>Jeff Bezos</author_name>
+    <isbn>1647820715</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Wed, 12 Nov 2025 15:33:23 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 12 Nov 2025 15:33:23 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>3.76</average_rating>
+    <book_published>2020</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7978731945?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Wed, 08 Oct 2025 20:53:59 -0700]]></pubDate>
+    <title><![CDATA[Poor Charlie's Almanack: The Wit and Wisdom of Charles T. Munger]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7978731945?utm_medium=api&utm_source=rss]]></link>
+    <book_id>944652</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1387744370l/944652._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1387744370l/944652._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1387744370l/944652._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1387744370l/944652.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="944652">
+      <num_pages>512</num_pages>
+    </book>
+    <author_name>Charles T. Munger</author_name>
+    <isbn>157864366X</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Wed, 08 Oct 2025 20:53:59 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 08 Oct 2025 20:53:59 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.36</average_rating>
+    <book_published>2005</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7967096209?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:44:58 -0700]]></pubDate>
+    <title><![CDATA[The Outsiders: Eight Unconventional CEOs and Their Radically Rational Blueprint for Success]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7967096209?utm_medium=api&utm_source=rss]]></link>
+    <book_id>13586932</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1393447357l/13586932._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1393447357l/13586932._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1393447357l/13586932._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1393447357l/13586932.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="13586932">
+      <num_pages>251</num_pages>
+    </book>
+    <author_name>William N. Thorndike Jr.</author_name>
+    <isbn>1422162672</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:44:58 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 04 Oct 2025 10:44:58 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.20</average_rating>
+    <book_published>2012</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7967088233?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:41:03 -0700]]></pubDate>
+    <title>Elon Musk</title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7967088233?utm_medium=api&utm_source=rss]]></link>
+    <book_id>122765395</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1692288251l/122765395._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1692288251l/122765395._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1692288251l/122765395._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1692288251l/122765395._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="122765395">
+      <num_pages>688</num_pages>
+    </book>
+    <author_name>Walter Isaacson</author_name>
+    <isbn>1982181281</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:41:03 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 04 Oct 2025 10:41:03 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.25</average_rating>
+    <book_published>2023</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7967086478?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:40:14 -0700]]></pubDate>
+    <title><![CDATA[Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7967086478?utm_medium=api&utm_source=rss]]></link>
+    <book_id>25541028</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1518291452l/25541028._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1518291452l/25541028._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1518291452l/25541028._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1518291452l/25541028.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="25541028">
+      <num_pages>392</num_pages>
+    </book>
+    <author_name>Ashlee Vance</author_name>
+    <isbn>0062301233</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>4</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:40:14 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Sat, 04 Oct 2025 10:40:14 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.10</average_rating>
+    <book_published>2015</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8286681001?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Wed, 21 Jan 2026 15:23:47 -0800]]></pubDate>
+    <title><![CDATA[The Overcoat: And Other Stories]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8286681001?utm_medium=api&utm_source=rss]]></link>
+    <book_id>39936272</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1460151968l/39936272._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1460151968l/39936272._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1460151968l/39936272._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1460151968l/39936272._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="39936272">
+      <num_pages>121</num_pages>
+    </book>
+    <author_name>Nikolai Gogol</author_name>
+    <isbn>1504035437</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Wed, 21 Jan 2026 15:23:47 -0800]]></user_date_added>
+    <user_date_created><![CDATA[Wed, 21 Jan 2026 15:23:45 -0800]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>3.71</average_rating>
+    <book_published>1836</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8857569141?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Thu, 13 Aug 2026 17:19:00 -0700]]></pubDate>
+    <title>To Kill a Mockingbird</title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8857569141?utm_medium=api&utm_source=rss]]></link>
+    <book_id>56916837</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1612238791l/56916837._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1612238791l/56916837._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1612238791l/56916837._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1612238791l/56916837._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="56916837">
+      <num_pages>323</num_pages>
+    </book>
+    <author_name>Harper Lee</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at><![CDATA[Mon, 10 Aug 2026 00:00:00 +0000]]></user_read_at>
+    <user_date_added><![CDATA[Thu, 13 Aug 2026 17:19:00 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Thu, 13 Aug 2026 17:16:41 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.23</average_rating>
+    <book_published>1960</book_published>
+    <description></description>
+  </item>
+  </channel>
+</rss>

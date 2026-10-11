@@ -1,0 +1,30 @@
+# Cloudflare Worker for the library's recommend form and Visitor shelf. See README.md for deploy steps.
+name = "library-recs"
+main = "src/index.js"
+# The newest date the pinned wrangler's workerd supports; bump it when wrangler is upgraded.
+compatibility_date = "2026-10-06"
+workers_dev = true
+
+# Invocation logs in the dashboard; the Worker never logs tokens, bodies or IPs.
+[observability]
+enabled = true
+
+[[kv_namespaces]]
+binding = "RECS"
+# Placeholder. The integrator runs `npx wrangler kv namespace create RECS` and pastes the id it prints here.
+# `wrangler dev` (local mode) simulates KV and ignores this value.
+id = "REPLACE_WITH_RECS_NAMESPACE_ID"
+
+[vars]
+ALLOWED_ORIGINS = "https://mhmanek.github.io,http://localhost:8080"
+INBOX_REPO = "mhmanek/library-inbox"
+TURNSTILE_HOSTNAMES = "mhmanek.github.io,localhost"
+GITHUB_API = "https://api.github.com"
+# Calendar day used for Visitor shelf dates (matches config.json site.timezone).
+TIMEZONE = "America/Chicago"
+
+# Secrets, never in this file or the repo. Set them in the dashboard (Workers -> library-recs -> Settings ->
+# Variables and Secrets) or with `npx wrangler secret put <NAME>`:
+#   GITHUB_TOKEN      fine-grained PAT, Issues: Read and write, only mhmanek/library-inbox, no expiry
+#   TURNSTILE_SECRET  the Turnstile widget's secret key
+# For `wrangler dev`, copy .dev.vars.example to .dev.vars (gitignored).

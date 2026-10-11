@@ -1,0 +1,593 @@
+{
+ "source": "Goodreads RSS for user 113503174, 11 Oct 2026",
+ "mustMerge": [
+  [
+   "242105169",
+   "241434373"
+  ],
+  [
+   "137252761",
+   "1155"
+  ],
+  [
+   "130119",
+   "448832"
+  ],
+  [
+   "1118485",
+   "18194"
+  ],
+  [
+   "133057573",
+   "176972"
+  ]
+ ],
+ "mustNotMerge": [
+  [
+   "13586932",
+   "231804"
+  ],
+  [
+   "122765395",
+   "25541028"
+  ],
+  [
+   "434634",
+   "87064"
+  ],
+  [
+   "87064",
+   "87066"
+  ],
+  [
+   "87062",
+   "434634"
+  ],
+  [
+   "1160404",
+   "2248"
+  ],
+  [
+   "2248",
+   "181442339"
+  ],
+  [
+   "181442339",
+   "83259309"
+  ],
+  [
+   "6648041",
+   "24280"
+  ],
+  [
+   "28226413",
+   "35419"
+  ],
+  [
+   "35419",
+   "758647"
+  ]
+ ],
+ "items": [
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "1155",
+    "title": "Buffett: The Making of an American Capitalist",
+    "author": "Roger Lowenstein",
+    "isbn": "0385484917",
+    "pages": 475,
+    "published": 1995,
+    "rating": 4,
+    "avgRating": 4.18,
+    "readAt": null,
+    "addedAt": "2025-11-11T20:39:05-08:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388278264l/1155.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "2248",
+    "title": "Knit India Through Literature, Volume II: The East",
+    "author": "Sivasankari",
+    "isbn": "8186852638",
+    "pages": 391,
+    "published": 2000,
+    "rating": 0,
+    "avgRating": 5,
+    "readAt": null,
+    "addedAt": "2026-02-28T21:21:54-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1710686295l/2248.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "18194",
+    "title": "The Cyberiad",
+    "author": "Stanisław Lem",
+    "isbn": null,
+    "pages": 295,
+    "published": 1965,
+    "rating": 0,
+    "avgRating": 4.18,
+    "readAt": null,
+    "addedAt": "2026-05-21T13:09:42-07:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1166889908l/18194.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "24280",
+    "title": "Les Misérables",
+    "author": "Victor Hugo",
+    "isbn": "0451525264",
+    "pages": 1488,
+    "published": 1862,
+    "rating": 0,
+    "avgRating": 4.19,
+    "readAt": null,
+    "addedAt": "2026-03-04T15:20:03-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1411852091l/24280.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "35419",
+    "title": "The Making of Star Wars",
+    "author": "J.W. Rinzler",
+    "isbn": "0345494768",
+    "pages": 362,
+    "published": 2007,
+    "rating": 0,
+    "avgRating": 4.55,
+    "readAt": null,
+    "addedAt": "2026-01-20T15:11:40-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1454013920l/35419._SX318_.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "87062",
+    "title": "John Maynard Keynes: 1883-1946: Economist, Philosopher, Statesman",
+    "author": "Robert Skidelsky",
+    "isbn": "0143036157",
+    "pages": 1021,
+    "published": 2003,
+    "rating": 0,
+    "avgRating": 4.19,
+    "readAt": null,
+    "addedAt": "2026-03-04T15:17:52-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1309209388l/87062.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "87064",
+    "title": "John Maynard Keynes: Volume 2: The Economist as Savior, 1920-1937",
+    "author": "Robert Skidelsky",
+    "isbn": "0140238069",
+    "pages": 768,
+    "published": 1992,
+    "rating": 0,
+    "avgRating": 4.28,
+    "readAt": null,
+    "addedAt": "2026-03-04T15:17:45-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1387700137l/87064.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "87066",
+    "title": "John Maynard Keynes: Fighting for Freedom, 1937-1946",
+    "author": "Robert Skidelsky",
+    "isbn": "0142001678",
+    "pages": 608,
+    "published": 2001,
+    "rating": 0,
+    "avgRating": 4.21,
+    "readAt": null,
+    "addedAt": "2026-03-04T15:17:48-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1329888747l/87066.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "130119",
+    "title": "An Enquiry Concerning Human Understanding",
+    "author": "David Hume",
+    "isbn": "1420926993",
+    "pages": 96,
+    "published": 1748,
+    "rating": 4,
+    "avgRating": 3.94,
+    "readAt": null,
+    "addedAt": "2025-12-28T21:40:46-08:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348617665l/130119.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "176972",
+    "title": "The Annotated Alice: The Definitive Edition",
+    "author": "Lewis Carroll",
+    "isbn": "0393048470",
+    "pages": 312,
+    "published": 1871,
+    "rating": 0,
+    "avgRating": 4.43,
+    "readAt": null,
+    "addedAt": "2026-05-21T13:08:43-07:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1367782378l/176972.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "231804",
+    "title": "The Outsiders",
+    "author": "S.E. Hinton",
+    "isbn": "0670532576",
+    "pages": 208,
+    "published": 1967,
+    "rating": 0,
+    "avgRating": 4.13,
+    "readAt": null,
+    "addedAt": "2026-07-04T11:57:54-07:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1442129426l/231804.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "434634",
+    "title": "John Maynard Keynes, Vol. 1: Hopes Betrayed, 1883-1920",
+    "author": "Robert Skidelsky",
+    "isbn": "033357379X",
+    "pages": 480,
+    "published": 1983,
+    "rating": 0,
+    "avgRating": 4.36,
+    "readAt": null,
+    "addedAt": "2026-03-04T15:17:43-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1408311533l/434634.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "448832",
+    "title": "An Enquiry Concerning Human Understanding: with Hume's Abstract of A Treatise of Human Nature and A Letter from a Gentleman to His Friend in Edinburgh (Hackett Classics)",
+    "author": "David Hume",
+    "isbn": "0872202291",
+    "pages": 142,
+    "published": 1748,
+    "rating": 4,
+    "avgRating": 3.84,
+    "readAt": null,
+    "addedAt": "2025-12-28T21:40:31-08:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1332582369l/448832.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "758647",
+    "title": "The Making of Star Wars: Revenge of the Sith",
+    "author": "J.W. Rinzler",
+    "isbn": "0345431383",
+    "pages": 224,
+    "published": null,
+    "rating": 0,
+    "avgRating": 4.2,
+    "readAt": null,
+    "addedAt": "2026-01-20T15:12:03-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1320467614l/758647.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "1118485",
+    "title": "The Cyberiad: Fables for the Cybernetic Age",
+    "author": "Stanisław Lem",
+    "isbn": "0156235501",
+    "pages": 312,
+    "published": 1965,
+    "rating": 0,
+    "avgRating": 4.16,
+    "readAt": null,
+    "addedAt": "2026-05-21T13:10:05-07:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1181144760l/1118485.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "1160404",
+    "title": "Knit India Through Literature, Volume I: The South",
+    "author": "Sivasankari",
+    "isbn": "8186852115",
+    "pages": 414,
+    "published": 1998,
+    "rating": 0,
+    "avgRating": 3.8,
+    "readAt": null,
+    "addedAt": "2026-02-28T21:21:52-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1710534480l/1160404._SY475_.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "6648041",
+    "title": "Les Miserables (Classics Illustrated #9)",
+    "author": "Rolland H. Livingstone",
+    "isbn": "1906814171",
+    "pages": 48,
+    "published": 1947,
+    "rating": 0,
+    "avgRating": 4.28,
+    "readAt": null,
+    "addedAt": "2026-07-12T09:13:46-07:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1462334629l/6648041._SX318_.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "13586932",
+    "title": "The Outsiders: Eight Unconventional CEOs and Their Radically Rational Blueprint for Success",
+    "author": "William N. Thorndike Jr.",
+    "isbn": "1422162672",
+    "pages": 251,
+    "published": 2012,
+    "rating": 5,
+    "avgRating": 4.2,
+    "readAt": null,
+    "addedAt": "2025-10-04T10:44:58-07:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1393447357l/13586932.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "25541028",
+    "title": "Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future",
+    "author": "Ashlee Vance",
+    "isbn": "0062301233",
+    "pages": 392,
+    "published": 2015,
+    "rating": 4,
+    "avgRating": 4.1,
+    "readAt": null,
+    "addedAt": "2025-10-04T10:40:14-07:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1518291452l/25541028.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "28226413",
+    "title": "The Black Swan: The Impact of the Highly Improbable by Nassim Nicholas Taleb | Key Takeaways, Analysis & Review",
+    "author": "Instaread Summaries",
+    "isbn": null,
+    "pages": 26,
+    "published": null,
+    "rating": 5,
+    "avgRating": 4.29,
+    "readAt": null,
+    "addedAt": "2025-10-04T10:44:10-07:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1450285034l/28226413._SY475_.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "83259309",
+    "title": "Knit India Through Literature, Volume IV: The North",
+    "author": "Sivasankari",
+    "isbn": null,
+    "pages": 978,
+    "published": null,
+    "rating": 0,
+    "avgRating": 0,
+    "readAt": null,
+    "addedAt": "2026-02-28T21:21:57-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1697950501l/83259309.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "122765395",
+    "title": "Elon Musk",
+    "author": "Walter Isaacson",
+    "isbn": "1982181281",
+    "pages": 688,
+    "published": 2023,
+    "rating": 5,
+    "avgRating": 4.25,
+    "readAt": null,
+    "addedAt": "2025-10-04T10:41:03-07:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1692288251l/122765395._SY475_.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "133057573",
+    "title": "The Annotated Alice: The Definitive Edition, Alice's Adventures in Wonderland and Through the Looking-Glass",
+    "author": "Lewis Carroll",
+    "isbn": null,
+    "pages": null,
+    "published": null,
+    "rating": 0,
+    "avgRating": 4.13,
+    "readAt": null,
+    "addedAt": "2026-05-21T13:09:23-07:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1697842585l/133057573._SX318_.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "137252761",
+    "title": "Buffett: The Making of an American Capitalist by Roger Lowenstein(2008-04-29)",
+    "author": "Roger Lowenstein",
+    "isbn": null,
+    "pages": null,
+    "published": 1995,
+    "rating": 4,
+    "avgRating": 4.33,
+    "readAt": null,
+    "addedAt": "2026-02-26T03:15:19-08:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1696904517l/137252761._SY475_.jpg"
+   }
+  },
+  {
+   "shelf": "to-read",
+   "item": {
+    "bookId": "181442339",
+    "title": "Knit India Through Literature, Volume III: The West",
+    "author": "Sivasankari",
+    "isbn": null,
+    "pages": 784,
+    "published": null,
+    "rating": 0,
+    "avgRating": 0,
+    "readAt": null,
+    "addedAt": "2026-02-28T21:21:56-08:00",
+    "shelves": [
+     "to-read"
+    ],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1687873696l/181442339._SY475_.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "241434373",
+    "title": "The Infinity Machine: Demis Hassabis, DeepMind, and the Quest for Superintelligence",
+    "author": "Sebastian Mallaby",
+    "isbn": "0593831845",
+    "pages": 480,
+    "published": null,
+    "rating": 3,
+    "avgRating": 4.37,
+    "readAt": null,
+    "addedAt": "2026-04-11T07:23:52-07:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1759148143l/241434373._SY475_.jpg"
+   }
+  },
+  {
+   "shelf": "read",
+   "item": {
+    "bookId": "242105169",
+    "title": "The Infinity Machine: Demis Hassabis, DeepMind, and the Quest for Superintelligence",
+    "author": "Sebastian Mallaby",
+    "isbn": null,
+    "pages": 16,
+    "published": null,
+    "rating": 3,
+    "avgRating": 4.24,
+    "readAt": "2026-04-14",
+    "addedAt": "2026-08-13T17:21:57-07:00",
+    "shelves": [],
+    "review": null,
+    "image": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1774819392l/242105169._SX318_.jpg"
+   }
+  }
+ ]
+}

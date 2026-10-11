@@ -1,0 +1,11 @@
+{
+  "shelf": "did-not-finish",
+  "channelTitle": "Malhar's bookshelf: did-not-finish",
+  "count": 3,
+  "etags": ["W/\"f3f63f3c12d5a3d6d0140aadcd3f4ba5\"","W/\"ad65eb20c759d912f1bd1a16ed7e74cb\""],
+  "items": [
+    {"bookId":"17863","title":"Accelerando","author":"Charles Stross","isbn":"0441014151","pages":415,"published":2005,"rating":4,"avgRating":3.88,"readAt":null,"addedAt":"2026-10-11T09:12:14-07:00","shelves":["did-not-finish"],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388240687l/17863.jpg"},
+    {"bookId":"10073506","title":"Tinker, Tailor, Soldier, Spy (George Smiley, #5; Karla Trilogy, #1)","author":"John le Carré","isbn":null,"pages":381,"published":1974,"rating":4,"avgRating":4.07,"readAt":null,"addedAt":"2026-04-18T15:34:48-07:00","shelves":["did-not-finish"],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1349070201l/10073506._SY475_.jpg"},
+    {"bookId":"37542581","title":"The Spy and the Traitor: The Greatest Espionage Story of the Cold War","author":"Ben Macintyre","isbn":"0771060335","pages":384,"published":2018,"rating":4,"avgRating":4.48,"readAt":null,"addedAt":"2026-04-18T15:34:21-07:00","shelves":["did-not-finish"],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1522906662l/37542581.jpg"}
+  ]
+}

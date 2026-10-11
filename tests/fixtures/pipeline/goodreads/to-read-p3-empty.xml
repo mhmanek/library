@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" >
+  <channel>
+    <xhtml:meta xmlns:xhtml="http://www.w3.org/1999/xhtml" name="robots" content="noindex" />
+    <title>Malhar's bookshelf: to-read</title>
+    <copyright><![CDATA[Copyright (C) 2026 Goodreads LLC. All rights reserved.]]>
+    </copyright>
+    <link><![CDATA[https://www.goodreads.com/review/list_rss/113503174?shelf=to-read&per_page=200&page=6&sort=date_added]]></link>
+    <atom:link href="https://www.goodreads.com/review/list_rss/113503174?shelf=to-read&amp;per_page=200&amp;page=6&amp;sort=date_added" rel="self" type="application/rss+xml" />
+    <description><![CDATA[Malhar's bookshelf: to-read]]></description>
+    <language>en-US</language>
+    <lastBuildDate>Sun, 11 Oct 2026 10:43:55 -0700</lastBuildDate>
+    <ttl>60</ttl>
+    <image>
+      <title>Malhar's bookshelf: to-read</title>
+      <link><![CDATA[https://www.goodreads.com/review/list_rss/113503174?shelf=to-read&per_page=200&page=6&sort=date_added]]></link>
+      <width>144</width>
+      <height>41</height>
+      <url>https://www.goodreads.com/images/layout/goodreads_logo_144.jpg</url>
+    </image>
+    
+
+  </channel>
+</rss>

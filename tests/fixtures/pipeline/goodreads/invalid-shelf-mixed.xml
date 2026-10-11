@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Real Goodreads RSS for user 113503174, fetched 11 Oct 2026. TRIMMED: items selected, book_description and description emptied. -->
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" >
+  <channel>
+    <xhtml:meta xmlns:xhtml="http://www.w3.org/1999/xhtml" name="robots" content="noindex" />
+    <title>Malhar's bookshelf: read</title>
+    <copyright><![CDATA[Copyright (C) 2026 Goodreads LLC. All rights reserved.]]>
+    </copyright>
+    <link><![CDATA[https://www.goodreads.com/review/list_rss/113503174?shelf=read&per_page=200&page=1&sort=date_added]]></link>
+    <atom:link href="https://www.goodreads.com/review/list_rss/113503174?shelf=read&amp;per_page=200&amp;page=1&amp;sort=date_added" rel="self" type="application/rss+xml" />
+    <description><![CDATA[Malhar's bookshelf: read]]></description>
+    <language>en-US</language>
+    <lastBuildDate>Mon, 31 Aug 2026 05:35:46 -0700</lastBuildDate>
+    <ttl>60</ttl>
+    <image>
+      <title>Malhar's bookshelf: read</title>
+      <link><![CDATA[https://www.goodreads.com/review/list_rss/113503174?shelf=read&per_page=200&page=1&sort=date_added]]></link>
+      <width>144</width>
+      <height>41</height>
+      <url>https://www.goodreads.com/images/layout/goodreads_logo_144.jpg</url>
+    </image>
+    
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/7924426207?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Sat, 04 Oct 2025 10:27:28 -0700]]></pubDate>
+    <title><![CDATA[Gödel, Escher, Bach: An Eternal Golden Braid]]></title>
+    <link><![CDATA[https://www.goodreads.com/review/show/7924426207?utm_medium=api&utm_source=rss]]></link>
+    <book_id>24113</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SY75_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SY75_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1547125681l/24113._SY475_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="24113">
+      <num_pages>777</num_pages>
+    </book>
+    <author_name>Douglas R. Hofstadter</author_name>
+    <isbn>0465026567</isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>5</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Sat, 04 Oct 2025 10:27:28 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Thu, 18 Sep 2025 02:51:29 -0700]]></user_date_created>
+    <user_shelves></user_shelves>
+    <user_review></user_review>
+    <average_rating>4.28</average_rating>
+    <book_published>1979</book_published>
+    <description></description>
+  </item>
+  <item>
+    <guid><![CDATA[https://www.goodreads.com/review/show/8746518674?utm_medium=api&utm_source=rss]]></guid>
+    <pubDate><![CDATA[Mon, 06 Jul 2026 06:55:27 -0700]]></pubDate>
+    <title>1984</title>
+    <link><![CDATA[https://www.goodreads.com/review/show/8746518674?utm_medium=api&utm_source=rss]]></link>
+    <book_id>40961427</book_id>
+    <book_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1532714506l/40961427._SX50_.jpg]]></book_image_url>
+    <book_small_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1532714506l/40961427._SX50_.jpg]]></book_small_image_url>
+    <book_medium_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1532714506l/40961427._SX98_.jpg]]></book_medium_image_url>
+    <book_large_image_url><![CDATA[https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1532714506l/40961427._SX318_.jpg]]></book_large_image_url>
+    <book_description></book_description>
+    <book id="40961427">
+      <num_pages>298</num_pages>
+    </book>
+    <author_name>George Orwell</author_name>
+    <isbn></isbn>
+    <user_name>Malhar</user_name>
+    <user_rating>0</user_rating>
+    <user_read_at></user_read_at>
+    <user_date_added><![CDATA[Mon, 06 Jul 2026 06:55:27 -0700]]></user_date_added>
+    <user_date_created><![CDATA[Mon, 06 Jul 2026 06:55:27 -0700]]></user_date_created>
+    <user_shelves>to-read</user_shelves>
+    <user_review></user_review>
+    <average_rating>4.24</average_rating>
+    <book_published>1949</book_published>
+    <description></description>
+  </item>
+  </channel>
+</rss>

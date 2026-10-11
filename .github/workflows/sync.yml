@@ -1,0 +1,163 @@
+# Malhar's Library: sync Goodreads, the Substack favourites post and the visitor shelf; commit what changed;
+# build the site and deploy it to GitHub Pages. One workflow does all of it because pushes made with
+# GITHUB_TOKEN never trigger other workflows. Scheduled runs deploy only when data changed; pushes and manual
+# runs always deploy. No keepalive of any kind: the data commits are the repository's activity.
+name: Sync and deploy
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'   # 00:17 06:17 12:17 18:17 UTC; GitHub may start a run hours late or skip one
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'worker/**'
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      allow_drop:
+        description: Accept a Goodreads shelf that shrank by more than 20% (you removed books on purpose)
+        type: boolean
+        default: false
+      refresh:
+        description: Re-check Open Library misses and covers that failed with an HTTP error
+        type: boolean
+        default: false
+      max_covers:
+        description: New covers to process in this run (2000 bootstraps the whole library)
+        type: number
+        default: 120
+
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  TZ: UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write   # push the data commit
+      pages: read       # configure-pages reads the site URL and base path
+    outputs:
+      deploy: ${{ steps.artifact.outputs.uploaded }}
+      alert: ${{ steps.sync.outputs.alert }}
+      alert_message: ${{ steps.sync.outputs.alert_message }}
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+        with:
+          ref: main   # newest main, so a run that waited behind another sees that run's data commit
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Test
+        run: npm test
+
+      - name: Sync sources
+        id: sync
+        env:
+          ALLOW_DROP: ${{ inputs.allow_drop == true }}
+          REFRESH: ${{ inputs.refresh == true }}
+          MAX_COVERS: ${{ inputs.max_covers }}
+        run: node scripts/sync.mjs --ci
+
+      - name: Commit data changes
+        id: commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- data covers
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'No data changes.'
+            exit 0
+          fi
+          git commit -q -F .cache/commit-message.txt
+          for attempt in 1 2 3; do
+            if git pull -q --rebase origin main && git push -q origin HEAD:main; then
+              echo 'changed=true' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 20))
+          done
+          echo '::error::Could not push the data commit: main moved and the rebase conflicted. The next run syncs again from the new main.'
+          exit 1
+
+      - name: Configure Pages
+        id: pages
+        if: github.event_name != 'schedule' || steps.commit.outputs.changed == 'true'
+        uses: actions/configure-pages@v6
+
+      - name: Build site
+        if: steps.pages.outcome == 'success'
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: node scripts/build.mjs --base "$BASE_PATH/" --site-url "$BASE_URL"
+
+      - name: Check site
+        if: steps.pages.outcome == 'success'
+        run: node scripts/check-site.mjs site
+
+      - name: Upload Pages artifact
+        if: steps.pages.outcome == 'success'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site/
+
+      - name: Mark artifact uploaded
+        id: artifact
+        if: steps.pages.outcome == 'success'
+        run: echo 'uploaded=true' >> "$GITHUB_OUTPUT"
+
+      - name: Write run summary
+        if: always()
+        run: if [ -f .cache/summary.md ]; then cat .cache/summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  alert:
+    # Fails the run (so GitHub emails you) only when a source has failed past its grace period;
+    # the site has already been deployed with the last good data and shows the outage in its footer.
+    needs: [build, deploy]
+    if: ${{ !cancelled() && needs.build.outputs.alert == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report failing source
+        env:
+          MESSAGE: ${{ needs.build.outputs.alert_message }}
+        run: |
+          echo "::error::$MESSAGE"
+          exit 1
