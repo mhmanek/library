@@ -1,8 +1,10 @@
-// The returns slot, loaded lazily: an ARIA 1.2 combobox over Open Library, "already on my shelf" from
-// match.json, Turnstile on first focus, validation, the POST to the Worker, and a mailto fallback for
-// every failure (some school and office networks block *.workers.dev).
+// The returns slot, loaded lazily: a postcard whose front becomes the chosen book's cover while the visitor
+// writes on the back. An ARIA 1.2 combobox over Open Library, "already on my shelf" from match.json,
+// Turnstile on first focus, validation, the POST to the Worker, and a mailto fallback for every failure
+// (some school and office networks block *.workers.dev). Without a Worker the card goes out by email.
 import {findInIndex} from '../shared/match.js';
 import {formatDay} from './lib/format.js';
+import {pictureEl, stampEl, PC} from './lib/postcard.js';
 import {wallState} from './wall.js';
 
 const OL = 'https://openlibrary.org/search.json';
@@ -15,6 +17,7 @@ const MSG = {
   jammed: 'The returns slot is jammed (some school and office networks block it).',
   blocked: 'Heads up: this network seems to block the returns slot. The email button below always works.',
   wait: 'One moment…', ol: 'Open Library isn’t answering. Type the title and author yourself.',
+  mailed: 'Your email app should open with the card written out. Nothing opened? Write to the address below.',
 };
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
 
@@ -44,13 +47,16 @@ let api = null;
 export function initRecommend(boot) {
   if (api) return api;
   const form = document.querySelector('[data-rec]');
-  if (!form || !boot.worker || !boot.siteKey) return (api = {prefill() {}});
+  if (!form) return (api = {prefill() {}});
+  const live = form.dataset.mode === 'post' && Boolean(boot.worker && boot.siteKey);
   const $ = sel => form.querySelector(sel);
   const title = $('#rec-title'), author = $('#rec-author'), note = $('#rec-note'), name = $('#rec-name'), email = $('#rec-email');
+  const back = $('[data-back]'), front = $('[data-front]'), pic = $('[data-pic]'), cap = $('[data-cap]'), corner = $('[data-stamp]'), turner = $('[data-turn]');
   const list = $('#rec-list'), status = $('[data-lb-status]'), chosen = $('[data-chosen]'), onshelf = $('[data-onshelf]');
   const submit = $('[data-submit]'), msg = $('[data-msg]'), errsum = $('[data-errsum]');
   const returns = form.closest('.returns'), wrap = form.parentElement, thanks = wrap.querySelector('[data-thanks]');
-  const shownAt = performance.now();
+  const shownAt = performance.now(), submitLabel = submit.firstElementChild.textContent;
+  const turnLabels = [turner.lastElementChild.textContent, turner.dataset.unturn];
   let selection = null, options = [], active = -1, index = null, token = null, widget = null, tsLoading = null;
 
   // ---- match.json: is it already on one of my shelves?
@@ -62,6 +68,26 @@ export function initRecommend(boot) {
     onshelf.textContent = m;
     onshelf.hidden = !m;
   }
+
+  // ---- The picture side follows the book: its cover once chosen from Open Library, else a cloth placeholder.
+  function drawFront() {
+    const t = title.value.trim(), a = author.value.trim(), cover = selection?.coverId ?? null;
+    cap.textContent = t ? `${t}${a ? ` · ${a}` : ''}` : PC.front;
+    const key = cover ? `c${cover}` : `p${t}\n${a}`;
+    if (pic.dataset.key === key) return;
+    pic.dataset.key = key;
+    pic.replaceChildren(pictureEl({coverId: cover, title: t, author: a}));
+    const old = corner.querySelector('.pc-stamp');
+    if ((old.dataset.cover ?? '') !== String(cover ?? '')) { const st = stampEl({coverId: cover}); st.dataset.cover = String(cover ?? ''); old.replaceWith(st); }
+  }
+  function turn(on) {
+    form.classList.toggle('is-turned', on);
+    back.inert = on; front.inert = !on;
+    turner.setAttribute('aria-pressed', String(on));
+    turner.lastElementChild.textContent = turnLabels[on ? 1 : 0];
+  }
+  turner.addEventListener('click', () => turn(!form.classList.contains('is-turned')));
+  front.addEventListener('click', () => turn(false));
 
   // ---- Open Library client: debounce, ≥1 s between requests, abort stale, 3 s timeout, circuit breaker.
   const cache = new Map();
@@ -144,14 +170,15 @@ export function initRecommend(boot) {
     if (d.author) author.value = d.author;
     selection = d;
     chosen.hidden = false;
-    chosen.firstElementChild.textContent = `Selected from Open Library${d.year ? ` · ${d.year}` : ''}`;
+    chosen.firstElementChild.textContent = `Cover from Open Library${d.year ? ` · ${d.year}` : ''}`;
     setExpanded(false);
+    drawFront();
     checkShelf();
   }
-  function unchoose() { selection = null; chosen.hidden = true; }
+  function unchoose() { selection = null; chosen.hidden = true; drawFront(); }
 
   title.addEventListener('input', () => {
-    if (selection && title.value !== selection.title) unchoose();
+    if (selection && title.value !== selection.title) unchoose(); else drawFront();
     clearTimeout(debounce);
     const q = title.value.trim();
     if (q.length < 3) { setExpanded(false); return; }
@@ -170,6 +197,7 @@ export function initRecommend(boot) {
   });
   title.addEventListener('blur', () => { setTimeout(() => setExpanded(false), 120); checkShelf(); });
   author.addEventListener('change', checkShelf);
+  author.addEventListener('input', drawFront);
   $('[data-unchoose]').addEventListener('click', () => { unchoose(); title.focus(); });
   const counter = $('[data-count-n]');
   note.addEventListener('input', () => { counter.textContent = String(note.value.length); });
@@ -197,8 +225,8 @@ export function initRecommend(boot) {
     });
     return tsLoading;
   }
-  form.addEventListener('focusin', () => { loadIndex(); loadTurnstile().catch(() => {}); }, {once: true});
-  if (wallState.reachable === false) showMsg(MSG.blocked, {mail: true});
+  form.addEventListener('focusin', () => { loadIndex(); if (live) loadTurnstile().catch(() => {}); }, {once: true});
+  if (live && wallState.reachable === false) showMsg(MSG.blocked, {mail: true});
 
   async function getToken() {
     if (token) return token;
@@ -210,7 +238,7 @@ export function initRecommend(boot) {
   }
 
   // ---- Validation and messages.
-  const fields = {title, author, note, name, email};
+  const fields = {title, author, note, name, ...(email ? {email} : {})};
   function setError(k, text) {
     const input = fields[k], err = form.querySelector(`#rec-${k}-err`);
     if (!input || !err) return;
@@ -224,8 +252,8 @@ export function initRecommend(boot) {
   function validate() {
     const errors = {};
     if (!title.value.trim()) errors.title = MSG.title;
-    for (const [k, max] of Object.entries(LIMITS)) if ((fields[k].value ?? '').length > max) errors[k] = MSG.long;
-    if (email.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) errors.email = MSG.email;
+    for (const [k, max] of Object.entries(LIMITS)) if ((fields[k]?.value ?? '').length > max) errors[k] = MSG.long;
+    if (email?.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) errors.email = MSG.email;
     return errors;
   }
   function showErrors(errors) {
@@ -233,6 +261,7 @@ export function initRecommend(boot) {
     const keys = Object.keys(errors);
     errsum.hidden = !keys.length;
     if (!keys.length) return;
+    turn(false);
     errsum.textContent = keys.length === 1 ? errors[keys[0]] : `${keys.length} things to fix before this card can go in the slot.`;
     fields[keys[0]].focus();
   }
@@ -246,7 +275,7 @@ export function initRecommend(boot) {
     msg.hidden = !text;
   }
   const values = () => ({title: title.value.trim(), author: author.value.trim(), note: note.value.trim(), name: name.value.trim()});
-  const busy = on => { submit.setAttribute('aria-disabled', String(on)); submit.firstElementChild.textContent = on ? 'Posting…' : 'Drop it in the slot'; };
+  const busy = on => { submit.setAttribute('aria-disabled', String(on)); submit.firstElementChild.textContent = on ? 'Posting…' : submitLabel; };
 
   let sending = false;
   form.addEventListener('submit', async e => {
@@ -255,6 +284,7 @@ export function initRecommend(boot) {
     const errors = validate();
     showErrors(errors);
     if (Object.keys(errors).length) return;
+    if (!live) { location.href = mailtoFor(boot.email, values()); showMsg(MSG.mailed); return; }
     sending = true; busy(true); showMsg('');
     try {
       const t = await getToken();
@@ -263,7 +293,7 @@ export function initRecommend(boot) {
       const v = values();
       const body = {
         title: v.title, author: v.author, olWork: selection?.olWork ?? null, coverId: selection?.coverId ?? null, year: selection?.year ?? null,
-        note: v.note, name: v.name, email: email.value.trim(), website: form.elements.website.value, t: Math.round(performance.now() - shownAt), turnstileToken: t,
+        note: v.note, name: v.name, email: email?.value.trim() ?? '', website: form.elements.website.value, t: Math.round(performance.now() - shownAt), turnstileToken: t,
       };
       let res, json = {};
       try {
@@ -280,24 +310,30 @@ export function initRecommend(boot) {
     } finally { sending = false; busy(false); }
   });
 
-  // ---- Success: the card posts into the slot, the plate glints, a date stamp thumps in.
+  // ---- Success: the postmark thumps onto the stamp, the card turns to its picture side and drops into the
+  // slot, the plate glints.
   function received(who) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const today = new Date().toISOString().slice(0, 10);
+    const d = new Date(), today = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
+    const day = corner.querySelector('time');
+    day.textContent = formatDay(today); day.dateTime = today;
     const finish = () => {
       form.hidden = true;
       returns.classList.remove('is-posting');
       returns.classList.add('is-received');
-      thanks.querySelector('[data-stamp]').textContent = `Received ${formatDay(today)}`;
+      thanks.querySelector('[data-stamp-text]').textContent = `Received ${formatDay(today)}`;
       thanks.querySelector('[data-thanks-text]').textContent = `Thank you${who ? `, ${who}` : ''}. It’s in the slot. I read every card; the ones I shelve go on the visitor shelf.`;
       thanks.hidden = false;
       thanks.focus();
     };
-    if (reduce) finish();
-    else { returns.classList.add('is-posting'); setTimeout(finish, 900); }
+    if (reduce) { finish(); return; }
+    form.classList.add('is-marked');
+    setTimeout(() => turn(true), 500);
+    setTimeout(() => returns.classList.add('is-posting'), 1450);
+    setTimeout(finish, 2400);
   }
   thanks.querySelector('[data-again]').addEventListener('click', () => {
-    form.reset(); unchoose(); onshelf.hidden = true; counter.textContent = '0'; showErrors({}); showMsg('');
+    form.reset(); unchoose(); turn(false); form.classList.remove('is-marked'); onshelf.hidden = true; counter.textContent = '0'; showErrors({}); showMsg('');
     token = null;
     if (widget !== null) window.turnstile?.reset(widget);
     thanks.hidden = true; form.hidden = false; returns.classList.remove('is-received');
@@ -305,14 +341,16 @@ export function initRecommend(boot) {
   });
 
   // This module arrives lazily: catch up on anything the visitor did before it loaded.
-  if (form.contains(document.activeElement)) { loadIndex(); loadTurnstile().catch(() => {}); }
+  if (form.contains(document.activeElement)) { loadIndex(); if (live) loadTurnstile().catch(() => {}); }
   if (title.value.trim()) checkShelf();
+  drawFront();
   counter.textContent = String(note.value.length);
 
   return (api = {
     prefill(text) {
       title.value = String(text ?? '').slice(0, 200);
       unchoose();
+      turn(false);
       title.focus();
       checkShelf();
     },

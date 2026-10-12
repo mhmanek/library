@@ -12,6 +12,7 @@ const SYMBOLS = {
   star: '<path fill="currentColor" stroke="none" d="M8 1.2l2 4.3 4.7.6-3.4 3.2.9 4.7L8 11.7 3.8 14l.9-4.7L1.3 6.1 6 5.5z"/>',
   ket: '<path d="M1 1l4 7-4 7"/>',
   curl: '<path d="M2 14c3-1 5-4 4-7S2 4 3 7s6 4 10 0M10.5 4.5 13 7l-3 1"/>',
+  turn: '<path d="M2.5 7A5.5 5.5 0 0 1 12.6 4.4M13 1.5v3h-3M13.5 9a5.5 5.5 0 0 1-10.1 2.6M3 14.5v-3h3"/>',
   squiggle: '<path d="M1 5c2-3 3 3 5 0s3 3 5 0 3 3 5 0 3 3 5 0"/>',
 };
 const VIEW = {ket: '0 0 6 16', squiggle: '0 0 22 8'};

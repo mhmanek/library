@@ -5,6 +5,7 @@ export const FONTS = {
   display: "Antonio,'Bahnschrift Condensed','DIN Condensed','Arial Narrow','Roboto Condensed',Impact,sans-serif",
   mono: "'Intel One Mono',ui-monospace,Menlo,Consolas,'Roboto Mono','Courier New',monospace",
   read: "'Crimson Pro','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif",
+  hand: "'Nothing You Could Do','Segoe Print','Bradley Hand','Comic Sans MS',cursive",
 };
 
 export const GOLD = '#d9b45a';
@@ -18,6 +19,7 @@ const SHARED = {
   glow: 'linear-gradient(-32deg,#c79f45 0%,#e2c06a 55%,#c79f45 100%)',
   'on-gold': NAVY, 'mark-me': GOLD, 'mark-me-ring': NAVY, 'plank-edge': GOLD, plank: '#22386b',
   'paper-ink': NAVY, 'paper-muted': '#56627f', 'paper-line': 'rgb(34 56 107/.09)',
+  pen: '#23408e', // blue-black ink on the postcards; the paper is cream in both themes
 };
 
 export const NIGHT = {
@@ -56,10 +58,10 @@ export const DAY = {
 export const TEXT_PAIRS = {
   night: [['text', 'page'], ['text', 'panel'], ['text', 'page-deep'], ['gold', 'page'], ['gold', 'panel'], ['gold', 'page-deep'],
     ['muted', 'page'], ['muted', 'panel'], ['muted', 'page-deep'], ['placeholder', 'page-deep'], ['on-gold', 'gold'], ['on-gold', 'gold-lo'],
-    ['heading', 'page'], ['link', 'page'], ['err', 'page'], ['ok', 'page'], ['paper-ink', 'paper'], ['paper-muted', 'paper'], ['gold', 'plank']],
+    ['heading', 'page'], ['link', 'page'], ['err', 'page'], ['ok', 'page'], ['paper-ink', 'paper'], ['paper-muted', 'paper'], ['pen', 'paper'], ['gold', 'plank']],
   day: [['text-strong', 'page'], ['text', 'page'], ['text', 'panel'], ['muted', 'page'], ['muted', 'page-deep'], ['muted', 'panel'],
     ['heading', 'page'], ['accent-text', 'panel'], ['link', 'page'], ['on-gold', 'gold'], ['on-gold', 'gold-lo'], ['err', 'page'], ['ok', 'page'],
-    ['err', 'paper'], ['paper-ink', 'paper'], ['paper-muted', 'paper'], ['placeholder', 'page-deep']],
+    ['err', 'paper'], ['paper-ink', 'paper'], ['paper-muted', 'paper'], ['pen', 'paper'], ['placeholder', 'page-deep']],
 };
 // Non-text boundaries that must reach 3:1 (focus rings, input borders, data marks).
 export const UI_PAIRS = {
@@ -73,7 +75,7 @@ const block = t => Object.entries(t).map(([k, v]) => (k === 'color-scheme' ? `co
 
 // Night on :root; the OS decides for no-JS visitors; an explicit choice (set before first paint) wins.
 export function tokensCss() {
-  const fonts = `--f-display:${FONTS.display};--f-mono:${FONTS.mono};--f-read:${FONTS.read};--grain:${GRAIN}`;
+  const fonts = `--f-display:${FONTS.display};--f-mono:${FONTS.mono};--f-read:${FONTS.read};--f-hand:${FONTS.hand};--grain:${GRAIN}`;
   return `:root{${fonts};${block(NIGHT)}}`
     + `@media (prefers-color-scheme:light){:root:not([data-theme=night]){${block(DAY)}}}`
     + `:root[data-theme=day]{${block(DAY)}}`;

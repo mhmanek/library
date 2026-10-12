@@ -1,37 +1,46 @@
 // Visitor shelf at runtime: fetch the live list from the Worker after idle and merge it over the build's
 // snapshot. Rendering uses DOM APIs and textContent only; visitor text never touches innerHTML.
 import {cleanItem, mergeWall} from './lib/wall-merge.js';
-import {formatDay} from './lib/format.js';
+import {PC, el, tiltFor, noteSize, pictureEl, stampEl, postmarkEl, addressEl} from './lib/postcard.js';
 
 export const wallState = {reachable: null};
-const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
+const SVG = 'http://www.w3.org/2000/svg';
 
+// Same markup as visitorCard() in src/templates/visitors.mjs: picture side out, a checkbox to turn it over.
 function card(item, isNew) {
   const li = el('li', 'vcard');
   li.dataset.id = item.id;
-  const art = el('article');
+  li.style.setProperty('--tilt', `${tiltFor(item.id)}deg`);
+  const art = el('article', 'pc pc--wall');
   art.setAttribute('aria-labelledby', `v-${item.id}`);
-  const cv = el('span', 'vc-cv');
-  cv.setAttribute('aria-hidden', 'true');
-  if (item.coverId) {
-    const img = new Image(72, 108);
-    img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
-    img.src = `https://covers.openlibrary.org/b/id/${item.coverId}-M.jpg`;
-    cv.append(img);
-  } else cv.append(el('b', '', item.title));
-  const tx = el('div', 'vc-tx');
-  const h = el('h3');
+
+  const hit = el('label', 'pc-hit'), tog = el('input', 'pc-tog'), turn = el('span', 'pc-turn');
+  tog.type = 'checkbox';
+  tog.setAttribute('aria-label', PC.turn + item.title);
+  turn.setAttribute('aria-hidden', 'true');
+  const svg = document.createElementNS(SVG, 'svg'), use = document.createElementNS(SVG, 'use');
+  svg.setAttribute('class', 'i i-turn'); svg.setAttribute('aria-hidden', 'true'); use.setAttribute('href', '#i-turn');
+  svg.append(use); turn.append(svg); hit.append(tog, turn);
+
+  const front = el('div', 'pc-side pc-front'), capt = el('div', 'pc-cap'), h = el('h3', 'pc-cap-t');
   h.id = `v-${item.id}`;
   h.append(el('cite', '', item.title));
   if (item.author) h.append(' ', el('span', 'by', item.author));
-  tx.append(h);
-  if (item.note) { const bq = el('blockquote'); bq.append(el('p', '', `“${item.note}”`)); tx.append(bq); }
-  const meta = el('p', 'meta', 'Recommended by ');
-  const t = el('time', '', formatDay(item.date));
-  t.dateTime = item.date;
-  meta.append(el('b', '', item.name || 'a visitor'), ' · ', t);
-  tx.append(meta);
-  art.append(cv, tx);
+  capt.append(h);
+  front.append(pictureEl(item), capt);
+
+  const back = el('div', 'pc-side pc-back'), corner = el('span', 'pc-corner'), msg = el('div', 'pc-msg');
+  corner.append(stampEl(item), postmarkEl(item.date));
+  if (item.note) { const n = el('p', 'pc-note', item.note); n.dataset.size = noteSize(item.note); msg.append(n); }
+  else msg.append(el('p', 'pc-none', PC.noNote));
+  const sig = el('p', 'pc-sig');
+  sig.append(el('span', 'sr-only', `${PC.by} `), item.name || PC.anon);
+  msg.append(sig);
+  back.append(corner, msg, addressEl());
+
+  const flip = el('div', 'pc-flip');
+  flip.append(front, back);
+  art.append(hit, flip);
   if (isNew) art.append(el('span', 'fresh', 'New'));
   li.append(art);
   return li;

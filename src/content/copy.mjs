@@ -1,4 +1,5 @@
-// Every user-facing string, in Malhar's voice, so copy edits never touch templates.
+// Every user-facing string, in Malhar's voice, so copy edits never touch templates. The postcards' printed
+// words (address, stamp, postmark) live in src/js/lib/postcard.js because the browser draws cards too.
 // Functions take numbers from the catalog; nothing here is HTML except where a template wraps it in raw().
 import {formatNumber as n} from '../js/lib/format.js';
 
@@ -41,21 +42,24 @@ export const COPY = {
   },
   dnf: {tab: 'Did not finish', display: 'Did not finish', dek: 'Put down without guilt. Life is short and the antilibrary is long.'},
   visitors: {
-    tab: 'Visitor shelf', display: 'Left by visitors',
-    dek: "Books people have slipped into the returns slot, and I've shelved. Thank you.",
-    empty: 'Your book here?', by: 'Recommended by', anon: 'a visitor', more: (k) => `Show all ${n(k)}`, fresh: 'New',
+    tab: 'Visitor shelf', display: 'Postcards from visitors',
+    dek: "Books people have posted through the returns slot, and I've shelved. Turn a card over to read what they wrote. Thank you.",
+    empty: 'Your postcard here?', by: 'Recommended by', anon: 'a visitor', more: (k) => `Show all ${n(k)}`, fresh: 'New',
     stamps: {read: (r) => `Read it${r ? ` · ${r}★` : ''}`, 'to-read': 'In my antilibrary', 'currently-reading': 'On my desk', 'did-not-finish': 'Put down', fav: 'A favourite'},
   },
   recommend: {
-    tab: 'Recommend', display: 'Leave a book in the returns slot',
-    dek: 'Tell me what I should read next. I read every card; the ones I shelve go on the visitor shelf.',
-    cardHead: 'Recommendation card · Nº —',
-    book: 'Book', bookHint: 'Start typing; I’ll look it up on Open Library', author: 'Author', note: 'Why I should read it', name: 'Signed',
-    nameHint: 'shown on the visitor shelf if I shelve it', email: 'Email (private)', emailHint: 'only so I can reply; never shown',
-    submit: 'Drop it in the slot', posting: 'Posting…', small: 'Spam-checked by Cloudflare Turnstile.',
-    plate: 'Book return · Recommendations',
+    tab: 'Recommend', display: 'Post me a book',
+    dek: 'Pick a book for the front, write on the back, and drop it in the slot. I read every card; the ones I shelve go on the visitor shelf.',
+    cardHead: 'Postcard: recommend me a book',
+    print: 'Post card', book: 'On the front', bookHint: 'Start typing; the cover comes from Open Library', author: 'By',
+    note: 'Message', notePh: 'Dear Malhar, you have to read this because…', name: 'Signed', namePh: 'a visitor',
+    nameHint: 'shown on the visitor shelf if I shelve it', email: 'Reply to (private)', emailHint: 'only so I can reply; never shown',
+    turn: 'See the front', unturn: 'Back to writing',
+    submit: 'Post it', submitMail: 'Post it by email', posting: 'Posting…',
+    small: 'Spam-checked by Cloudflare Turnstile.', smallMail: 'Opens your email app with the card written out.',
+    plate: 'Book return · Postcards',
     prefer: 'Prefer email?',
-    postcard: 'The returns slot opens soon. Until then, a postcard works just as well:',
+    postcard: 'The returns slot needs JavaScript, but a postcard by email works just as well:',
     postcardCta: 'Email me a book',
   },
   footer: {
@@ -67,7 +71,7 @@ export const COPY = {
     covers: 'Covers belong to their publishers and designers, shown small via Goodreads, Open Library and Substack to identify each book. Want one removed?',
     stack: 'Plain Node, no framework',
     source: 'Source on GitHub',
-    type: 'Type: Antonio, Intel One Mono, Crimson Pro (SIL OFL)',
+    type: 'Type: Antonio, Intel One Mono, Crimson Pro, Nothing You Could Do (SIL OFL)',
     loop: 'This library contains a book about itself.',
     reset: 'Follow my system theme',
   },

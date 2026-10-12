@@ -1,11 +1,15 @@
-// Visitor shelf: approved recommendations in Margins' "Recommended by" idiom. The build renders the
-// committed snapshot (escaped; wall items are plain text by contract), stamped with what happened to each
-// book on his shelves. At runtime wall.js swaps in the live list with textContent only.
+// Visitor shelf: approved recommendations as postcards pinned up picture side out (the cover); tap or
+// press one to turn it over to the visitor's handwritten note, name and postmark. The flip is a checkbox,
+// so it works without JS. The build renders the committed snapshot (escaped; wall items are plain text by
+// contract), stamped with what happened to each book on my shelves. At runtime wall.js swaps in the live
+// list with textContent only.
 import {html} from './html.mjs';
 import {icon} from './icons.mjs';
 import {sectionHead} from './shelf.mjs';
+import {picture, stamp, postmark, address, tiltFor, noteSize} from './postcard.mjs';
+import {PC} from '../js/lib/postcard.js';
 import {COPY} from '../content/copy.mjs';
-import {formatDay, formatNumber as n} from '../js/lib/format.js';
+import {formatNumber as n} from '../js/lib/format.js';
 import {findInIndex} from '../shared/match.js';
 
 export const VISIBLE = 12;
@@ -19,15 +23,17 @@ export function stampFor(item, index) {
   return s[hit.s] ?? '';
 }
 
-export function visitorCard(item, stamp) {
-  const vid = `v-${item.id}`;
-  return html`<li class="vcard" data-id="${item.id}"><article aria-labelledby="${vid}">
-<span class="vc-cv" aria-hidden="true">${item.coverId ? html`<img src="https://covers.openlibrary.org/b/id/${item.coverId}-M.jpg" width="72" height="108" loading="lazy" decoding="async" alt="">` : html`<b>${item.title}</b>`}</span>
-<div class="vc-tx">
-<h3 id="${vid}"><cite>${item.title}</cite>${item.author ? html` <span class="by">${item.author}</span>` : ''}</h3>
-${item.note ? html`<blockquote><p>“${item.note}”</p></blockquote>` : ''}
-<p class="meta">${COPY.visitors.by} <b>${item.name || COPY.visitors.anon}</b> · <time datetime="${item.date}">${formatDay(item.date)}</time></p>
-${stamp ? html`<p class="stamp">${stamp}</p>` : ''}
+export function visitorCard(item, stamp_) {
+  const V = COPY.visitors, vid = `v-${item.id}`;
+  return html`<li class="vcard" data-id="${item.id}" style="--tilt:${tiltFor(item.id)}deg"><article class="pc pc--wall" aria-labelledby="${vid}">
+<label class="pc-hit"><input type="checkbox" class="pc-tog" aria-label="${PC.turn}${item.title}"><span class="pc-turn" aria-hidden="true">${icon('turn')}</span></label>
+<div class="pc-flip">
+<div class="pc-side pc-front">${picture(item)}<div class="pc-cap"><h3 class="pc-cap-t" id="${vid}"><cite>${item.title}</cite>${item.author ? html` <span class="by">${item.author}</span>` : ''}</h3>${stamp_ ? html`<p class="stamp">${stamp_}</p>` : ''}</div></div>
+<div class="pc-side pc-back">
+<span class="pc-corner">${stamp(item)}${postmark(item.date)}</span>
+<div class="pc-msg">${item.note ? html`<p class="pc-note" data-size="${noteSize(item.note)}">${item.note}</p>` : html`<p class="pc-none">${PC.noNote}</p>`}<p class="pc-sig"><span class="sr-only">${V.by} </span>${item.name || V.anon}</p></div>
+${address()}
+</div>
 </div>
 </article></li>`;
 }

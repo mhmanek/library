@@ -74,7 +74,7 @@ async function mockWall(res) {
   const file = fixture ? join(root, 'tests/fixtures/frontend/wall-sample.json') : join(root, 'data/wall.json');
   const wall = JSON.parse(await readFile(file, 'utf8').catch(() => '{"items":[]}'));
   // One extra approval the build hasn't seen, so the NEW chip and the runtime merge are visible.
-  const items = [{id: '99', title: 'Gödel’s Proof', author: 'Ernest Nagel', olWork: null, coverId: null, year: 1958, name: 'Sam <script>', note: 'Short and sweet; the perfect chaser to GEB.', date: new Date().toISOString().slice(0, 10)}, ...wall.items];
+  const items = [{id: '99', title: 'Gödel’s Proof', author: 'Ernest Nagel', olWork: 'OL5567662W', coverId: 4622253, year: 1958, name: 'Sam <script>', note: 'Short and sweet; the perfect chaser to GEB.', date: new Date().toISOString().slice(0, 10)}, ...wall.items];
   json(res, 200, {updatedAt: new Date().toISOString(), items}, {'cache-control': 'public, max-age=300'});
 }
 

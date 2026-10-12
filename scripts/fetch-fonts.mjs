@@ -1,8 +1,9 @@
 // One-time: download Google's own pre-subset woff2 files (latin + latin-ext) and the OFL licences into
 // src/fonts/, plus two static TTFs used only to draw og.png (sharp's text renderer can't read woff2).
 // Writes src/styles/fonts.css. Outputs are committed, so the site never asks Google for anything.
+// Files already in src/fonts/ are kept (delete one to refetch it), so adding a family leaves the others byte-identical.
 // Usage: node scripts/fetch-fonts.mjs
-import {mkdir, writeFile} from 'node:fs/promises';
+import {access, mkdir, writeFile} from 'node:fs/promises';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -17,6 +18,8 @@ const FAMILIES = [
   {name: 'Antonio', file: 'antonio-700', query: 'Antonio:wght@700', licence: 'antonio'},
   {name: 'Intel One Mono', file: 'intel-one-mono', query: 'Intel+One+Mono:wght@300..700', licence: 'intelonemono'},
   {name: 'Crimson Pro', file: 'crimson-pro-400', query: 'Crimson+Pro:ital,wght@0,400;1,400', licence: 'crimsonpro'},
+  // Visitors' postcards: their note, written by hand. Latin only; other scripts fall back to the system's handwriting face.
+  {name: 'Nothing You Could Do', file: 'nothing-you-could-do', query: 'Nothing+You+Could+Do', licence: 'nothingyoucoulddo'},
 ];
 const TTFS = [
   {query: 'Antonio:wght@700', out: 'Antonio-Bold.ttf'},
@@ -24,6 +27,7 @@ const TTFS = [
 ];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const exists = path => access(path).then(() => true, () => false);
 async function get(url, ua, as = 'text') {
   const res = await fetch(url, {headers: {'user-agent': ua}});
   if (!res.ok) throw new Error(`${res.status} for ${url}`);
@@ -47,15 +51,20 @@ for (const fam of FAMILIES) {
   const css = await get(`https://fonts.googleapis.com/css2?family=${fam.query}&display=swap`, UA_WOFF2);
   for (const f of parseFaces(css).filter(f => KEEP.has(f.subset))) {
     const file = `${fam.file}${f.style === 'italic' ? 'i' : ''}-${f.subset}.woff2`;
-    const buf = await get(f.url, UA_WOFF2, 'buf');
-    await writeFile(join(fontsDir, file), buf);
-    console.log(`${file}  ${(buf.length / 1024).toFixed(1)} KB`);
+    if (await exists(join(fontsDir, file))) console.log(`${file}  kept`);
+    else {
+      const buf = await get(f.url, UA_WOFF2, 'buf');
+      await writeFile(join(fontsDir, file), buf);
+      console.log(`${file}  ${(buf.length / 1024).toFixed(1)} KB`);
+    }
     rules.push(`@font-face{font-family:'${fam.name}';font-style:${f.style};font-weight:${f.weight};font-display:swap;src:url(../fonts/${file}) format('woff2');unicode-range:${f.range}}`);
   }
+  if (await exists(join(fontsDir, `OFL-${fam.licence}.txt`))) continue;
   const ofl = await get(`https://raw.githubusercontent.com/google/fonts/main/ofl/${fam.licence}/OFL.txt`, UA_TTF);
   await writeFile(join(fontsDir, `OFL-${fam.licence}.txt`), ofl.replace(/\r\n/g, '\n'));
 }
 for (const t of TTFS) {
+  if (await exists(join(fontsDir, 'ttf', t.out))) continue;
   const css = await get(`https://fonts.googleapis.com/css2?family=${t.query}`, UA_TTF);
   const url = /url\(([^)]+\.ttf)\)/.exec(css)?.[1];
   if (!url) throw new Error(`no TrueType URL for ${t.query}`);

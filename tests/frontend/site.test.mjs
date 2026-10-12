@@ -49,7 +49,8 @@ test('conditional sections: reading now, Margins, the form or the postcard', asy
   const base = await buildFixture();
   assert.ok(base.html.includes('id="now"'), 'reading now shows with one book');
   assert.ok(!base.html.includes('data-margins'), 'no Margins card without an id');
-  assert.ok(!base.html.includes('id="rec-form"'), 'no form without a worker');
+  assert.ok(base.html.includes('data-mode="mail"'), 'without a worker the postcard goes out by email');
+  assert.ok(!base.html.includes('id="rec-email"') && !base.html.includes('id="rec-ts"'), 'no private email field or Turnstile in email mode');
   assert.ok(base.html.includes('mailto:malhar.manek@gmail.com'));
   assert.ok(base.html.includes('id="visitors"'), 'the snapshot alone shows the visitor shelf');
 
@@ -60,7 +61,7 @@ test('conditional sections: reading now, Margins, the form or the postcard', asy
   const on = await buildFixture({catalog: cat, wall: {items: []}, cfg: await config({...live, margins: {userId: id}})});
   assert.ok(!on.html.includes('id="now"'), 'reading now absent when empty');
   assert.ok(on.html.includes(`https://margins.app/api/og?userId=${id}&amp;v=20261011`));
-  assert.ok(on.html.includes('id="rec-form"'));
+  assert.ok(on.html.includes('data-mode="post"') && on.html.includes('id="rec-email"') && on.html.includes('id="rec-ts"'));
   assert.ok(on.html.includes('name="website"'), 'honeypot');
   assert.ok(on.html.includes('mailto:'), 'the email fallback is always there');
   const nums = [...on.html.matchAll(/<span class="n" aria-hidden="true">(\d+)<\/span>/g)].map(m => +m[1]);
@@ -144,5 +145,21 @@ test('check-site catches secrets, a <base>, broken links and missing covers', as
   assert.match(all, /broken link nope\.html/);
   assert.match(all, /looks like a secret/);
   assert.match(all, /missing cover covers\/a1b2c3d4e5f60718-200\.webp/);
+  await rm(outDir, {recursive: true, force: true});
+});
+
+test('visitor shelf: approved recommendations are postcards that turn over', async () => {
+  const {html, outDir} = await buildFixture();
+  const cards = html.split('<li class="vcard"').slice(1);
+  assert.equal(cards.length, 2);
+  const [lem, leguin] = cards;
+  assert.match(lem, /^ data-id="14" style="--tilt:-?\d\.\d\ddeg"/);
+  assert.ok(lem.includes('<input type="checkbox" class="pc-tog" aria-label="Turn over the postcard for The Cyberiad">'), 'a no-JS turn-over control');
+  assert.ok(lem.includes('class="pc-cover" src="https://covers.openlibrary.org/b/id/116079-M.jpg"'), 'the cover is the picture side');
+  assert.ok(lem.includes('<p class="pc-note" data-size="s">Robots writing poetry'), 'the note, in handwriting');
+  assert.ok(lem.includes('<time datetime="2026-10-03">3 Oct 2026</time>'), 'postmarked with the date');
+  assert.ok(leguin.includes('<span class="pc-ph"><b>The Dispossessed</b>'), 'no cover: a cloth placeholder');
+  assert.ok(leguin.includes('</span>a visitor</p>'), 'unsigned cards are from a visitor');
+  assert.ok(leguin.includes('&lt;b&gt;Not&lt;/b&gt; HTML'), 'notes stay plain text');
   await rm(outDir, {recursive: true, force: true});
 });

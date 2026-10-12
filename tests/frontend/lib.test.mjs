@@ -163,3 +163,14 @@ test('browser helpers: colour keys and recommend messages', () => {
   assert.ok(m.startsWith('mailto:m@x.org?subject=Book%20recommendation%3A%20Dune%20%26%20more&body='));
   assert.ok(decodeURIComponent(m).includes('— Ana'));
 });
+
+test('postcards: a stable tilt, note sizes, Open Library cover URLs', async () => {
+  const {tiltFor, noteSize, coverUrl} = await import('../../src/js/lib/postcard.js');
+  assert.equal(tiltFor('14'), tiltFor('14'));
+  for (const id of ['1', '9', '14', '123', '99999']) assert.ok(Math.abs(+tiltFor(id)) <= 1.4, id);
+  assert.equal(noteSize('Short and sweet.'), 's');
+  assert.equal(noteSize('x'.repeat(120)), 'm');
+  assert.equal(noteSize('x'.repeat(280)), 'l');
+  assert.equal(coverUrl(116079), 'https://covers.openlibrary.org/b/id/116079-M.jpg');
+  assert.equal(coverUrl(116079, 'L'), 'https://covers.openlibrary.org/b/id/116079-L.jpg');
+});
