@@ -2,9 +2,9 @@
   "shelf": "read",
   "channelTitle": "Malhar's bookshelf: read",
   "count": 169,
-  "etags": [null,"W/\"fdd9c9edb2d0ef45a29599d80400b111\""],
+  "etags": [null,"W/\"04b3b8f73e9ba97763d2dcde6bf43bd4\""],
   "items": [
-    {"bookId":"11","title":"The Hitchhiker's Guide to the Galaxy (Hitchhiker's Guide to the Galaxy, #1)","author":"Douglas Adams","isbn":null,"pages":216,"published":1979,"rating":4,"avgRating":4.21,"readAt":null,"addedAt":"2025-10-04T10:37:10-07:00","shelves":[],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1531891848l/11._SY475_.jpg"},
+    {"bookId":"11","title":"The Hitchhiker's Guide to the Galaxy (The Hitchhiker's Guide to the Galaxy, #1)","author":"Douglas Adams","isbn":null,"pages":216,"published":1979,"rating":4,"avgRating":4.21,"readAt":null,"addedAt":"2025-10-04T10:37:10-07:00","shelves":[],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1531891848l/11._SY475_.jpg"},
     {"bookId":"629","title":"Zen and the Art of Motorcycle Maintenance: An Inquiry Into Values (Phaedrus, #1)","author":"Robert M. Pirsig","isbn":"0060589469","pages":540,"published":1974,"rating":4,"avgRating":3.77,"readAt":null,"addedAt":"2025-11-27T18:04:28-08:00","shelves":[],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1410136019l/629.jpg"},
     {"bookId":"816","title":"Cryptonomicon","author":"Neal Stephenson","isbn":null,"pages":1152,"published":1999,"rating":5,"avgRating":4.24,"readAt":null,"addedAt":"2025-11-11T20:19:15-08:00","shelves":[],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1327931476l/816.jpg"},
     {"bookId":"890","title":"Of Mice and Men","author":"John Steinbeck","isbn":"0142000671","pages":107,"published":1937,"rating":4,"avgRating":3.89,"readAt":null,"addedAt":"2025-11-05T21:28:18-08:00","shelves":[],"review":null,"image":"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1511302904l/890._SX318_.jpg"},
