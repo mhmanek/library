@@ -5,7 +5,6 @@ import {formatDay, formatYear, formatRating, formatAvg, formatNumber as n, forma
 import {readItem, loadStacks} from './shelf.js';
 
 const SHELF_LABEL = {read: 'Read', 'to-read': 'Antilibrary', 'did-not-finish': 'Did not finish', 'currently-reading': 'Reading now', desk: 'Reading now'};
-const PATH = {read: 'read', 'to-read': 'antilibrary', 'did-not-finish': 'dnf', 'currently-reading': 'desk', desk: 'desk', fav: 'favourites'};
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
 const text = (root, sel) => root?.querySelector(sel)?.textContent ?? '';
 
@@ -95,8 +94,6 @@ export function initCard({shelf, boot, toast}) {
     const shelfName = li ? (li.closest('[data-shelf]')?.dataset.shelf ?? list) : null;
     const fav = rec.fav;
     const score = text(plate, '.score b');
-    f('shelf').textContent = PATH[shelfName ?? 'fav'] ?? 'favourites';
-    f('slug').textContent = slug;
     const eyebrow = [shelfName ? SHELF_LABEL[shelfName] : 'Favourite'];
     if (fav.startsWith('1:')) eyebrow.push(`Favourite Nº ${fav.slice(2)}`); else if (fav && shelfName) eyebrow.push('Favourite');
     if (score) eyebrow.push(score);

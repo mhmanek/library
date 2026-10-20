@@ -1,6 +1,5 @@
-// Browser entry. The page works without any of this; JS only enhances: card, console, theme knob,
+// Browser entry. The page works without any of this; JS only enhances: card, console,
 // relative times, scroll-spy, the live visitor shelf and (lazily) the recommendation form.
-import {initTheme} from './theme.js';
 import {initShelf} from './shelf.js';
 import {initCard} from './card.js';
 import {relativeTime} from './lib/format.js';
@@ -19,7 +18,6 @@ const toast = msg => {
 let rec = null;
 const recommend = () => (rec ??= import('./recommend.js').then(m => m.initRecommend(boot)));
 
-initTheme({toast});
 const shelf = initShelf({onMiss: title => recommend().then(r => r?.prefill(title))});
 initCard({shelf, boot, toast});
 

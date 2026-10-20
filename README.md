@@ -1,6 +1,6 @@
 # Malhar's Library
 
-My bookshelf, at **https://mhmanek.github.io/library/**. It rebuilds itself: every six hours a GitHub Action reads my Goodreads shelves and the favourites post on my Substack, [Mr Philomath](https://www.malharmanek.com/p/books), commits whatever changed and redeploys the site. Visitors can recommend a book; it reaches me privately and goes on the Visitor shelf only once I approve it.
+My bookshelf, at **https://mhmanek.github.io/library/**. It rebuilds itself: once a day a GitHub Action reads my Goodreads shelves and the favourites post on my Substack, [Mr Philomath](https://www.malharmanek.com/p/books), commits whatever changed and redeploys the site. Visitors can recommend a book; it reaches me privately and goes on the Visitor shelf only once I approve it.
 
 ## What I do day to day
 
@@ -14,7 +14,7 @@ Updates are not instant: GitHub's schedules often start hours late. To refresh n
 
 ```
 Goodreads RSS (4 shelves) ─┐
-Substack favourites JSON  ─┼─► .github/workflows/sync.yml (every 6 h, on push, on demand)
+Substack favourites JSON  ─┼─► .github/workflows/sync.yml (daily, on push, on demand)
 Worker GET /wall          ─┘    sync → commit data/ + covers/ if changed → build → deploy Pages
 Open Library (new books only)
 

@@ -142,7 +142,7 @@ async function expectError(fn, re) { await assert.rejects(fn, e => re.test(e.mes
 
 test('workflow: schedule, concurrency, action majors, permissions, no keepalive, no script injection', async () => {
   const y = await readFile(new URL('.github/workflows/sync.yml', ROOT), 'utf8');
-  assert.match(y, /cron: '17 \*\/6 \* \* \*'/);
+  assert.match(y, /cron: '17 11 \* \* \*'/);
   assert.match(y, /concurrency:\n  group: pages\n  cancel-in-progress: false/);
   for (const a of ['actions/checkout@v7', 'actions/setup-node@v7', 'actions/configure-pages@v6', 'actions/upload-pages-artifact@v5', 'actions/deploy-pages@v5']) assert.ok(y.includes(`uses: ${a}`), a);
   assert.match(y, /node-version: 24/);

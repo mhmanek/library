@@ -87,7 +87,7 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
     else missingCovers.push(rel);
   }
 
-  const initialJs = ['js/main.js', 'js/theme.js', 'js/shelf.js', 'js/card.js', 'js/lib/format.js', 'js/lib/url.js', 'js/lib/sort.js', 'js/lib/search.js', 'shared/normalize.js'];
+  const initialJs = ['js/main.js', 'js/shelf.js', 'js/card.js', 'js/lib/format.js', 'js/lib/url.js', 'js/lib/sort.js', 'js/lib/search.js', 'shared/normalize.js'];
   const jsText = await Promise.all(initialJs.map(p => readFile(join(outDir, 'assets', p), 'utf8')));
   const books = JSON.stringify(catalog);
   const report = {

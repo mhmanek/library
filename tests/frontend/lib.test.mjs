@@ -84,7 +84,7 @@ test('url state round-trips and omits defaults', () => {
   const s = {view: 'covers', sort: 'old', q: 'le guin', gilt: true};
   assert.deepEqual(parseState(serializeState(s)), s);
   assert.equal(serializeState({view: 'shelf', sort: '', q: '', gilt: false}), '');
-  assert.equal(serializeState({view: 'list', sort: '', q: '', gilt: false}, '?theme=day'), '?theme=day&view=list');
+  assert.equal(serializeState({view: 'list', sort: '', q: '', gilt: false}, '?utm_source=x'), '?utm_source=x&view=list');
   assert.equal(parseState('?view=evil&sort=drop').view, 'shelf');
   assert.equal(parseHash('#book/anathem-stephenson'), 'anathem-stephenson');
   assert.equal(parseHash('#book/gr-2845024'), 'gr-2845024');

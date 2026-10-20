@@ -1,6 +1,5 @@
 // Spine colours: each cover's colour pulled toward six bookcloth hues and darkened, so the shelf reads as a
-// gilt library rather than a rainbow, and gold-foil titles always pass 4.6:1. Same spines in both themes,
-// because cloth doesn't change with daylight.
+// gilt library rather than a rainbow, and gold-foil titles always pass 4.6:1.
 import {hexToOklch, oklabToRgb, rgbToHex, contrast, clamp} from '../../lib/color-math.mjs';
 import {GOLD} from '../design/tokens.mjs';
 

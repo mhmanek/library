@@ -20,7 +20,6 @@ ${showWall ? html`<li>${F.wall}${s.wall.failingSince ? ' · from a saved copy' :
 <li>${F.covers} <a href="mailto:${config.site.email}?subject=Cover%20takedown">${config.site.email}</a></li>
 <li>${F.stack} · <a href="https://github.com/${config.site.repo}">${F.source}${icon('ext')}</a> · ${F.type}</li>
 ${loopSlug ? html`<li class="loop"><a href="#book/${loopSlug}">${F.loop}</a></li>` : ''}
-<li><button class="linkish js-only" type="button" data-theme-reset>${F.reset}</button></li>
 </ul>
 <p class="col-sig" aria-hidden="true">|00${icon('ket')} + |11${icon('ket')}</p>
 </footer>`;

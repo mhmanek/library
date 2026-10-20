@@ -1,14 +1,12 @@
-// <head>: CSP first, the no-flash theme bootstrap, then meta, preloads, the stylesheet and the module entry.
+// <head>: CSP first, the js-class bootstrap, then meta, preloads, the stylesheet and the module entry.
 import {createHash} from 'node:crypto';
 import {html, raw} from './html.mjs';
 import {jsonForScript} from '../../lib/json.mjs';
-import {NIGHT, DAY} from '../design/tokens.mjs';
+import {COLOURS} from '../design/tokens.mjs';
 
-// Runs before the stylesheet so the right theme is on <html> at first paint. ?theme= is for screenshots only
-// and is never stored. Its sha256 goes in the CSP, so any edit here updates the policy automatically.
-export const BOOTSTRAP = "(function(d){var t,q=/[?&]theme=(day|night)\\b/.exec(location.search);try{t=localStorage.getItem('ml:theme')}catch(e){}"
-  + "if(q)t=q[1];if(t!=='day'&&t!=='night')t=matchMedia('(prefers-color-scheme: light)').matches?'day':'night';"
-  + "d.dataset.theme=t;d.classList.replace('no-js','js')})(document.documentElement)";
+// Runs before the stylesheet so .js-only controls are right at first paint. Its sha256 goes in the CSP, so any
+// edit here updates the policy automatically.
+export const BOOTSTRAP = "document.documentElement.classList.replace('no-js','js')";
 
 export const sha256 = text => `'sha256-${createHash('sha256').update(text, 'utf8').digest('base64')}'`;
 
@@ -38,9 +36,8 @@ export function head({title, description, canonical, ogImage, ogAlt, prefix = ''
 <script>${raw(BOOTSTRAP)}</script>${extraScript ? raw(`\n<script>${extraScript}</script>`) : ''}
 <meta name="description" content="${description}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="${NIGHT.page}" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="${DAY.page}" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="${COLOURS.page}">
 ${canonical ? html`<link rel="canonical" href="${canonical}">\n` : ''}<link rel="preload" href="${prefix}assets/fonts/antonio-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${prefix}assets/fonts/intel-one-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${prefix}${css}">

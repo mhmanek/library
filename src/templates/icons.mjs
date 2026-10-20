@@ -3,6 +3,7 @@ import {html, raw} from './html.mjs';
 
 const SYMBOLS = {
   arrow: '<path d="M2 8h11M9 4l4 4-4 4"/>',
+  find: '<circle cx="6.8" cy="6.8" r="4.6"/><path d="M10.2 10.2 14 14"/>',
   ext: '<path d="M5 11 11 5M6.5 5H11v4.5"/>',
   x: '<path d="M4 4l8 8M12 4l-8 8"/>',
   prev: '<path d="M10 3 5 8l5 5"/>',

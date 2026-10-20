@@ -24,7 +24,6 @@ export function renderNotFound({base, css, siteUrl}) {
 ${sprite()}
 <div class="page">
 <header class="mast">
-<div class="kicker"><p class="prompt"><span>$ cd ~/library/404</span><span class="caret" aria-hidden="true"></span></p></div>
 <p class="wm"><a href="${base}" aria-label="Malhar’s Library, home">${circuit('404')}</a></p>
 </header>
 <main id="main" class="sec nf-main">

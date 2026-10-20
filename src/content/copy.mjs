@@ -12,9 +12,6 @@ export const COPY = {
   title: "Malhar's Library",
   description: (c) => `Every book I've finished (${n(c.read)}), my favourites in my own words, and ${n(c.toRead)} I haven't got to yet. Kept up to date from Goodreads.`,
   skip: 'Skip to the library',
-  prompt: '$ cd ~/library',
-  intro: (c) => `Every book I've finished, the ${word(c.ranked)} I'd press into your hands first, and the ${word(c.toRead)} I haven't got to yet. `
-    + 'The notes are from my Substack, Mr Philomath; the shelves keep themselves up to date from Goodreads.',
   nav: [['favourites', 'favourites'], ['read', 'read'], ['antilibrary', 'antilibrary'], ['visitors', 'visitors'], ['recommend', 'recommend']],
 
   now: {tab: 'Reading now', display: 'On the desk', dek: 'What I have open at the moment.'},
@@ -63,7 +60,7 @@ export const COPY = {
     postcardCta: 'Email me a book',
   },
   footer: {
-    synced: (when) => `Shelves last changed ${when} · checked every 6 hours`,
+    synced: (when) => `Shelves last changed ${when} · checked once a day`,
     failing: (since) => `Goodreads hasn't answered since ${since}; showing the last good copy`,
     favourites: (when) => `Favourites from My Favourite Books (Mr Philomath${when ? `, updated ${when}` : ''})`,
     favouritesFailing: ' · from a saved copy',
@@ -73,9 +70,8 @@ export const COPY = {
     source: 'Source on GitHub',
     type: 'Type: Antonio, Intel One Mono, Crimson Pro, Nothing You Could Do (SIL OFL)',
     loop: 'This library contains a book about itself.',
-    reset: 'Follow my system theme',
   },
-  card: {close: 'Close card', prev: 'Previous book', next: 'Next book', copy: 'Copy link', copied: 'Link copied', gone: 'That book has left the shelf.', hint: '← → browse · Esc close'},
+  card: {label: 'Malhar’s Library', close: 'Close card', prev: 'Previous book', next: 'Next book', copy: 'Copy link', copied: 'Link copied', gone: 'That book has left the shelf.', hint: '← → browse · Esc close'},
   empty: (q) => `Nothing on this shelf matches “${q}”.`,
   miss: (q) => `Not in the catalogue. Recommend “${q}” to me`,
   hint: '← → to browse · Enter to open',

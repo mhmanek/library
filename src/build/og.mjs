@@ -5,20 +5,20 @@ import sharp from 'sharp';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {join} from 'node:path';
 import {hash} from './assets.mjs';
-import {NIGHT, GOLD, NAVY} from '../design/tokens.mjs';
+import {COLOURS, GOLD, NAVY} from '../design/tokens.mjs';
 import {formatNumber as n} from '../js/lib/format.js';
 
 const W = 1200, H = 630, T = 76, TH = 86, GAP = 13;
 const KEY = '#a8822e';
 
 function geometry() {
-  const ketX = 64, hX = 150, tilesX = 236, row1 = 132, row2 = row1 + TH + 44;
+  const ketX = 64, tilesX = 150, row1 = 132, row2 = row1 + TH + 44;
   const xs1 = [], xs2 = [];
   for (let i = 0; i < 6; i++) { xs1.push(tilesX + i * (T + GAP)); xs2.push(tilesX + i * (T + GAP)); }
   const apos = tilesX + 6 * (T + GAP), last = apos + 22 + GAP;
   xs1.push(last); xs2.push(last);
-  const cx = 1000, node = 1136;
-  return {ketX, hX, row1, row2, xs1, xs2, apos, cx, node};
+  const cx = 950, node = 1136;
+  return {ketX, row1, row2, xs1, xs2, apos, cx, node};
 }
 
 function svgShapes({spines}) {
@@ -44,7 +44,6 @@ function svgShapes({spines}) {
 <rect width="${W}" height="${H}" fill="${NAVY}"/><rect width="${W}" height="${H}" fill="url(#lamp)"/>
 <rect x="0" y="0" width="${W}" height="12" fill="${GOLD}"/>
 ${wires}${ket(g.row1)}${ket(g.row2)}
-<rect x="${g.hX}" y="${mid(g.row1) - 30}" width="60" height="60" fill="${NAVY}" stroke="${GOLD}" stroke-width="3"/>
 ${g.xs1.map(x => tile(x)(g.row1)).join('')}${g.xs2.map(x => tile(x)(g.row2)).join('')}
 <circle cx="${g.cx}" cy="${mid(g.row1)}" r="11" fill="${GOLD}"/><rect x="${g.cx - 1.5}" y="${mid(g.row1)}" width="3" height="${g.row2 - g.row1}" fill="${GOLD}"/>
 <circle cx="${g.cx}" cy="${mid(g.row2)}" r="20" fill="${NAVY}" stroke="${GOLD}" stroke-width="3"/><rect x="${g.cx - 1.5}" y="${mid(g.row2) - 20}" width="3" height="40" fill="${GOLD}"/><rect x="${g.cx - 20}" y="${mid(g.row2) - 1.5}" width="40" height="3" fill="${GOLD}"/>
@@ -73,11 +72,9 @@ export async function renderOg({derived, catalog, siteUrl, srcDir}) {
   for (let i = 0; i < 7; i++) { await tileText(letters1[i], g.xs1[i], g.row1); await tileText(letters2[i], g.xs2[i], g.row2); }
   await place('’', {fontfile: antonio, size: 84, color: GOLD}, () => ({left: g.apos, top: g.row1 - 8}));
   for (const y of [g.row1, g.row2]) await place('|0', {fontfile: mono, size: 30, color: GOLD}, l => ({left: g.ketX, top: Math.round(y + (TH - l.h) / 2)}));
-  await place('H', {fontfile: mono, size: 30, color: GOLD}, l => ({left: Math.round(g.hX + (60 - l.w) / 2), top: Math.round(g.row1 + (TH - l.h) / 2)}));
-  await place('$ cd ~/library', {fontfile: mono, size: 22, color: NIGHT.muted}, () => ({left: 64, top: 52}));
-  await place(siteUrl.replace(/^https?:\/\//, ''), {fontfile: mono, size: 22, color: NIGHT.muted}, l => ({left: W - 64 - l.w, top: 52}));
+  await place(siteUrl.replace(/^https?:\/\//, ''), {fontfile: mono, size: 22, color: COLOURS.muted}, () => ({left: 64, top: 52}));
   const c = catalog.counts;
-  await place(`${n(c.read)} READ  ·  ${n(c.toRead)} IN THE ANTILIBRARY  ·  ${n(catalog.stats.favourites.ranked)} FAVOURITES`, {fontfile: mono, size: 22, color: NIGHT.text, letterSpacing: 2}, () => ({left: 64, top: 404}));
+  await place(`${n(c.read)} READ  ·  ${n(c.toRead)} IN THE ANTILIBRARY  ·  ${n(catalog.stats.favourites.ranked)} FAVOURITES`, {fontfile: mono, size: 22, color: COLOURS.text, letterSpacing: 2}, () => ({left: 64, top: 404}));
   return sharp(Buffer.from(svgShapes({spines}))).composite(layers).png({palette: true, quality: 90, effort: 8}).toBuffer();
 }
 

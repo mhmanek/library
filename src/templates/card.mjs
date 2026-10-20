@@ -9,7 +9,7 @@ export function cardDialog() {
   return html`<dialog id="card" class="card" aria-labelledby="card-title" aria-describedby="card-by">
 <div class="card-bar" data-drag>
 <span class="card-grip" aria-hidden="true"><i></i><i></i><i></i></span>
-<span class="card-path">~/library/<span data-f="shelf">read</span>/<span data-f="slug"></span>.card</span>
+<span class="card-path">${C.label}</span>
 <span class="card-pos" data-f="pos"></span>
 <button type="button" class="card-x" data-close aria-label="${C.close}">${icon('x')}</button>
 </div>

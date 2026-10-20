@@ -6,7 +6,7 @@ name: Sync and deploy
 
 on:
   schedule:
-    - cron: '17 */6 * * *'   # 00:17 06:17 12:17 18:17 UTC; GitHub may start a run hours late or skip one
+    - cron: '17 11 * * *'   # once a day at 11:17 UTC (early morning in Chicago); GitHub may start it hours late or skip it
   push:
     branches: [main]
     paths-ignore:

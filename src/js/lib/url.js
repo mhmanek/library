@@ -14,7 +14,7 @@ export function parseState(search = '') {
   };
 }
 
-// Keeps unrelated parameters (utm tags, ?theme= for screenshots) untouched.
+// Keeps unrelated parameters (utm tags and the like) untouched.
 export function serializeState(state, search = '') {
   const p = new URLSearchParams(search);
   const set = (k, v) => (v ? p.set(k, v) : p.delete(k));

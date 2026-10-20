@@ -31,7 +31,7 @@ const catHead = () => html`<div class="cat-head" aria-hidden="true"><span></span
 export function consoleBar(total) {
   return html`<div class="console">
 <form class="find js-only" role="search" aria-label="Search the stacks" data-find>
-<label for="q"><span class="find-p" aria-hidden="true">&gt;<span class="find-w"> find</span></span><span class="sr-only">Title, author or series</span></label>
+<label for="q"><span class="find-p" aria-hidden="true">${icon('find')}</span><span class="sr-only">Title, author or series</span></label>
 <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-keyshortcuts="/" placeholder="title or author" maxlength="120">
 <kbd class="slash" aria-hidden="true">/</kbd>
 </form>

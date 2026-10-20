@@ -14,7 +14,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:var(--link);text-decoration:underline;text-decoration-thickness:var(--link-w);text-decoration-color:var(--link-line);text-underline-offset:.22em;transition:background-color .15s,color .15s,text-decoration-color .15s}
 a:hover{text-decoration-color:currentColor}
-:root[data-theme=day] .note a:hover,:root[data-theme=day] .col-l a:hover{background:var(--gold);color:var(--on-gold)}
 :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 ::selection{background:var(--sel-bg);color:var(--sel-fg)}
 .i{width:1em;height:1em;flex:none;display:inline-block;vertical-align:-.12em}

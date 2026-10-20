@@ -1,7 +1,7 @@
-/* Print: day colours, the catalogue layout, every book shown; controls, dialog and grain hidden. */
+/* Print: black on white, the catalogue layout, every book shown; controls, dialog and grain hidden. */
 @media print{
   :root{--page:#fff;--page-deep:#fff;--panel:#fff;--text:#111;--text-strong:#000;--muted:#444;--heading:#000;--heading-fill:linear-gradient(#000,#000);--accent-text:#000;--rule:#999;--link:#000;color-scheme:light}
-  .grain,.console,.knob,.kb-hint,.reader,.card,.toast,.returns,.prefer,.more-wrap,.tnav,.skip,.vghost,.chip,.margins,[data-theme-reset]{display:none!important}
+  .grain,.console,.kb-hint,.reader,.card,.toast,.returns,.prefer,.more-wrap,.tnav,.skip,.vghost,.chip,.margins{display:none!important}
   body{font-size:10pt}
   .sec{padding-top:24pt;break-inside:auto}
   .mg{position:static!important;width:auto!important}
