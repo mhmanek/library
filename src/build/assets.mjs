@@ -5,7 +5,7 @@ import {join, dirname, relative, resolve, posix} from 'node:path';
 import {createHash} from 'node:crypto';
 import {tokensCss} from '../design/tokens.mjs';
 
-export const CSS_ORDER = ['fonts.css', 'base.css', 'layout.css', 'components.css', 'favourites.css', 'card.css', 'visitors.css', 'print.css'];
+export const CSS_ORDER = ['fonts.css', 'base.css', 'layout.css', 'components.css', 'visitors.css', 'print.css'];
 export const hash = text => createHash('sha256').update(text).digest('hex').slice(0, 10);
 
 // Minifies outside strings and comments only, so data URIs and content:'…' survive byte for byte.

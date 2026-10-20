@@ -1,7 +1,6 @@
-// Masthead: kicker bar (sync LED), the two-wire circuit wordmark, section nav.
+// Masthead: the two-wire circuit wordmark.
 import {html} from './html.mjs';
 import {icon} from './icons.mjs';
-import {syncTime} from '../js/lib/format.js';
 
 const ket = label => html`<span class="ket">|${label}${icon('ket', 'ket-a')}</span>`;
 const tiles = (letters, start) => [...letters].map((ch, i) => html`<span class="tile" style="--i:${i + start}">${ch}</span>`);
@@ -16,22 +15,8 @@ export function circuit(label = '0') {
 </span>`;
 }
 
-export function syncLine(catalog, timeZone) {
-  const g = catalog.sources.goodreads;
-  const when = catalog.syncedAt;
-  if (g.failingSince) {
-    return html`<span class="sync is-stale"><i class="led led--hollow"></i><span>Goodreads quiet since <time datetime="${g.failingSince}" data-rel>${syncTime(g.failingSince, timeZone)}</time></span></span>`;
-  }
-  if (!when) return html`<span class="sync is-stale"><i class="led led--hollow"></i><span>Not synced yet</span></span>`;
-  return html`<span class="sync"><i class="led"></i><span>Updated from Goodreads · <time datetime="${when}" data-rel>${syncTime(when, timeZone)}</time></span></span>`;
-}
-
-export function masthead({catalog, config, nav}) {
+export function masthead() {
   return html`<header class="mast" id="top">
-<div class="kicker">
-<p class="kick-r">${syncLine(catalog, config.site.timezone)}</p>
-</div>
 <h1 class="wm"><span class="sr-only">Malhar’s Library</span>${circuit()}</h1>
-<nav class="tnav" aria-label="Sections"><ul>${nav.map(([id, label]) => html`<li><a href="#${id}">${label}</a></li>`)}</ul></nav>
 </header>`;
 }

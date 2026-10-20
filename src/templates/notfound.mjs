@@ -1,6 +1,6 @@
 // 404.html can be served at any depth, so its assets use the base-absolute path. A tiny inline script
-// (hashed into this page's CSP) forwards /book/<slug> and /<section> to the hash links on the main page,
-// so per-book URLs already work today.
+// (hashed into this page's CSP) forwards /<section> to its hash on the main page, and the old per-book
+// /book/<slug> links to the main page itself.
 import {html, raw} from './html.mjs';
 import {head, buildCsp, BOOTSTRAP} from './head.mjs';
 import {circuit} from './masthead.mjs';
@@ -8,9 +8,9 @@ import {sprite, icon} from './icons.mjs';
 import {COPY} from '../content/copy.mjs';
 
 export const forwardScript = base => `(function(b){var p=location.pathname;if(p.indexOf(b)!==0)return;`
-  + `var r=decodeURIComponent(p.slice(b.length)).replace(/\\/+$/,''),m=/^book\\/([a-z0-9-]+)$/.exec(r);`
-  + `if(m){location.replace(b+'#book/'+m[1]);return}`
-  + `if(/^(favourites|visitors|recommend)$/.test(r))location.replace(b+'#'+r)})(${JSON.stringify(base)})`;
+  + `var r=decodeURIComponent(p.slice(b.length)).replace(/\\/+$/,'');`
+  + `if(/^book\\/[a-z0-9-]+$/.test(r)){location.replace(b);return}`
+  + `if(/^(visitors|recommend)$/.test(r))location.replace(b+'#'+r)})(${JSON.stringify(base)})`;
 
 export function renderNotFound({base, css, siteUrl}) {
   const script = forwardScript(base);

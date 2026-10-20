@@ -17,7 +17,7 @@ export function buildCsp({scripts = [BOOTSTRAP], workerUrl = null, dev = false} 
     `script-src 'self' ${scripts.map(sha256).join(' ')} https://challenges.cloudflare.com`,
     "style-src 'self'", "style-src-attr 'unsafe-inline'",
     // Open Library covers redirect twice: covers.openlibrary.org -> archive.org -> ia*.us.archive.org.
-    "img-src 'self' data: https://margins.app https://covers.openlibrary.org https://archive.org https://*.us.archive.org",
+    "img-src 'self' data: https://covers.openlibrary.org https://archive.org https://*.us.archive.org",
     "font-src 'self'",
     `connect-src 'self' https://openlibrary.org https://challenges.cloudflare.com${worker ? ` ${worker}` : ''}`,
     'frame-src https://challenges.cloudflare.com',

@@ -1,29 +1,14 @@
-// Pure browser libraries (format, url, card records, wall merge) and the build's derive and sanitise steps.
+// Pure browser libraries (format, wall merge, postcards, recommend messages) and the build's derive step.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {formatDay, formatYear, formatRating, formatAvg, relativeTime, syncTime, joinNames, formatDelta} from '../../src/js/lib/format.js';
-import {parseHash} from '../../src/js/lib/url.js';
-import {readRecords} from '../../src/js/card.js';
+import {formatDay, formatNumber, joinNames} from '../../src/js/lib/format.js';
 import {mergeWall, cleanItem} from '../../src/js/lib/wall-merge.js';
 import {spineWidth, spineHeight, bindings, displaySurname, deriveCatalog, viewModel} from '../../src/build/derive.mjs';
-import {safeFragment} from '../../src/build/sanitize.mjs';
-import {unsafeHtml} from '../../lib/schema.mjs';
 import {badgeFor, shelfMessage, mailtoFor} from '../../src/js/recommend.js';
 import {sample} from './helpers.mjs';
 
-test('format: years, including BCE', () => {
-  assert.equal(formatYear(-385), 'c. 385 BCE');
-  assert.equal(formatYear(2008), '2008');
-  assert.equal(formatYear(null), 'Unknown');
-  assert.equal(formatYear(0), 'Unknown');
-});
-
-test('format: ratings, averages, deltas, names', () => {
-  assert.equal(formatRating(5), '5');
-  assert.equal(formatRating(4.25), '4.25');
-  assert.equal(formatAvg(4.1), '4.10');
-  assert.equal(formatDelta(0.79), '+0.79');
-  assert.equal(formatDelta(-0.9), '−0.90');
+test('format: numbers and names', () => {
+  assert.equal(formatNumber(1093), '1,093');
   assert.equal(joinNames(['A']), 'A');
   assert.equal(joinNames(['A', 'B', 'C']), 'A, B and C');
 });
@@ -32,29 +17,6 @@ test('format: dates never say "Sept" and are read literally', () => {
   assert.equal(formatDay('2025-09-04'), '4 Sep 2025');
   assert.equal(formatDay('20251004'), '4 Oct 2025');
   assert.equal(formatDay('2026-01-01'), '1 Jan 2026');
-});
-
-test('format: relative and Chicago sync times', () => {
-  const now = Date.parse('2026-10-11T16:00:00Z');
-  assert.equal(relativeTime('2026-10-11T14:00:00Z', now), '2 h ago');
-  assert.equal(relativeTime('2026-10-08T16:00:00Z', now), '3 days ago');
-  assert.equal(relativeTime('2026-10-11T15:59:50Z', now), 'just now');
-  assert.equal(syncTime('2026-10-11T14:17:03Z'), '11 Oct 2026, 09:17 CDT');
-  assert.equal(syncTime('2026-01-15T14:17:03Z'), '15 Jan 2026, 08:17 CST');
-});
-
-test('url: #book/ deep links only', () => {
-  assert.equal(parseHash('#book/anathem-stephenson'), 'anathem-stephenson');
-  assert.equal(parseHash('#book/gr-2845024'), 'gr-2845024');
-  assert.equal(parseHash('#read'), null);
-  assert.equal(parseHash('#book/<script>'), null);
-});
-
-test('card records: defaults fill the fields the build leaves out; bad JSON is no records', () => {
-  const [r] = readRecords('[{"i":"x","t":"T","au":"A","fav":"2"}]');
-  assert.deepEqual(r, {s: null, sub: '', r: 0, wr: null, p: null, y: null, d: '', ra: '', fav: '2', alt: [], c: null, gr: null, ser: '', i: 'x', t: 'T', au: 'A'});
-  assert.deepEqual(readRecords('{nope'), []);
-  assert.deepEqual(readRecords(undefined), []);
 });
 
 test('wall merge: live list wins, identical list is a no-op, new ids flagged', () => {
@@ -107,15 +69,6 @@ test('derive: bindings, surnames, favourites order and review dedupe', async () 
   assert.equal(viewModel(b).review, null, 'a review that repeats the note is dropped');
   b.reviewHtml = '<p>Something else entirely, and quite long enough to differ.</p>';
   assert.ok(viewModel(b).review);
-});
-
-test('sanitise: allowlist only, safe links, escaped text', () => {
-  const out = safeFragment('<p onclick="x()">Hi <script>alert(1)</script><a href="javascript:alert(1)">bad</a> <a href="https://ok.org" target="_blank">ok</a> <em>e</em> <b>b</b> <img src=x onerror=alert(1)> 1 < 2 & 3</p><style>p{}</style>', {block: true});
-  assert.equal(out, '<p>Hi bad <a href="https://ok.org" rel="noopener">ok</a> <em>e</em> <strong>b</strong>  1 &lt; 2 &amp; 3</p>');
-  assert.deepEqual(unsafeHtml(out), []);
-  assert.equal(safeFragment('<p>a</p>'), 'a', 'inline mode drops blocks');
-  assert.equal(safeFragment('<a href="mailto:m@x.org">m</a>'), '<a href="mailto:m@x.org" rel="noopener">m</a>');
-  assert.equal(safeFragment('<a href=" java\tscript:alert(1)">x</a>'), 'x');
 });
 
 test('browser helpers: recommend messages', () => {

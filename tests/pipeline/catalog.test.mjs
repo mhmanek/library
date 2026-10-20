@@ -37,6 +37,8 @@ export async function fixtureData() {
 
 test('fixture catalog satisfies the contract and its sort order', async () => {
   const data = await fixtureData();
+  // Every favourite is on Goodreads now; one not-on-Goodreads entry keeps its ISBN pass-through covered.
+  data.manual.favouritesMap.notOnGoodreads = {'The Art of Learning': {isbn13: '9780743277457'}};
   const cat = buildCatalog(data, config);
   assert.deepEqual(validateBooks(cat), []);
   assert.deepEqual(Object.keys(cat), ['version', 'syncedAt', 'sources', 'counts', 'stats', 'books']);

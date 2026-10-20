@@ -1,19 +1,11 @@
-/* Page frame, masthead, sections, marginalia placement, footer. Breakpoints 480 / 720 / 1024 / 1400. */
+/* Page frame, masthead, sections, footer, the 404. Breakpoints 480 / 720 / 1024. */
 .page{width:100%;max-width:1072px;margin:0 auto;padding:0 16px 40px}
 @media (min-width:720px){.page{padding:0 24px 56px}}
-/* On wide screens the stats hang in the margins, so the main column narrows a little to make room. */
-@media (min-width:1400px){.page{max-width:min(1088px,calc(100vw - 480px))}}
 main{display:block;outline:none}
 
-.mast{padding:0 0 8px}
-.kicker{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap;padding:16px 0 0;font:700 11px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.kick-r{display:flex;align-items:center}
+.mast{padding:16px 0 0}
 .wm{margin:30px 0 0;font-size:inherit;line-height:1;container-type:inline-size}
 .wm a{display:block;text-decoration:none;color:inherit}
-.tnav{margin:28px 0 0}
-.tnav ul{display:flex;flex-wrap:wrap;gap:4px 14px;list-style:none;padding:12px 0 0;border-top:2px solid var(--rule)}
-.tnav a{display:inline-block;padding:8px 8px 7px;font:700 13px/1 var(--f-mono);letter-spacing:.03em;color:var(--text);text-decoration:none}
-.tnav a:hover,.tnav a[aria-current]{background:var(--gold);color:var(--on-gold)}
 
 .sec{position:relative;padding-top:72px}
 @media (min-width:720px){.sec{padding-top:112px}}
@@ -22,25 +14,11 @@ main{display:block;outline:none}
 .dek{margin:14px 0 0;max-width:62ch;font:400 19px/1.5 var(--f-read);color:var(--text)}
 @media (min-width:720px){.dek{font-size:20.5px}}
 
-/* Marginalia: a strip of stat tiles under the head, or hanging in the margins from 1400px. */
-.mg{margin:26px 0 0}
-.mg-in{display:flex;flex-wrap:wrap;gap:16px 32px}
-@media (max-width:719px){.mg-in{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 20px}.mg-in .st{min-width:0;max-width:none}.st-v{font-size:34px}}
-.mg--l+.mg--r{margin-top:16px}
-@media (min-width:1400px){
-  .mg{position:absolute;top:0;bottom:0;width:200px;margin:0!important}
-  .mg--l{right:calc(100% + 36px)}
-  .mg--r{left:calc(100% + 36px)}
-  .mg-in{position:sticky;top:96px;flex-direction:column;flex-wrap:nowrap;gap:26px;padding-top:200px}
-}
-
 .colophon{position:relative;margin-top:112px;padding-top:26px;font:400 12.5px/1.7 var(--f-mono);color:var(--muted);content-visibility:auto;contain-intrinsic-size:auto 320px}
 .colophon .rail{position:absolute;top:0;left:0;right:0;height:2px;background:var(--rule)}
 .colophon a{color:var(--muted);text-decoration-color:var(--rule-hi)}
 .colophon a:hover{color:var(--text)}
 .col-l{list-style:none;display:grid;gap:6px;max-width:90ch}
-.col-l .warn{color:var(--err)}
-.col-l .loop a{font:italic 400 17px/1.4 var(--f-read);color:var(--accent-text)}
 .col-sig{margin-top:30px;font:700 11px/1 var(--f-mono);letter-spacing:.14em;color:var(--rule-hi)}
 
 .nf-main{padding-top:56px}

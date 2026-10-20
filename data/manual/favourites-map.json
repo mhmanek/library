@@ -2,6 +2,7 @@
   "pins": {
     "24113": {"title": "Gödel, Escher, Bach"},
     "328802": {"title": "Totto-chan"},
+    "222420139": {"title": "Totto-chan: The Sequel"},
     "35167685": {"title": "Surely You’re Joking, Mr. Feynman"},
     "45776": {"title": "Feynman’s Rainbow"},
     "137252761": {"title": "Buffett"},
@@ -10,10 +11,5 @@
     "54505323": {"title": "Invent & Wander"},
     "944652": {"title": "Poor Charlie’s Almanack"}
   },
-  "notOnGoodreads": {
-    "Totto-chan: The Sequel": {"isbn13": null},
-    "How To Create A Mind": {"isbn13": "9780670025299"},
-    "The Art of Learning": {"isbn13": "9780743277457"},
-    "Finite and Infinite Games": {"isbn13": "9780345341846"}
-  }
+  "notOnGoodreads": {}
 }

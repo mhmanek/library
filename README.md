@@ -1,11 +1,11 @@
 # Malhar's Library
 
-My favourite books, at **https://mhmanek.github.io/library/**. It rebuilds itself: once a day a GitHub Action reads my Goodreads shelves and the favourites post on my Substack, [Mr Philomath](https://www.malharmanek.com/p/books), commits whatever changed and redeploys the site. Visitors can recommend a book; it reaches me privately and goes on the Visitor shelf only once I approve it.
+Links to my favourite books, Goodreads and Margins, and a postcard for recommending me a book, at **https://mhmanek.github.io/library/**. It rebuilds itself: once a day a GitHub Action reads my Goodreads shelves and the favourites post on my Substack, [Mr Philomath](https://www.malharmanek.com/p/books), commits whatever changed and redeploys the site. Visitors can recommend a book; it reaches me privately and goes on the Visitor shelf only once I approve it.
 
 ## What I do day to day
 
-- **Log books on Goodreads.** The site doesn't show my shelves, but it still reads all four: they give the favourites their ratings, dates and Goodreads links, and let the recommend form and the visitor postcards say whether I've read a book already. Margins has no export or API (and its Terms forbid scraping), so Goodreads is the source; Margins can re-import from Goodreads whenever I like.
-- **Edit the Substack post** to change the Favourites: the ranked list above the line is the podium and plates, the list below it is "And more". My blurbs and links come through as written.
+- **Log books on Goodreads.** The site links to my profile and still reads all four shelves, so the recommend form and the visitor postcards can say whether I've read a book already. Margins has no export or API (and its Terms forbid scraping), so Goodreads is the source; Margins can re-import from Goodreads whenever I like.
+- **Edit the Substack post** to change the favourites. The site links to it, and reads it so a visitor's postcard is stamped "A favourite" when it should be.
 - **Approve recommendations.** Each one arrives as an issue in the private repo `mhmanek/library-inbox` and GitHub emails me. Label it `approved` to shelve it (it appears within about 15 minutes), `spam` to bin it.
 
 Updates are not instant: GitHub's schedules often start hours late. To refresh now: **Actions → Sync and deploy → Run workflow**, or `gh workflow run sync.yml -R mhmanek/library`.
@@ -22,7 +22,7 @@ Recommend form ─► Cloudflare Worker (worker/, Turnstile + throttle) ─► i
 ```
 
 - `scripts/sync.mjs` is the only code that touches the network. Each source is validated and keeps its last good copy if it fails; the committed files in `data/` are deterministic, so a commit means a real change.
-- `scripts/build.mjs` turns `data/`, `covers/` and `src/` into `site/` offline. The page is plain HTML and CSS that works without JavaScript; the scripts add the library card, the recommend form and the live Visitor shelf.
+- `scripts/build.mjs` turns `data/`, `covers/` and `src/` into `site/` offline. The page is plain HTML and CSS that works without JavaScript; the scripts add the recommend form and the live Visitor shelf.
 - `docs/CONTRACT.md` is the data contract between the parts. `worker/README.md` covers the recommendation Worker.
 
 ## Commands

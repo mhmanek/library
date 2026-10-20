@@ -68,7 +68,7 @@ export const testConfig = (over = {}) => ({
   site: {title: "Malhar's Library", url: 'https://mhmanek.github.io/library', base: '/library/', repo: 'mhmanek/library', email: 'malhar.manek@gmail.com', substack: 'https://www.malharmanek.com', timezone: 'America/Chicago'},
   goodreads: {userId: '113503174', ownerName: 'Malhar', shelves: ['read', 'currently-reading', 'did-not-finish', 'to-read'], perPage: 200, maxPages: 20, sort: 'date_added'},
   substack: {api: ['https://www.malharmanek.com/api/v1/posts/books', 'https://malharmanek.substack.com/api/v1/posts/books'], postUrl: 'https://www.malharmanek.com/p/books'},
-  margins: {userId: null}, visitorShelf: {workerUrl: null, turnstileSiteKey: null},
+  margins: {profileUrl: null}, visitorShelf: {workerUrl: null, turnstileSiteKey: null},
   sync: {userAgent: 'mhmanek-library-sync/1.0 (+https://github.com/mhmanek/library)', maxDropFraction: 0.2, maxDropFloor: 5, maxNewCoversPerRun: 120, maxOlQueriesPerRun: 200, olMissRetryDays: 90},
   ...over,
 });

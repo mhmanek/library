@@ -57,16 +57,13 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
 
   const vs = config.visitorShelf ?? {};
   const live = Boolean(vs.workerUrl && vs.turnstileSiteKey);
-  const boot = {
-    worker: vs.workerUrl || null, siteKey: live ? vs.turnstileSiteKey : null, email: config.site.email,
-    postUrl: catalog.sources.substack.postUrl || config.substack.postUrl, siteUrl, base, syncedAt: catalog.syncedAt, tz: config.site.timezone,
-  };
+  const boot = {worker: vs.workerUrl || null, siteKey: live ? vs.turnstileSiteKey : null, email: config.site.email};
   const csp = buildCsp({workerUrl: vs.workerUrl, dev});
   const images = await cachedImages({root, srcDir: SRC, derived, catalog, siteUrl});
   const ogImage = `${siteUrl}/og.png?v=${hash(images['og.png'])}`;
 
-  const page = renderPage({catalog, config, wall, derived, index, assets, csp, boot, buildDate, canonical: `${siteUrl}/`, ogImage});
-  if (/<base[\s>]/i.test(page)) throw new Error('index.html must not contain a <base> element (it breaks #book/ links)');
+  const page = renderPage({catalog, config, wall, index, assets, csp, boot, canonical: `${siteUrl}/`, ogImage});
+  if (/<base[\s>]/i.test(page)) throw new Error('index.html must not contain a <base> element (it breaks the relative URLs)');
   await write('index.html', page);
   await write('404.html', renderNotFound({base, css: assets.css, siteUrl}));
   await write('data/books.json', JSON.stringify(catalog));
@@ -85,7 +82,7 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
     else missingCovers.push(rel);
   }
 
-  const initialJs = ['js/main.js', 'js/card.js', 'js/lib/format.js', 'js/lib/url.js'];
+  const initialJs = ['js/main.js'];
   const jsText = await Promise.all(initialJs.map(p => readFile(join(outDir, 'assets', p), 'utf8')));
   const books = JSON.stringify(catalog);
   const report = {
