@@ -10,11 +10,11 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 export const COPY = {
   title: "Malhar's Library",
-  description: (c) => `Every book I've finished (${n(c.read)}), my favourites in my own words, and ${n(c.toRead)} I haven't got to yet. Kept up to date from Goodreads.`,
+  description: (f) => `My ${word(f.ranked)} favourite books, ranked, and ${n(f.more)} more I'd recommend, with what I wrote about each on Mr Philomath. Post me a book I should read next.`,
+  ogAlt: (f) => `Malhar's Library: ${n(f.ranked)} favourite books, and a postcard to recommend one`,
   skip: 'Skip to the library',
-  nav: [['favourites', 'favourites'], ['read', 'read'], ['antilibrary', 'antilibrary'], ['visitors', 'visitors'], ['recommend', 'recommend']],
+  nav: [['favourites', 'favourites'], ['visitors', 'visitors'], ['recommend', 'recommend']],
 
-  now: {tab: 'Reading now', display: 'On the desk', dek: 'What I have open at the moment.'},
   favourites: {
     tab: 'Favourites', display: 'Turned up to eleven',
     dek: (elevens) => `Ranked, roughly, with what I wrote about each on Mr Philomath.${elevens ? ` ${cap(word(elevens))} of them go to eleven.` : ''}`,
@@ -25,19 +25,6 @@ export const COPY = {
     margins: 'My shelf on Margins, the app I read in. The card redraws itself; Margins can’t sync here, so Goodreads does the bookkeeping.',
     marginsAlt: "My Margins profile card: a sketch of me with the books I'm reading and my favourites",
   },
-  read: {
-    tab: 'Read', display: "Everything I've finished",
-    dek: (count, rated, dated) => `${rated === count ? `All ${n(count)} rated` : `${n(count)} books, ${n(rated)} rated`}, ${dated ? `${word(dated)} of them dated` : 'none of them dated'}: Goodreads only knows when I finished ${word(dated)}, so I won't pretend otherwise. Gilt spines are five stars; numbered ones are my top twenty; thicker books are longer.`,
-    gilt: 'Gilt only',
-    giltHint: '5★ & favourites',
-  },
-  anti: {
-    tab: 'Antilibrary', display: 'The antilibrary',
-    dek: 'Umberto Eco kept 30,000 books, most of them unread; Nassim Taleb called that an antilibrary. The unread ones are the point. Mine grows most weeks.',
-    more: (k) => `Walk the stacks: show all ${n(k)}`,
-    less: 'Fewer, please',
-  },
-  dnf: {tab: 'Did not finish', display: 'Did not finish', dek: 'Put down without guilt. Life is short and the antilibrary is long.'},
   visitors: {
     tab: 'Visitor shelf', display: 'Postcards from visitors',
     dek: "Books people have posted through the returns slot, and I've shelved. Turn a card over to read what they wrote. Thank you.",
@@ -60,7 +47,7 @@ export const COPY = {
     postcardCta: 'Email me a book',
   },
   footer: {
-    synced: (when) => `Shelves last changed ${when} · checked once a day`,
+    synced: (when) => `Goodreads data last changed ${when} · checked once a day`,
     failing: (since) => `Goodreads hasn't answered since ${since}; showing the last good copy`,
     favourites: (when) => `Favourites from My Favourite Books (Mr Philomath${when ? `, updated ${when}` : ''})`,
     favouritesFailing: ' · from a saved copy',
@@ -72,13 +59,10 @@ export const COPY = {
     loop: 'This library contains a book about itself.',
   },
   card: {label: 'Malhar’s Library', close: 'Close card', prev: 'Previous book', next: 'Next book', copy: 'Copy link', copied: 'Link copied', gone: 'That book has left the shelf.', hint: '← → browse · Esc close'},
-  empty: (q) => `Nothing on this shelf matches “${q}”.`,
-  miss: (q) => `Not in the catalogue. Recommend “${q}” to me`,
-  hint: '← → to browse · Enter to open',
   notFound: {
     display: 'Not in the catalogue',
-    dek: "This page doesn't exist, or it's still in the antilibrary.",
-    back: 'Back to the library', search: (q) => `Search for “${q}”`,
+    dek: "This page doesn't exist, or it's been taken off the shelf.",
+    back: 'Back to the library',
   },
   plural,
 };

@@ -1,6 +1,5 @@
-// Browser entry. The page works without any of this; JS only enhances: card, console,
-// relative times, scroll-spy, the live visitor shelf and (lazily) the recommendation form.
-import {initShelf} from './shelf.js';
+// Browser entry. The page works without any of this; JS only enhances: the library card, relative times,
+// scroll-spy, the live visitor shelf and (lazily) the recommendation form.
 import {initCard} from './card.js';
 import {relativeTime} from './lib/format.js';
 
@@ -18,8 +17,7 @@ const toast = msg => {
 let rec = null;
 const recommend = () => (rec ??= import('./recommend.js').then(m => m.initRecommend(boot)));
 
-const shelf = initShelf({onMiss: title => recommend().then(r => r?.prefill(title))});
-initCard({shelf, boot, toast});
+initCard({boot, toast});
 
 const now = Date.now();
 for (const t of document.querySelectorAll('time[data-rel]')) {

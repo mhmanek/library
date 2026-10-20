@@ -1,17 +1,11 @@
-/* Print: black on white, the catalogue layout, every book shown; controls, dialog and grain hidden. */
+/* Print: black on white, every favourite shown; controls, dialog and grain hidden. */
 @media print{
   :root{--page:#fff;--page-deep:#fff;--panel:#fff;--text:#111;--text-strong:#000;--muted:#444;--heading:#000;--heading-fill:linear-gradient(#000,#000);--accent-text:#000;--rule:#999;--link:#000;color-scheme:light}
-  .grain,.console,.kb-hint,.reader,.card,.toast,.returns,.prefer,.more-wrap,.tnav,.skip,.vghost,.chip,.margins{display:none!important}
+  .grain,.card,.toast,.returns,.prefer,.tnav,.skip,.vghost,.margins{display:none!important}
   body{font-size:10pt}
   .sec{padding-top:24pt;break-inside:auto}
   .mg{position:static!important;width:auto!important}
   .mg-in{position:static!important;padding:0!important;flex-direction:row!important;flex-wrap:wrap!important}
-  .bk[hidden]{display:block!important}
-  .bk-list{display:block!important;background:none!important;border:0!important;padding:0!important;columns:2;column-gap:24pt}
-  .bk{display:block!important;width:auto!important;height:auto!important;padding:2pt 0!important;margin:0!important;break-inside:avoid}
-  .bk>a{display:block!important;height:auto!important;rotate:none!important;color:#000;text-decoration:none}
-  .sp,.cv,.cat-head{display:none!important}
-  .bk .tx,.bk .mt{position:static!important;width:auto!important;height:auto!important;clip-path:none!important;overflow:visible!important;white-space:normal!important}
   .plate{border:1px solid #999!important;break-inside:avoid;box-shadow:none!important}
   .pl-cv img{max-width:90pt}
   .more{display:block}.more>*:not(summary){display:block}

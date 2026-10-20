@@ -18,7 +18,6 @@ main{display:block;outline:none}
 .sec{position:relative;padding-top:72px}
 @media (min-width:720px){.sec{padding-top:112px}}
 .sec-head{display:flex;align-items:flex-end;margin:0 0 22px}
-.sec-intro{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px 24px}
 .display{font:700 clamp(34px,4.6vw + 14px,60px)/1 var(--f-display);letter-spacing:-.005em;color:var(--heading);background:var(--heading-fill);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-wrap:balance;padding-bottom:.16em;margin-bottom:-.1em}
 .dek{margin:14px 0 0;max-width:62ch;font:400 19px/1.5 var(--f-read);color:var(--text)}
 @media (min-width:720px){.dek{font-size:20.5px}}
@@ -26,14 +25,13 @@ main{display:block;outline:none}
 /* Marginalia: a strip of stat tiles under the head, or hanging in the margins from 1400px. */
 .mg{margin:26px 0 0}
 .mg-in{display:flex;flex-wrap:wrap;gap:16px 32px}
-@media (max-width:719px){.mg-in{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 20px}.mg-in .st,.mg-in .hist{min-width:0;max-width:none}.mg-in .hist{grid-column:1/-1}.st-v{font-size:34px}}
+@media (max-width:719px){.mg-in{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 20px}.mg-in .st{min-width:0;max-width:none}.st-v{font-size:34px}}
 .mg--l+.mg--r{margin-top:16px}
 @media (min-width:1400px){
   .mg{position:absolute;top:0;bottom:0;width:200px;margin:0!important}
   .mg--l{right:calc(100% + 36px)}
   .mg--r{left:calc(100% + 36px)}
   .mg-in{position:sticky;top:96px;flex-direction:column;flex-wrap:nowrap;gap:26px;padding-top:200px}
-  .stacks .mg-in{top:110px}
 }
 
 .colophon{position:relative;margin-top:112px;padding-top:26px;font:400 12.5px/1.7 var(--f-mono);color:var(--muted);content-visibility:auto;contain-intrinsic-size:auto 320px}
@@ -43,7 +41,6 @@ main{display:block;outline:none}
 .col-l{list-style:none;display:grid;gap:6px;max-width:90ch}
 .col-l .warn{color:var(--err)}
 .col-l .loop a{font:italic 400 17px/1.4 var(--f-read);color:var(--accent-text)}
-.col-l .linkish{color:var(--muted)}
 .col-sig{margin-top:30px;font:700 11px/1 var(--f-mono);letter-spacing:.14em;color:var(--rule-hi)}
 
 .nf-main{padding-top:56px}

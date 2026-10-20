@@ -5,7 +5,7 @@
 // list with textContent only.
 import {html} from './html.mjs';
 import {icon} from './icons.mjs';
-import {sectionHead} from './shelf.mjs';
+import {sectionHead} from './section.mjs';
 import {picture, stamp, postmark, address, tiltFor, noteSize} from './postcard.mjs';
 import {PC} from '../js/lib/postcard.js';
 import {COPY} from '../content/copy.mjs';

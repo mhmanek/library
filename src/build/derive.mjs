@@ -1,8 +1,7 @@
-// Per-book view model for the templates: spine geometry, harmonised cloth, binding classes, sort keys and
-// the default order of every shelf. Pure: the same catalog always yields the same markup.
-import {harmonise, hueKey} from './colour.mjs';
-import {COMPARATORS, favOrder} from '../js/lib/sort.js';
-import {sortKey, surname, fold, similarity} from '../shared/normalize.js';
+// Per-book view model for the templates: spine geometry (og.png), harmonised cloth, binding classes and
+// the favourites in order. Pure: the same catalog always yields the same markup.
+import {harmonise} from './colour.mjs';
+import {fold, similarity} from '../shared/normalize.js';
 import {joinNames} from '../js/lib/format.js';
 
 export function fnv1a(str) {
@@ -26,7 +25,6 @@ export function displaySurname(name) {
   return tokens.slice(i).join(' ');
 }
 
-const SHELF_KEY = {read: 'read', 'currently-reading': 'now', 'did-not-finish': 'dnf', 'to-read': 'anti'};
 const compact = day => (day ? day.replace(/-/g, '') : '');
 const plain = html => fold(String(html ?? '').replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' '));
 
@@ -39,15 +37,6 @@ export function bindings(book) {
   return cls;
 }
 
-// The badge in Covers view: rank for the top twenty, otherwise the strongest true claim.
-export function badge(book) {
-  const f = book.favourite;
-  if (f?.tier === 1) return `Nº ${f.rank}`;
-  if (f) return 'Fav';
-  if (book.rating >= 5 && book.shelf === 'read') return '5★';
-  return '';
-}
-
 export function viewModel(book) {
   const f = book.favourite;
   const cloth = harmonise(book.cover?.colors?.spine || book.cover?.colors?.bg, {unread: book.shelf === 'to-read'});
@@ -56,30 +45,21 @@ export function viewModel(book) {
   // The build drops a review that only repeats the favourite blurb (all three current ones do).
   const review = book.reviewHtml && !(note && similarity(plain(book.reviewHtml), plain(note)) >= 0.9) ? book.reviewHtml : null;
   return {
-    book, id: book.id, slug: book.slug, shelf: book.shelf, shelfKey: SHELF_KEY[book.shelf] ?? 'fav',
+    book, id: book.id, slug: book.slug, shelf: book.shelf,
     title: book.title, subtitle: book.subtitle, series: book.series,
     authors: book.authors, authorsText: joinNames(book.authors), spineAuthor: displaySurname(book.authors[0]),
     w: spineWidth(book.pages, book.id), h: spineHeight(book.id),
-    sp: cloth.hex, fr: book.cover?.colors?.bg ?? '#22386b', hue: hueKey(book.cover?.colors?.bg ?? '#22386b'),
-    cls: bindings(book), badge: badge(book),
+    sp: cloth.hex, fr: book.cover?.colors?.bg ?? '#22386b',
+    cls: bindings(book),
     rank: f?.tier === 1 ? f.rank : null, fav: f ? (f.tier === 1 ? `1:${f.rank}` : '2') : '',
     rating: book.rating, avg: book.avgRating, pages: book.pages, year: book.published,
     d: compact(book.dateAdded), ra: compact(book.readAt), alt: book.mergedIds ?? [],
-    goodreadsUrl: book.goodreadsUrl, cover, note, review,
-    keys: {r: book.rating, wr: book.avgRating, p: book.pages, y: book.published, d: compact(book.dateAdded), hue: hueKey(book.cover?.colors?.bg ?? '#22386b'),
-      t: sortKey(book.title), s: surname(book.authors[0]), fr: favOrder(f), i: 0},
+    goodreadsId: book.goodreadsId, goodreadsUrl: book.goodreadsUrl, cover, note, review,
   };
-}
-
-// Default orders: the read shelf best-first; everything else newest-added first.
-export function orderShelf(models, shelf) {
-  const cmp = shelf === 'read' ? COMPARATORS.best : COMPARATORS.added;
-  return models.map((m, i) => ({m, k: {...m.keys, i}})).sort((a, b) => cmp(a.k, b.k)).map(x => x.m);
 }
 
 export function deriveCatalog(catalog) {
   const models = catalog.books.map(viewModel);
-  const on = shelf => orderShelf(models.filter(m => m.shelf === shelf), shelf);
   const favs = models.filter(m => m.book.favourite);
   const tier1 = favs.filter(m => m.book.favourite.tier === 1).sort((a, b) => a.book.favourite.rank - b.book.favourite.rank);
   const tier2 = favs.filter(m => m.book.favourite.tier === 2).sort((a, b) => a.book.favourite.order - b.book.favourite.order);
@@ -90,5 +70,7 @@ export function deriveCatalog(catalog) {
     if (g) g.books.push(m); else groups.push({id: m.book.favourite.groupId, books: [m]});
   }
   const byId = new Map(models.map(m => [m.id, m]));
-  return {models, byId, read: on('read'), reading: on('currently-reading'), dnf: on('did-not-finish'), toRead: on('to-read'), tier1, tier2Groups: groups};
+  // Every favourite in page order: the ranked twenty, then "And more" with each group's books together.
+  const favourites = [...tier1, ...groups.flatMap(g => g.books)];
+  return {models, byId, tier1, tier2Groups: groups, favourites};
 }

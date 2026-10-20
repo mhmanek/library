@@ -1,16 +1,13 @@
-// Inline SVG sprite. Glyphs missing from the latin font subsets (→ ↗ ★ ⟩ ⊕) are drawn here instead.
+// Inline SVG sprite. Glyphs missing from the latin font subsets (→ ↗ ⟩ ⊕) are drawn here instead.
 import {html, raw} from './html.mjs';
 
 const SYMBOLS = {
   arrow: '<path d="M2 8h11M9 4l4 4-4 4"/>',
-  find: '<circle cx="6.8" cy="6.8" r="4.6"/><path d="M10.2 10.2 14 14"/>',
   ext: '<path d="M5 11 11 5M6.5 5H11v4.5"/>',
   x: '<path d="M4 4l8 8M12 4l-8 8"/>',
   prev: '<path d="M10 3 5 8l5 5"/>',
   next: '<path d="M6 3l5 5-5 5"/>',
   check: '<path d="M3 8.5 6.5 12 13 4.5"/>',
-  down: '<path d="M3 6l5 5 5-5"/>',
-  star: '<path fill="currentColor" stroke="none" d="M8 1.2l2 4.3 4.7.6-3.4 3.2.9 4.7L8 11.7 3.8 14l.9-4.7L1.3 6.1 6 5.5z"/>',
   ket: '<path d="M1 1l4 7-4 7"/>',
   curl: '<path d="M2 14c3-1 5-4 4-7S2 4 3 7s6 4 10 0M10.5 4.5 13 7l-3 1"/>',
   turn: '<path d="M2.5 7A5.5 5.5 0 0 1 12.6 4.4M13 1.5v3h-3M13.5 9a5.5 5.5 0 0 1-10.1 2.6M3 14.5v-3h3"/>',

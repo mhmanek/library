@@ -1,15 +1,13 @@
-// Pure browser libraries (format, sort, search, url, wall merge) and the build's derive and sanitise steps.
+// Pure browser libraries (format, url, card records, wall merge) and the build's derive and sanitise steps.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {formatDay, formatYear, formatRating, formatAvg, relativeTime, syncTime, joinNames, formatDelta} from '../../src/js/lib/format.js';
-import {comparator, COMPARATORS} from '../../src/js/lib/sort.js';
-import {tokens, haystack, matches} from '../../src/js/lib/search.js';
-import {parseState, serializeState, parseHash} from '../../src/js/lib/url.js';
+import {parseHash} from '../../src/js/lib/url.js';
+import {readRecords} from '../../src/js/card.js';
 import {mergeWall, cleanItem} from '../../src/js/lib/wall-merge.js';
 import {spineWidth, spineHeight, bindings, displaySurname, deriveCatalog, viewModel} from '../../src/build/derive.mjs';
 import {safeFragment} from '../../src/build/sanitize.mjs';
 import {unsafeHtml} from '../../lib/schema.mjs';
-import {hueOf} from '../../src/js/shelf.js';
 import {badgeFor, shelfMessage, mailtoFor} from '../../src/js/recommend.js';
 import {sample} from './helpers.mjs';
 
@@ -45,51 +43,18 @@ test('format: relative and Chicago sync times', () => {
   assert.equal(syncTime('2026-01-15T14:17:03Z'), '15 Jan 2026, 08:17 CST');
 });
 
-const key = (o, i) => ({r: 0, wr: null, p: null, y: null, d: '', hue: 0, t: '', s: '', fr: null, i, ...o});
-const order = (sort, rows) => rows.map(key).sort(comparator(sort)).map(k => k.t);
-
-test('sort: unknowns last, BCE first, articles and surnames', () => {
-  assert.deepEqual(order('long', [{t: 'a', p: null}, {t: 'b', p: 900}, {t: 'c', p: 100}]), ['b', 'c', 'a']);
-  assert.deepEqual(order('old', [{t: 'mod', y: 2008}, {t: 'none', y: null}, {t: 'plato', y: -385}]), ['plato', 'mod', 'none']);
-  assert.deepEqual(order('author', [{t: 'x', s: 'lem'}, {t: 'y', s: 'adams'}]), ['y', 'x']);
-  assert.deepEqual(order('', [{t: 'z'}, {t: 'a'}]), ['z', 'a'], 'shelf order keeps the build order');
-  assert.deepEqual(order('love', [{t: 'kind', r: 5, wr: 3.9}, {t: 'unrated', r: 0, wr: 4}, {t: 'harsh', r: 2, wr: 4.1}]), ['kind', 'harsh', 'unrated']);
-});
-
-test('sort: the read default is rating, then my ranking, then the crowd', () => {
-  const rows = [{t: 'b', r: 5, wr: 4.5, fr: null}, {t: 'a', r: 5, wr: 4.0, fr: 2}, {t: 'c', r: 5, wr: 4.1, fr: 1}, {t: 'd', r: 4, wr: 4.9}].map(key);
-  assert.deepEqual(rows.sort(COMPARATORS.best).map(k => k.t), ['c', 'a', 'b', 'd']);
-});
-
-test('sort: title sort ignores a leading article (via sortKey keys from the build)', async () => {
-  const cat = await sample();
-  const d = deriveCatalog(cat);
-  const keys = d.toRead.map(m => m.keys.t);
-  assert.ok(keys.includes('cyberiad'), keys.join());
-});
-
-test('search: folded, ANDed word prefixes', () => {
-  const geb = haystack('Gödel, Escher, Bach', 'An Eternal Golden Braid', '', 'Douglas R. Hofstadter');
-  const lem = haystack('The Cyberiad', '', '', 'Stanisław Lem');
-  assert.ok(matches(geb, tokens('godel')));
-  assert.ok(matches(geb, tokens('GÖDEL, bach!')));
-  assert.ok(matches(lem, tokens('lem')));
-  assert.ok(matches(lem, tokens('stanislaw cyber')));
-  assert.ok(!matches(lem, tokens('lem asimov')));
-  assert.ok(!matches(haystack('A Problem Book', '', '', 'X'), tokens('lem')), 'prefix, not substring');
-});
-
-test('url state round-trips and omits defaults', () => {
-  assert.deepEqual(parseState(''), {view: 'shelf', sort: '', q: '', gilt: false});
-  const s = {view: 'covers', sort: 'old', q: 'le guin', gilt: true};
-  assert.deepEqual(parseState(serializeState(s)), s);
-  assert.equal(serializeState({view: 'shelf', sort: '', q: '', gilt: false}), '');
-  assert.equal(serializeState({view: 'list', sort: '', q: '', gilt: false}, '?utm_source=x'), '?utm_source=x&view=list');
-  assert.equal(parseState('?view=evil&sort=drop').view, 'shelf');
+test('url: #book/ deep links only', () => {
   assert.equal(parseHash('#book/anathem-stephenson'), 'anathem-stephenson');
   assert.equal(parseHash('#book/gr-2845024'), 'gr-2845024');
   assert.equal(parseHash('#read'), null);
   assert.equal(parseHash('#book/<script>'), null);
+});
+
+test('card records: defaults fill the fields the build leaves out; bad JSON is no records', () => {
+  const [r] = readRecords('[{"i":"x","t":"T","au":"A","fav":"2"}]');
+  assert.deepEqual(r, {s: null, sub: '', r: 0, wr: null, p: null, y: null, d: '', ra: '', fav: '2', alt: [], c: null, gr: null, ser: '', i: 'x', t: 'T', au: 'A'});
+  assert.deepEqual(readRecords('{nope'), []);
+  assert.deepEqual(readRecords(undefined), []);
 });
 
 test('wall merge: live list wins, identical list is a no-op, new ids flagged', () => {
@@ -121,7 +86,7 @@ test('derive: spine geometry', () => {
   }
 });
 
-test('derive: bindings, surnames, orders and review dedupe', async () => {
+test('derive: bindings, surnames, favourites order and review dedupe', async () => {
   const fav = t => ({tier: t, rank: t === 1 ? 1 : null, order: 1, position: 1, groupId: 'g', score: t === 1 ? '11/10' : null, bylineHtml: '', noteHtml: ''});
   assert.deepEqual(bindings({shelf: 'read', rating: 5, favourite: null}), ['g']);
   assert.deepEqual(bindings({shelf: 'read', rating: 5, favourite: fav(1)}), ['g', 'x']);
@@ -133,9 +98,10 @@ test('derive: bindings, surnames, orders and review dedupe', async () => {
   assert.equal(displaySurname('Plato'), 'Plato');
   const cat = await sample();
   const d = deriveCatalog(cat);
-  assert.deepEqual(d.read.map(m => m.slug).slice(0, 2), ['godel-escher-bach-hofstadter', 'zero-to-one-thiel']);
-  assert.deepEqual(d.toRead.map(m => m.slug), ['the-cyberiad-lem', 'the-left-hand-of-darkness-le-guin']);
   assert.equal(d.tier1.length, 2);
+  assert.deepEqual(d.favourites.map(m => m.slug), ['godel-escher-bach-hofstadter', 'zero-to-one-thiel', ...d.tier2Groups.flatMap(g => g.books.map(m => m.slug))]);
+  assert.ok(d.favourites.some(m => m.slug === 'the-art-of-learning-waitzkin' && !m.shelf), 'favourites-only books are in the list');
+  assert.ok(!('read' in d) && !('toRead' in d), 'no shelves are derived any more');
   const b = structuredClone(cat.books.find(x => x.slug === 'godel-escher-bach-hofstadter'));
   b.reviewHtml = `<p>${b.favourite.noteHtml}</p>`;
   assert.equal(viewModel(b).review, null, 'a review that repeats the note is dropped');
@@ -152,8 +118,7 @@ test('sanitise: allowlist only, safe links, escaped text', () => {
   assert.equal(safeFragment('<a href=" java\tscript:alert(1)">x</a>'), 'x');
 });
 
-test('browser helpers: colour keys and recommend messages', () => {
-  assert.ok(hueOf('#ffffff') >= 400 && hueOf('#ff0000') === 0 && hueOf('#0000ff') === 240);
+test('browser helpers: recommend messages', () => {
   assert.equal(badgeFor({s: 'read', r: 5, f: null}), 'Read · 5★');
   assert.equal(badgeFor({s: 'read', r: 5, f: '1:4'}), 'Nº 4');
   assert.equal(badgeFor({s: 'to-read', r: 0, f: null}), 'Antilibrary');

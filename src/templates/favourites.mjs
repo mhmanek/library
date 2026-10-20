@@ -1,19 +1,27 @@
 // Favourites: a podium for 01–03, plates for 04–20, the tier-2 list in a <details>, then the Margins card.
 // Notes and bylines are allowlist-sanitised by the pipeline (CONTRACT "Sanitised HTML"), so they go in raw.
 import {html, raw} from './html.mjs';
+import {jsonForScript} from '../../lib/json.mjs';
 import {icon} from './icons.mjs';
-import {sectionHead} from './shelf.mjs';
+import {sectionHead} from './section.mjs';
 import {COPY} from '../content/copy.mjs';
 import {formatDay, formatNumber as n} from '../js/lib/format.js';
 import {safeFragment} from '../build/sanitize.mjs';
 
 const pad = k => String(k).padStart(2, '0');
 
-// Favourites-only books (not on Goodreads) carry the same data-* as a shelf item, so the card can open.
-function cardData(m) {
-  if (m.shelf) return '';
-  return html` data-fo="1"${m.cover ? html` data-c="${m.cover.stem}"` : ''}${m.pages ? html` data-p="${m.pages}"` : ''}${m.year ? html` data-y="${m.year}"` : ''} data-fav="${m.fav}" data-au="${m.authorsText}" data-t="${m.title}"`;
+// What the library card shows for each favourite, in page order (which is also Prev/Next order). Empty and
+// unknown fields are left out; card.js fills the defaults.
+export function cardRecords(favourites) {
+  return favourites.map(m => Object.fromEntries(Object.entries({
+    i: m.slug, t: m.title, sub: m.subtitle, au: m.authorsText, s: m.shelf, fav: m.fav, sp: m.sp, fr: m.fr, c: m.cover?.stem,
+    r: m.rating, wr: m.avg, p: m.pages, y: m.year, d: m.d, ra: m.ra, alt: m.alt.length ? m.alt : null, gr: m.goodreadsId,
+    ser: m.series ? `${m.series.name}${m.series.index ? ` #${m.series.index}` : ''}` : null,
+  }).filter(([, v]) => v !== null && v !== undefined && v !== '' && v !== 0)));
 }
+
+export const cardScript = favourites => raw(`<script type="application/json" id="favs">${jsonForScript(cardRecords(favourites))}</script>`);
+
 const href = (m, postUrl) => m.goodreadsUrl ?? postUrl;
 
 function cover(m, {size, eager = false}) {
@@ -31,7 +39,7 @@ function score(s) {
 
 function plate(m, postUrl, podium) {
   const f = m.book.favourite;
-  return html`<li class="plate${podium ? ' plate--pod' : ''}" id="fav-${m.slug}" data-book="${m.slug}" style="--fr:${m.fr};--sp:${m.sp}"${cardData(m)}>
+  return html`<li class="plate${podium ? ' plate--pod' : ''}" id="fav-${m.slug}" data-book="${m.slug}" style="--fr:${m.fr};--sp:${m.sp}">
 <span class="idx${podium ? ' idx--xl' : ''}" aria-hidden="true">${pad(f.rank)}</span>
 <a class="pl-cv" href="${href(m, postUrl)}" data-open="${m.slug}" tabindex="-1" aria-hidden="true">${cover(m, {size: podium ? 400 : 200, eager: podium})}</a>
 <div class="pl-tx">
@@ -47,7 +55,7 @@ ${m.shelf ? '' : html`<p class="pl-off">${COPY.favourites.notOnGoodreads}</p>`}
 function moreEntry(group, postUrl) {
   const [first] = group.books;
   const f = first.book.favourite;
-  return html`<li class="more-i" id="fav-${first.slug}" data-book="${first.slug}" style="--fr:${first.fr};--sp:${first.sp}"${cardData(first)}>
+  return html`<li class="more-i" id="fav-${first.slug}" data-book="${first.slug}" style="--fr:${first.fr};--sp:${first.sp}">
 <span class="more-cv" aria-hidden="true">${first.cover ? html`<img src="${first.cover.src}" width="40" height="${Math.round(40 * first.cover.h / first.cover.w)}" loading="lazy" decoding="async" alt="">` : html`<i></i>`}</span>
 <div><p class="more-t">${group.books.map((m, i) => html`${i ? ' & ' : ''}<a href="${href(m, postUrl)}" data-open="${m.slug}"><cite>${m.title}</cite></a>`)}<span class="more-by"> — ${raw(safeFragment(f.bylineHtml || first.authorsText))}</span></p>
 <div class="note">${raw(safeFragment(f.noteHtml, {block: true}))}</div></div>

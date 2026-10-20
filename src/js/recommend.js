@@ -47,7 +47,7 @@ let api = null;
 export function initRecommend(boot) {
   if (api) return api;
   const form = document.querySelector('[data-rec]');
-  if (!form) return (api = {prefill() {}});
+  if (!form) return (api = {});
   const live = form.dataset.mode === 'post' && Boolean(boot.worker && boot.siteKey);
   const $ = sel => form.querySelector(sel);
   const title = $('#rec-title'), author = $('#rec-author'), note = $('#rec-note'), name = $('#rec-name'), email = $('#rec-email');
@@ -346,13 +346,5 @@ export function initRecommend(boot) {
   drawFront();
   counter.textContent = String(note.value.length);
 
-  return (api = {
-    prefill(text) {
-      title.value = String(text ?? '').slice(0, 200);
-      unchoose();
-      turn(false);
-      title.focus();
-      checkShelf();
-    },
-  });
+  return (api = {});
 }

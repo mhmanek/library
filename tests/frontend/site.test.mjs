@@ -17,7 +17,8 @@ const count = (html, re) => (html.match(re) ?? []).length;
 
 test('the sample builds into a complete site that passes check-site', async () => {
   const {outDir, files, report} = await buildFixture();
-  for (const f of ['index.html', '404.html', 'data/books.json', 'data/match.json', 'data/wall.json', 'data/stacks.json', 'og.png', 'favicon.svg']) assert.ok(files.includes(f), f);
+  for (const f of ['index.html', '404.html', 'data/books.json', 'data/match.json', 'data/wall.json', 'og.png', 'favicon.svg']) assert.ok(files.includes(f), f);
+  assert.ok(!files.includes('data/stacks.json'), 'no shelves, so no antilibrary covers file');
   assert.deepEqual(report.missingCovers, []);
   const {errors} = await checkSite(outDir);
   assert.deepEqual(errors, []);
@@ -31,8 +32,9 @@ test('the sample builds into a complete site that passes check-site', async () =
 
 test('untrusted text is escaped everywhere; sanitised notes keep their links', async () => {
   const cat = await sample();
-  cat.books[0].title = '<script>alert("t")</script>';
-  cat.books[0].authors = ['"><img src=x onerror=alert(1)>'];
+  const fav = cat.books.find(b => b.favourite?.tier === 1);
+  fav.title = '<script>alert("t")</script>';
+  fav.authors = ['"><img src=x onerror=alert(1)>'];
   const wall = {items: [{id: '1', title: '<img src=x onerror=alert(2)>', author: '</h3><script>', olWork: null, coverId: null, year: null, name: '<b>N</b>', note: '"}</script><script>alert(3)</script>', date: '2026-10-01'}]};
   const {html, outDir} = await buildFixture({catalog: cat, wall, cfg: await config(live)});
   assert.ok(!html.includes('<script>alert'), 'no injected script');
@@ -45,21 +47,21 @@ test('untrusted text is escaped everywhere; sanitised notes keep their links', a
   await rm(outDir, {recursive: true, force: true});
 });
 
-test('conditional sections: reading now, Margins, the form or the postcard', async () => {
+test('sections: favourites and postcards only; Margins, the form or the email', async () => {
   const base = await buildFixture();
-  assert.ok(base.html.includes('id="now"'), 'reading now shows with one book');
+  const order = [...base.html.matchAll(/<section id="([a-z]+)"/g)].map(m => m[1]);
+  assert.deepEqual(order, ['favourites', 'visitors', 'recommend']);
+  const nav = /<nav class="tnav"[\s\S]*?<\/nav>/.exec(base.html)[0];
+  assert.deepEqual([...nav.matchAll(/href="#([a-z]+)"/g)].map(m => m[1]), order, 'the nav lists exactly those');
+  for (const gone of ['id="now"', 'id="read"', 'id="antilibrary"', 'id="dnf"', 'id="stacks"', 'class="console"', 'role="search"', 'class="bk']) assert.ok(!base.html.includes(gone), gone);
   assert.ok(!base.html.includes('data-margins'), 'no Margins card without an id');
   assert.ok(base.html.includes('data-mode="mail"'), 'without a worker the postcard goes out by email');
   assert.ok(!base.html.includes('id="rec-email"') && !base.html.includes('id="rec-ts"'), 'no private email field or Turnstile in email mode');
   assert.ok(base.html.includes('mailto:malhar.manek@gmail.com'));
   assert.ok(base.html.includes('id="visitors"'), 'the snapshot alone shows the visitor shelf');
 
-  const cat = await sample();
-  cat.books = cat.books.filter(b => b.shelf !== 'currently-reading');
-  cat.counts.reading = 0; cat.stats.reading.count = 0; cat.sources.goodreads.items['currently-reading'] = 0;
   const id = '0123456789abcdef0123456789abcdef';
-  const on = await buildFixture({catalog: cat, wall: {items: []}, cfg: await config({...live, margins: {userId: id}})});
-  assert.ok(!on.html.includes('id="now"'), 'reading now absent when empty');
+  const on = await buildFixture({wall: {items: []}, cfg: await config({...live, margins: {userId: id}})});
   assert.ok(on.html.includes(`https://margins.app/api/og?userId=${id}&amp;v=20261011`));
   assert.ok(on.html.includes('data-mode="post"') && on.html.includes('id="rec-email"') && on.html.includes('id="rec-ts"'));
   assert.ok(on.html.includes('name="website"'), 'honeypot');
@@ -72,7 +74,7 @@ test('conditional sections: reading now, Margins, the form or the postcard', asy
 test('accessibility basics: one h1, landmarks, unique ids, alt on every img, named buttons', async () => {
   const {html, outDir} = await buildFixture({cfg: await config(live)});
   assert.equal(count(html, /<h1[\s>]/g), 1);
-  for (const re of [/<header[\s>]/, /<nav[^>]*aria-label="Sections"/, /<main id="main"/, /role="search"/, /<footer[\s>]/, /<dialog id="card"/]) assert.match(html, re);
+  for (const re of [/<header[\s>]/, /<nav[^>]*aria-label="Sections"/, /<main id="main"/, /<footer[\s>]/, /<dialog id="card"/]) assert.match(html, re);
   assert.match(html, /<html lang="en-GB"/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);
   assert.equal(new Set(ids).size, ids.length, `duplicate ids: ${ids.filter((x, i) => ids.indexOf(x) !== i)}`);
@@ -109,14 +111,32 @@ test('404: base-absolute assets, its own script hash, and the forwarder', async 
   }
   const run = path => {
     let to = null;
-    const a = {href: '', hidden: true, firstChild: {textContent: ''}};
-    vm.runInNewContext(forwardScript('/library/'), {location: {pathname: path, replace: u => { to = u; }}, document: {getElementById: () => a}, encodeURIComponent, decodeURIComponent});
-    return to ?? a.href;
+    vm.runInNewContext(forwardScript('/library/'), {location: {pathname: path, replace: u => { to = u; }}, decodeURIComponent});
+    return to;
   };
   assert.equal(run('/library/book/anathem-stephenson'), '/library/#book/anathem-stephenson');
   assert.equal(run('/library/book/anathem-stephenson/'), '/library/#book/anathem-stephenson');
-  assert.equal(run('/library/antilibrary'), '/library/#antilibrary');
-  assert.equal(run('/library/no-such-thing'), '/library/?q=no%20such%20thing');
+  assert.equal(run('/library/recommend'), '/library/#recommend');
+  assert.equal(run('/library/antilibrary'), null, 'the old shelves are gone: a plain 404');
+  assert.equal(run('/library/no-such-thing'), null);
+  assert.equal(run('/elsewhere/book/x'), null, 'outside the base: left alone');
+});
+
+test('the library card works from the favourites alone: one record per favourite, in page order', async () => {
+  const {html, outDir} = await buildFixture();
+  const {readRecords} = await import('../../src/js/card.js');
+  const recs = readRecords(/<script type="application\/json" id="favs">([^<]*)<\/script>/.exec(html)[1]);
+  const cat = await sample();
+  assert.equal(recs.length, cat.books.filter(b => b.favourite).length);
+  assert.deepEqual(recs.slice(0, 2).map(r => r.i), ['godel-escher-bach-hofstadter', 'zero-to-one-thiel'], 'ranked first, by rank');
+  const geb = recs[0], b = cat.books.find(x => x.slug === geb.i);
+  assert.deepEqual([geb.s, geb.r, geb.wr, geb.p, geb.gr, geb.fav], ['read', b.rating, b.avgRating, b.pages, b.goodreadsId, '1:1']);
+  const off = recs.find(r => r.i === 'the-art-of-learning-waitzkin');
+  assert.ok(off && off.s === null && off.gr === null, 'a favourite that is not on Goodreads still has a card');
+  const slugs = new Set(recs.map(r => r.i));
+  for (const m of html.matchAll(/data-open="([^"]+)"/g)) assert.ok(slugs.has(m[1]), `card link without a record: ${m[1]}`);
+  for (const m of html.matchAll(/<template id="rev-([^"]+)"/g)) assert.ok(slugs.has(m[1]), `review for a book with no card: ${m[1]}`);
+  await rm(outDir, {recursive: true, force: true});
 });
 
 test('budget: a 1,100-book library stays within the gzip budgets', async () => {

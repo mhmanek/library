@@ -1,29 +1,34 @@
-// The library card: a native modal <dialog> filled from the book's own DOM (shelf item, favourites plate,
-// review <template>). History-backed at #book/<slug>, so Back closes it and links can be shared.
+// The library card: a native modal <dialog> filled from the favourites' records (#favs), the plate's note
+// and the review <template>. History-backed at #book/<slug>, so Back closes it and links can be shared.
 import {parseHash, bookHash} from './lib/url.js';
 import {formatDay, formatYear, formatRating, formatAvg, formatNumber as n, formatDelta} from './lib/format.js';
-import {readItem, loadStacks} from './shelf.js';
 
-const SHELF_LABEL = {read: 'Read', 'to-read': 'Antilibrary', 'did-not-finish': 'Did not finish', 'currently-reading': 'Reading now', desk: 'Reading now'};
+const SHELF_LABEL = {read: 'Read', 'to-read': 'Antilibrary', 'did-not-finish': 'Did not finish', 'currently-reading': 'Reading now'};
+const DEFAULTS = {s: null, sub: '', r: 0, wr: null, p: null, y: null, d: '', ra: '', fav: '', alt: [], c: null, gr: null, ser: ''};
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
 const text = (root, sel) => root?.querySelector(sel)?.textContent ?? '';
 
-export function initCard({shelf, boot, toast}) {
+// The build leaves empty fields out of each record; this puts the defaults back.
+export function readRecords(json) {
+  try { return JSON.parse(json || '[]').map(r => ({...DEFAULTS, ...r})); } catch { return []; }
+}
+
+export function initCard({boot, toast}) {
   const dlg = document.getElementById('card');
   if (!dlg) return null;
   const f = name => dlg.querySelector(`[data-f="${name}"]`);
   const prevBtn = dlg.querySelector('[data-prev]'), nextBtn = dlg.querySelector('[data-next]');
-  let current = null, ctx = [], ctxName = '', pushed = false, opener = null;
+  const recs = readRecords(document.getElementById('favs')?.textContent);
+  const bySlug = new Map(recs.map(r => [r.i, r])), order = recs.map(r => r.i);
+  let current = null, pushed = false, opener = null;
 
-  // Resolves a slug (or gr-<id> / merged id alias) to its sources in the DOM.
+  // Resolves a slug (or gr-<id> / merged id alias) to its record.
   function lookup(slug) {
-    const hit = shelf?.find(slug);
-    const li = hit?.it.li ?? document.getElementById(`book/${slug}`);
-    const real = li ? li.id.slice(5) : slug;
-    const plate = document.getElementById(`fav-${real}`);
-    if (!li && !plate?.dataset.fo) return null;
-    return {slug: real, li, plate, list: hit?.s.name ?? li?.closest('[data-list]')?.dataset.list ?? 'fav'};
+    const id = slug.replace(/^gr-/, '');
+    return bySlug.get(slug) ?? recs.find(r => r.gr === id || r.alt.includes(id)) ?? null;
   }
+  // The plate or "And more" entry that carries the note; the second book of a paired entry is found by its link.
+  const plateFor = slug => document.getElementById(`fav-${slug}`) ?? document.querySelector(`#favourites [data-open="${slug}"]`)?.closest('[data-book]') ?? null;
 
   function dumbbell(me, world, shelfName) {
     const box = f('vs');
@@ -52,79 +57,56 @@ export function initCard({shelf, boot, toast}) {
       const d = me - world;
       sentence = `My rating ${formatRating(me)} · Goodreads average ${formatAvg(world)} · ${formatDelta(d)} ${d >= 0 ? 'kinder' : 'harsher'} than the crowd`;
     } else if (rated) sentence = `My rating ${formatRating(me)}`;
-    else if (known) sentence = `${shelfName === 'did-not-finish' ? 'Did not finish' : shelfName === 'currently-reading' || shelfName === 'desk' ? 'Reading it now' : 'Not read yet'} · Goodreads average ${formatAvg(world)}`;
+    else if (known) sentence = `${shelfName === 'did-not-finish' ? 'Did not finish' : shelfName === 'currently-reading' ? 'Reading it now' : 'Not read yet'} · Goodreads average ${formatAvg(world)}`;
     if (!sentence) { box.hidden = true; return; }
     box.hidden = false;
     if (known || rated) box.append(plot);
     box.append(el('p', 'vs-txt', sentence));
   }
 
-  // One record shape for shelf items (read back once by shelf.js) and favourites-only plates.
-  function recordOf(src) {
-    if (src.li) return shelf?.find(src.slug)?.it ?? readItem(src.li);
-    const d = src.plate.dataset, st = src.plate.style;
-    return {title: d.t, au: d.au, r: 0, wr: null, p: d.p ? +d.p : null, y: d.y ? +d.y : null, d: '', ra: '', fav: d.fav ?? '', alt: [],
-      stem: d.c ?? null, fr: st.getPropertyValue('--fr').trim(), sp: st.getPropertyValue('--sp').trim(), gr: null};
-  }
-
-  function fillCover(rec) {
+  function fillCover(rec, plate) {
     const cover = f('cover');
     cover.replaceChildren();
     dlg.style.setProperty('--fr', rec.fr || rec.sp);
-    if (rec.stem) {
+    if (rec.c) {
       const img = new Image(400, 600);
       img.alt = ''; img.decoding = 'async';
-      const known = rec.li?.querySelector('.cv') ?? null;
-      if (known?.naturalWidth) { img.width = known.naturalWidth; img.height = known.naturalHeight; }
-      img.src = `covers/${rec.stem}-400.webp`;
+      const known = plate?.querySelector('img') ?? null;
+      if (known?.naturalWidth) img.height = Math.round(400 * known.naturalHeight / known.naturalWidth);
+      img.src = `covers/${rec.c}-400.webp`;
       cover.append(img);
     } else {
       const t = el('span', 'tcover');
       t.style.setProperty('--sp', rec.sp);
-      t.append(el('b', '', rec.title), el('i', '', rec.au));
+      t.append(el('b', '', rec.t), el('i', '', rec.au));
       cover.append(t);
     }
   }
 
-  function populate(src) {
-    const {slug, li, plate, list} = src;
-    const rec = recordOf(src);
-    const d = {r: rec.r, wr: rec.wr, p: rec.p, y: rec.y, d: rec.d, ra: rec.ra, alt: rec.alt.join(' '), gr: rec.gr};
-    const title = rec.title, authors = rec.au;
-    const shelfName = li ? (li.closest('[data-shelf]')?.dataset.shelf ?? list) : null;
-    const fav = rec.fav;
+  function populate(rec) {
+    const slug = rec.i, plate = plateFor(slug), shelfName = rec.s, fav = rec.fav;
     const score = text(plate, '.score b');
     const eyebrow = [shelfName ? SHELF_LABEL[shelfName] : 'Favourite'];
     if (fav.startsWith('1:')) eyebrow.push(`Favourite Nº ${fav.slice(2)}`); else if (fav && shelfName) eyebrow.push('Favourite');
     if (score) eyebrow.push(score);
     if (!shelfName) eyebrow.push('Not on my Goodreads');
     f('eyebrow').textContent = eyebrow.join(' · ');
-    f('title').textContent = title;
-    f('subtitle').textContent = text(li, '.sub').replace(/^:\s*/, '');
-    f('authors').textContent = authors;
-    fillCover(rec);
-    if (!rec.stem && shelfName === 'to-read') {
-      loadStacks().then(st => {
-        const [stem, fr] = st[slug] ?? [];
-        if (current !== slug || !stem) return;
-        rec.stem = stem; if (fr) rec.fr = fr;
-        fillCover(rec);
-      });
-    }
+    f('title').textContent = rec.t;
+    f('subtitle').textContent = rec.sub;
+    f('authors').textContent = rec.au;
+    fillCover(rec, plate);
 
-    dumbbell(d.r, d.wr, shelfName);
+    dumbbell(rec.r, rec.wr, shelfName);
 
     const facts = f('facts');
     facts.replaceChildren();
     const fact = (k, v, muted = false) => { facts.append(el('dt', '', k)); facts.append(el('dd', muted ? 'nr' : '', v)); };
-    fact('Pages', d.p ? n(d.p) : 'Unknown', !d.p);
-    fact('First published', formatYear(d.y), !d.y);
-    if (shelfName === 'read') fact('Finished', d.ra ? formatDay(d.ra) : 'Not recorded', !d.ra);
-    if (d.d) fact(shelfName === 'to-read' ? 'In the antilibrary since' : 'On Goodreads since', formatDay(d.d));
-    const ser = text(li, '.ser').replace(/^\s*·\s*/, '');
-    if (ser) fact('Series', ser);
-    const alt = (d.alt ?? '').split(' ').filter(Boolean);
-    if (alt.length) fact('Editions', alt.length === 1 ? 'Shelved twice (two editions)' : `Shelved ${alt.length + 1} times (${alt.length + 1} editions)`);
+    fact('Pages', rec.p ? n(rec.p) : 'Unknown', !rec.p);
+    fact('First published', formatYear(rec.y), !rec.y);
+    if (shelfName === 'read') fact('Finished', rec.ra ? formatDay(rec.ra) : 'Not recorded', !rec.ra);
+    if (rec.d) fact(shelfName === 'to-read' ? 'In the antilibrary since' : 'On Goodreads since', formatDay(rec.d));
+    if (rec.ser) fact('Series', rec.ser);
+    if (rec.alt.length) fact('Editions', rec.alt.length === 1 ? 'Shelved twice (two editions)' : `Shelved ${rec.alt.length + 1} times (${rec.alt.length + 1} editions)`);
 
     const note = f('note');
     note.replaceChildren();
@@ -143,47 +125,27 @@ export function initCard({shelf, boot, toast}) {
     if (tpl) { review.append(tpl.content.cloneNode(true)); review.append(el('p', 'from', '— my Goodreads review')); }
 
     const gr = f('gr');
-    gr.hidden = !d.gr;
-    if (d.gr) gr.href = `https://www.goodreads.com/book/show/${d.gr}`;
-    const k = ctx.indexOf(slug);
-    f('pos').textContent = k >= 0 ? `${String(k + 1).padStart(3, '0')} / ${String(ctx.length).padStart(3, '0')}` : '';
+    gr.hidden = !rec.gr;
+    if (rec.gr) gr.href = `https://www.goodreads.com/book/show/${rec.gr}`;
+    const k = order.indexOf(slug);
+    f('pos').textContent = k >= 0 ? `${String(k + 1).padStart(2, '0')} / ${String(order.length).padStart(2, '0')}` : '';
     const label = (btn, j, word) => {
-      const target = ctx[j];
-      btn.disabled = target === undefined;
-      const t = target && lookup(target);
-      btn.setAttribute('aria-label', t ? `${word} book: ${t.li ? text(t.li, 'cite') : t.plate?.dataset.t ?? ''}` : `${word} book`);
+      const t = bySlug.get(order[j]);
+      btn.disabled = !t;
+      btn.setAttribute('aria-label', t ? `${word} book: ${t.t}` : `${word} book`);
     };
     label(prevBtn, k - 1, 'Previous');
     label(nextBtn, k + 1, 'Next');
   }
 
-  function contextFor(src, from) {
-    if (from?.closest?.('#favourites')) return ['fav', [...document.querySelectorAll('#favourites [data-book]')].map(x => x.dataset.book)];
-    if (src.li && shelf) return [src.list, shelf.order(src.list)];
-    if (src.li) return [src.list, [...src.li.parentElement.children].map(x => x.id.slice(5))];
-    return ['fav', [...document.querySelectorAll('#favourites [data-book]')].map(x => x.dataset.book)];
-  }
-
-  function mark(slug) {
-    document.querySelector('.bk[aria-current]')?.removeAttribute('aria-current');
-    const li = document.getElementById(`book/${slug}`);
-    if (li && !li.hidden) {
-      li.setAttribute('aria-current', 'true');
-      li.scrollIntoView({block: 'nearest', inline: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
-    }
-  }
-
-  function open(slug, {from = null, push = true, keepCtx = false} = {}) {
-    const src = lookup(slug);
-    if (!src) { toast?.('That book has left the shelf.'); if (parseHash(location.hash)) history.replaceState(history.state, '', location.pathname + location.search); return false; }
-    if (src.li) shelf?.reveal(src.slug);
-    if (!keepCtx) [ctxName, ctx] = contextFor(src, from);
-    if (!ctx.includes(src.slug)) ctx = [src.slug];
+  function open(slug, {from = null, push = true} = {}) {
+    const rec = lookup(slug);
+    if (!rec) { toast?.('That book has left the shelf.'); if (parseHash(location.hash)) history.replaceState(history.state, '', location.pathname + location.search); return false; }
     if (from) opener = from;
-    current = src.slug;
-    populate(src);
-    if (push && location.hash !== bookHash(src.slug)) { history.pushState({card: src.slug}, '', bookHash(src.slug)); pushed = true; }
-    else if (!push && location.hash !== bookHash(src.slug)) history.replaceState(history.state, '', bookHash(src.slug));
+    current = rec.i;
+    populate(rec);
+    if (push && location.hash !== bookHash(rec.i)) { history.pushState({card: rec.i}, '', bookHash(rec.i)); pushed = true; }
+    else if (!push && location.hash !== bookHash(rec.i)) history.replaceState(history.state, '', bookHash(rec.i));
     if (!dlg.open) {
       restoreOffset();
       dlg.showModal();
@@ -191,7 +153,6 @@ export function initCard({shelf, boot, toast}) {
     }
     dlg.querySelector('.card-body').scrollTop = 0;
     f('title').focus({preventScroll: true});
-    mark(src.slug);
     return true;
   }
 
@@ -203,24 +164,18 @@ export function initCard({shelf, boot, toast}) {
   }
 
   function step(delta) {
-    const k = ctx.indexOf(current);
-    const target = ctx[k + delta];
-    if (!target) return;
     // Prev/next replace the entry, so a single Back still closes the card.
-    const src = lookup(target);
-    if (!src) return;
-    current = src.slug;
-    populate(src);
-    history.replaceState(history.state, '', bookHash(src.slug));
-    mark(src.slug);
-    if (!opener?.isConnected || opener.closest('.bk')) opener = (src.li ?? src.plate)?.querySelector('a');
+    const rec = bySlug.get(order[order.indexOf(current) + delta]);
+    if (!rec) return;
+    current = rec.i;
+    populate(rec);
+    history.replaceState(history.state, '', bookHash(rec.i));
+    if (!opener?.isConnected) opener = plateFor(rec.i)?.querySelector('a[data-open]') ?? null;
   }
 
   dlg.addEventListener('close', () => {
     document.documentElement.classList.remove('card-open');
-    const li = document.querySelector('.bk[aria-current]');
-    li?.removeAttribute('aria-current');
-    const back = opener?.isConnected ? opener : li?.querySelector('a');
+    const back = opener?.isConnected ? opener : null;
     current = null; opener = null;
     back?.focus();
   });
@@ -285,22 +240,21 @@ export function initCard({shelf, boot, toast}) {
 
   // Links, not buttons: without JS they go to Goodreads; with JS a plain click opens the card, and the
   // first hover or focus rewrites href so new-tab and copy-link give the site's own deep link.
-  const owner = a => a.closest('.bk')?.id.slice(5) ?? a.dataset.open;
   const prime = e => {
-    const a = e.target.closest?.('.bk>a, a[data-open]');
+    const a = e.target.closest?.('a[data-open]');
     if (!a || a.dataset.primed) return;
     a.dataset.primed = '1';
     const gr = /\/book\/show\/(\d+)/.exec(a.getAttribute('href') ?? '')?.[1];
     if (gr) a.dataset.gr = gr;
-    a.href = bookHash(owner(a));
+    a.href = bookHash(a.dataset.open);
     a.setAttribute('aria-haspopup', 'dialog');
   };
   document.addEventListener('pointerover', prime);
   document.addEventListener('focusin', prime);
   document.addEventListener('click', e => {
-    const a = e.target.closest?.('.bk>a, a[data-open], a[href^="#book/"]');
+    const a = e.target.closest?.('a[data-open], a[href^="#book/"]');
     if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.closest('dialog')) return;
-    const slug = a.closest('.bk')?.id.slice(5) ?? a.dataset.open ?? parseHash(a.getAttribute('href'));
+    const slug = a.dataset.open ?? parseHash(a.getAttribute('href'));
     if (!slug) return;
     e.preventDefault();
     open(slug, {from: a});

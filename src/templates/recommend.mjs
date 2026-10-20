@@ -4,7 +4,7 @@
 // No-JS visitors get a plain postcard with a mailto button.
 import {html} from './html.mjs';
 import {icon} from './icons.mjs';
-import {sectionHead} from './shelf.mjs';
+import {sectionHead} from './section.mjs';
 import {picture, stamp, postmark, address} from './postcard.mjs';
 import {COPY} from '../content/copy.mjs';
 

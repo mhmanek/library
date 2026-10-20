@@ -72,8 +72,6 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
   await write('data/books.json', JSON.stringify(catalog));
   await write('data/match.json', JSON.stringify(index));
   await write('data/wall.json', JSON.stringify(wall));
-  // Antilibrary items carry no cover stem in the HTML; Covers view and the card fetch them from here.
-  await write('data/stacks.json', JSON.stringify(Object.fromEntries(derived.toRead.filter(m => m.cover).map(m => [m.slug, [m.cover.stem, m.fr]]))));
   await write('.nojekyll', '');
   for (const [name, buf] of Object.entries(images)) await write(name, buf);
   await write('favicon.svg', await readFile(join(SRC, 'static/favicon.svg')));
@@ -87,13 +85,13 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
     else missingCovers.push(rel);
   }
 
-  const initialJs = ['js/main.js', 'js/shelf.js', 'js/card.js', 'js/lib/format.js', 'js/lib/url.js', 'js/lib/sort.js', 'js/lib/search.js', 'shared/normalize.js'];
+  const initialJs = ['js/main.js', 'js/card.js', 'js/lib/format.js', 'js/lib/url.js'];
   const jsText = await Promise.all(initialJs.map(p => readFile(join(outDir, 'assets', p), 'utf8')));
   const books = JSON.stringify(catalog);
   const report = {
     gzip: {html: gz(page), css: gz(css), js: gz(jsText.join('\n')), books: gz(books), match: gz(JSON.stringify(index))},
     raw: {html: page.length, css: css.length, books: books.length},
-    counts: {items: derived.read.length + derived.toRead.length + derived.dnf.length + derived.reading.length},
+    counts: {items: derived.favourites.length},
     missingCovers, warnings: [],
   };
   if (report.gzip.html > BUDGET.html) report.warnings.push(`index.html is ${(report.gzip.html / 1024).toFixed(1)} KB gzipped (budget 130)`);
@@ -107,6 +105,6 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
 export function formatReport(report) {
   const kb = b => `${(b / 1024).toFixed(1)} KB`;
   const g = report.gzip;
-  return [`site: ${report.counts.items} books · gzip html ${kb(g.html)} · css ${kb(g.css)} · js ${kb(g.js)} · books.json ${kb(g.books)} · match.json ${kb(g.match)}`,
+  return [`site: ${report.counts.items} favourites · gzip html ${kb(g.html)} · css ${kb(g.css)} · js ${kb(g.js)} · books.json ${kb(g.books)} · match.json ${kb(g.match)}`,
     ...report.warnings.map(w => `  warning: ${w}`)].join('\n');
 }

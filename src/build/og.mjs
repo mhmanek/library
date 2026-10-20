@@ -1,5 +1,5 @@
 // og.png (1200x630) and the PNG favicons, drawn with sharp: SVG shapes (navy cloth, grain, the two-wire
-// circuit, a shelf of harmonised spines on a gold rail) plus text layers from the committed TTFs, because
+// circuit, the favourites as harmonised spines on a gold rail) plus text layers from the committed TTFs, because
 // librsvg can't be trusted to find Antonio. Cached by input hash, so most builds just copy bytes.
 import sharp from 'sharp';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
@@ -63,7 +63,7 @@ async function textLayer(text, {fontfile, size, color, letterSpacing = 0}) {
 
 export async function renderOg({derived, catalog, siteUrl, srcDir}) {
   const antonio = join(srcDir, 'fonts/ttf/Antonio-Bold.ttf'), mono = join(srcDir, 'fonts/ttf/IntelOneMono-Bold.ttf');
-  const spines = derived.read.slice(0, 60).map(m => ({w: m.w, h: m.h, sp: m.sp, g: m.cls.includes('g')}));
+  const spines = derived.favourites.slice(0, 60).map(m => ({w: m.w, h: m.h, sp: m.sp, g: m.cls.includes('g')}));
   const g = geometry();
   const layers = [];
   const place = async (text, opts, pos) => { const l = await textLayer(text, opts); layers.push({input: l.input, ...pos(l)}); };
@@ -73,8 +73,8 @@ export async function renderOg({derived, catalog, siteUrl, srcDir}) {
   await place('’', {fontfile: antonio, size: 84, color: GOLD}, () => ({left: g.apos, top: g.row1 - 8}));
   for (const y of [g.row1, g.row2]) await place('|0', {fontfile: mono, size: 30, color: GOLD}, l => ({left: g.ketX, top: Math.round(y + (TH - l.h) / 2)}));
   await place(siteUrl.replace(/^https?:\/\//, ''), {fontfile: mono, size: 22, color: COLOURS.muted}, () => ({left: 64, top: 52}));
-  const c = catalog.counts;
-  await place(`${n(c.read)} READ  ·  ${n(c.toRead)} IN THE ANTILIBRARY  ·  ${n(catalog.stats.favourites.ranked)} FAVOURITES`, {fontfile: mono, size: 22, color: COLOURS.text, letterSpacing: 2}, () => ({left: 64, top: 404}));
+  const f = catalog.stats.favourites;
+  await place(`${n(f.ranked)} FAVOURITES  ·  ${n(f.more)} MORE  ·  POST ME A BOOK`, {fontfile: mono, size: 22, color: COLOURS.text, letterSpacing: 2}, () => ({left: 64, top: 404}));
   return sharp(Buffer.from(svgShapes({spines}))).composite(layers).png({palette: true, quality: 90, effort: 8}).toBuffer();
 }
 
@@ -86,7 +86,7 @@ export async function renderFavicons(srcDir) {
 
 // Cache by input hash under .cache/og so the dev server's rebuilds stay fast.
 export async function cachedImages({root, srcDir, derived, catalog, siteUrl}) {
-  const key = hash(JSON.stringify([catalog.counts, catalog.stats.favourites.ranked, siteUrl, derived.read.slice(0, 60).map(m => [m.w, m.h, m.sp, m.cls]),
+  const key = hash(JSON.stringify([catalog.stats.favourites, siteUrl, derived.favourites.slice(0, 60).map(m => [m.w, m.h, m.sp, m.cls]),
     await readFile(new URL(import.meta.url), 'utf8'), await readFile(join(srcDir, 'static/favicon.svg'), 'utf8')]));
   const dir = join(root, '.cache', 'og');
   try {
