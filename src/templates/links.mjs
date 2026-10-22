@@ -1,6 +1,5 @@
-// Where my reading lives: the favourites post on Mr Philomath, Goodreads and Margins. Plain links, one row
-// each; Margins appears once config.json has the profile link. The Goodreads counts are the shelves' own,
-// so they match the profile the link opens.
+// Where else my reading lives: Goodreads, and Margins once config.json has the profile link. One small line
+// under the wordmark.
 import {html} from './html.mjs';
 import {icon} from './icons.mjs';
 import {COPY} from '../content/copy.mjs';
@@ -8,11 +7,10 @@ import {COPY} from '../content/copy.mjs';
 const L = COPY.links;
 
 export function links({catalog, config}) {
-  const gr = catalog.sources.goodreads;
   const rows = [
-    [catalog.sources.substack.postUrl || config.substack.postUrl, L.favourites, L.favouritesDek],
-    [gr.profileUrl, L.goodreads, L.goodreadsDek(gr.items['read'], gr.items['to-read'])],
-    [config.margins?.profileUrl, L.margins, L.marginsDek],
+    [catalog.sources.goodreads.profileUrl, L.goodreads],
+    [config.margins?.profileUrl, L.margins],
   ].filter(([href]) => href);
-  return html`<nav class="links" aria-label="${L.label}"><ul>${rows.map(([href, title, dek]) => html`<li><a class="lk" href="${href}"><span class="lk-t">${title}</span><span class="lk-d">${dek}</span>${icon('ext')}</a></li>`)}</ul></nav>`;
+  if (!rows.length) return '';
+  return html`<nav class="links" aria-label="${L.label}"><ul>${rows.map(([href, title]) => html`<li><a href="${href}">${title}${icon('ext')}</a></li>`)}</ul></nav>`;
 }

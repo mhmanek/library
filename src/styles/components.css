@@ -1,4 +1,4 @@
-/* Circuit wordmark, tabs on the rail, tiles, buttons, the reading links. */
+/* Circuit wordmark, tabs on the rail, tiles, buttons, the links elsewhere. */
 .circuit{--t:min(64px,7.3cqi);display:flex;flex-direction:column;gap:calc(var(--t)*.5);color:var(--wire);user-select:none}
 .wire{position:relative;display:flex;align-items:center;gap:calc(var(--t)*.18);height:calc(var(--t)*1.12)}
 .wire::before{content:'';position:absolute;left:calc(var(--t)*.95);right:calc(var(--t)*.11);top:50%;height:2px;margin-top:-1px;background:var(--wire)}
@@ -49,20 +49,9 @@
 .btn:disabled{opacity:.35;cursor:default;box-shadow:none;background:transparent}
 .more-wrap{margin:22px 0 0;display:flex;justify-content:center}
 
-
-/* The reading links: one ruled row each, the name in the display face; the whole row lights up gold. */
-.links{margin:48px 0 0}
-.links ul{list-style:none;border-top:2px solid var(--rule)}
-.links li{border-bottom:2px solid var(--rule)}
-.lk{display:grid;grid-template-columns:minmax(0,1fr) 30px;align-items:center;gap:6px 22px;padding:22px 14px 20px;color:var(--text);text-decoration:none}
-.lk-t{font:700 clamp(34px,3vw + 20px,54px)/1 var(--f-display);letter-spacing:.005em;color:var(--accent-text)}
-.lk-d{grid-column:1;font:400 18px/1.4 var(--f-read);color:var(--muted)}
-.lk .i{grid-column:2;grid-row:1/span 2;width:30px;height:30px;color:var(--accent-text);transition:translate .15s}
-.lk:is(:hover,:focus-visible){background:var(--gold) var(--glow)}
-.lk:is(:hover,:focus-visible) :is(.lk-t,.lk-d,.i){color:var(--on-gold)}
-.lk:is(:hover,:focus-visible) .i{translate:3px -3px}
-@media (min-width:720px){
-  .lk{grid-template-columns:minmax(0,1fr) auto 30px;padding:26px 18px 24px}
-  .lk-d{grid-column:2;grid-row:1;text-align:right;font-size:19px}
-  .lk .i{grid-column:3;grid-row:1}
-}
+/* Elsewhere: one small line of links under the wordmark. */
+.links{margin:26px 0 0}
+.links ul{list-style:none;display:flex;flex-wrap:wrap;gap:4px 28px}
+.links a{display:inline-flex;align-items:center;gap:6px;min-height:28px;font:700 13px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text);text-decoration:none}
+.links a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.links .i{width:12px;height:12px}

@@ -30,8 +30,11 @@ test('the sample builds into a complete site that passes check-site', async () =
   await rm(outDir, {recursive: true, force: true});
 });
 
-test('untrusted text is escaped everywhere', async () => {
+test('untrusted text is escaped everywhere; sanitised notes keep their links', async () => {
   const cat = await sample();
+  const fav = cat.books.find(b => b.favourite?.tier === 1);
+  fav.title = '<script>alert("t")</script>';
+  fav.authors = ['"><img src=x onerror=alert(1)>'];
   cat.sources.substack.postUrl = 'https://x.org/p/books?a="><script>alert("t")</script>';
   const wall = {items: [{id: '1', title: '<img src=x onerror=alert(2)>', author: '</h3><script>', olWork: null, coverId: null, year: null, name: '<b>N</b>', note: '"}</script><script>alert(3)</script>', date: '2026-10-01'}]};
   const {html, outDir} = await buildFixture({catalog: cat, wall, cfg: await config(live)});
@@ -39,28 +42,36 @@ test('untrusted text is escaped everywhere', async () => {
   assert.ok(!/<img src=x/i.test(html), 'no injected img');
   assert.ok(html.includes('href="https://x.org/p/books?a=&quot;&gt;&lt;script&gt;alert(&quot;t&quot;)&lt;/script&gt;"'), 'the favourites link stays one attribute');
   assert.ok(html.includes('&lt;b&gt;N&lt;/b&gt;'));
+  assert.ok(html.includes('&lt;script&gt;alert(&quot;t&quot;)&lt;/script&gt;</a></h3>'), 'a favourite title is text');
+  assert.ok(html.includes('<a href="https://malharmanek.substack.com/p/thieleology" rel="noopener">this essay</a>'));
   const boot = /<script type="application\/json" id="boot">([^<]*)<\/script>/.exec(html);
   assert.ok(boot && JSON.parse(boot[1]).worker === live.visitorShelf.workerUrl);
   await rm(outDir, {recursive: true, force: true});
 });
 
-test('the page: links to my reading, then postcards; the form or the email', async () => {
+test('the page: links elsewhere, the ranked favourites, then postcards; the form or the email', async () => {
   const cat = await sample();
   const base = await buildFixture();
-  assert.deepEqual([...base.html.matchAll(/<section id="([a-z]+)"/g)].map(m => m[1]), ['visitors', 'recommend']);
-  const links = /<nav class="links" aria-label="My reading">([\s\S]*?)<\/nav>/.exec(base.html)[1];
-  assert.deepEqual([...links.matchAll(/<a class="lk" href="([^"]+)"/g)].map(m => m[1]), [cat.sources.substack.postUrl, cat.sources.goodreads.profileUrl],
-    'the favourites post and Goodreads; no Margins row without a profile link');
-  const items = cat.sources.goodreads.items;
-  assert.ok(links.includes(`${items.read} read, ${items['to-read']} still to go`), 'the shelf counts Goodreads itself shows');
-  for (const gone of ['id="favourites"', 'class="plate', 'id="card"', 'id="favs"', '<template', 'class="tnav"', 'class="kicker"', 'data-rel']) assert.ok(!base.html.includes(gone), gone);
+  assert.deepEqual([...base.html.matchAll(/<section id="([a-z]+)"/g)].map(m => m[1]), ['favourites', 'visitors', 'recommend']);
+  const links = /<nav class="links" aria-label="Elsewhere">([\s\S]*?)<\/nav>/.exec(base.html)[1];
+  assert.deepEqual([...links.matchAll(/<a href="([^"]+)"/g)].map(m => m[1]), [cat.sources.goodreads.profileUrl], 'Goodreads; no Margins link without a profile link');
+  assert.ok(!links.includes('still to go'), 'no shelf counts');
+  const ranked = cat.books.filter(b => b.favourite?.tier === 1).sort((a, b) => a.favourite.rank - b.favourite.rank);
+  const favs = /<ol class="favs">([\s\S]*?)<\/ol>/.exec(base.html)[1];
+  assert.deepEqual([...favs.matchAll(/<li class="fv" id="fav-([^"]+)"/g)].map(m => m[1]), ranked.map(b => b.slug), 'the ranked favourites only, in rank order');
+  for (const b of ranked) if (b.cover.src) assert.ok(favs.includes(`<img src="${b.cover.src}"`), `cover for ${b.slug}`);
+  assert.ok(favs.includes('<strong>My favourite book.</strong>'), 'each with my note');
+  assert.ok(base.html.includes(`<p class="fv-more"><a href="${cat.sources.substack.postUrl}">`), 'the rest are on the post');
+  for (const gone of ['class="lk"', 'class="plate', 'id="card"', 'id="favs"', '<template', 'class="tnav"', 'class="kicker"', 'data-rel']) assert.ok(!base.html.includes(gone), gone);
   assert.ok(base.html.includes('data-mode="mail"'), 'without a worker the postcard goes out by email');
-  assert.ok(!base.html.includes('id="rec-email"') && !base.html.includes('id="rec-ts"'), 'no private email field or Turnstile in email mode');
+  assert.ok(!base.html.includes('id="rec-ts"'), 'no Turnstile in email mode');
+  assert.match(base.html, /id="rec-name"[^>]*>[\s\S]*?id="rec-email"/, 'the email field sits under the signature, in either mode');
+  for (const gone of ['data-turn', 'Open Library</p>', 'if I shelve it', 'On the front']) assert.ok(!base.html.includes(gone), gone);
   assert.ok(base.html.includes('mailto:malhar.manek@gmail.com'));
   assert.ok(base.html.includes('id="visitors"'), 'the snapshot alone shows the visitor shelf');
 
   const on = await buildFixture({wall: {items: []}, cfg: await config({...live, margins: {profileUrl: 'https://margins.app/u/malhar'}})});
-  assert.ok(on.html.includes('<a class="lk" href="https://margins.app/u/malhar">'), 'the Margins row once the link is set');
+  assert.ok(on.html.includes('<li><a href="https://margins.app/u/malhar">'), 'the Margins link once it is set');
   assert.ok(on.html.includes('id="visitors"'), 'a live worker shows the visitor shelf even before it has cards');
   assert.ok(on.html.includes('data-mode="post"') && on.html.includes('id="rec-email"') && on.html.includes('id="rec-ts"'));
   assert.ok(on.html.includes('name="website"'), 'honeypot');
@@ -73,7 +84,7 @@ test('the page: links to my reading, then postcards; the form or the email', asy
 test('accessibility basics: one h1, landmarks, unique ids, alt on every img, named buttons', async () => {
   const {html, outDir} = await buildFixture({cfg: await config(live)});
   assert.equal(count(html, /<h1[\s>]/g), 1);
-  for (const re of [/<header[\s>]/, /<nav[^>]*aria-label="My reading"/, /<main id="main"/, /<footer[\s>]/]) assert.match(html, re);
+  for (const re of [/<header[\s>]/, /<nav[^>]*aria-label="Elsewhere"/, /<main id="main"/, /<footer[\s>]/]) assert.match(html, re);
   assert.match(html, /<html lang="en-GB"/);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);
   assert.equal(new Set(ids).size, ids.length, `duplicate ids: ${ids.filter((x, i) => ids.indexOf(x) !== i)}`);
@@ -117,7 +128,8 @@ test('404: base-absolute assets, its own script hash, and the forwarder', async 
   assert.equal(run('/library/book/anathem-stephenson'), '/library/', 'old book links land on the page');
   assert.equal(run('/library/book/anathem-stephenson/'), '/library/');
   assert.equal(run('/library/recommend'), '/library/#recommend');
-  assert.equal(run('/library/favourites'), null, 'the old sections are gone: a plain 404');
+  assert.equal(run('/library/favourites'), '/library/#favourites');
+  assert.equal(run('/library/antilibrary'), null, 'the old shelves are gone: a plain 404');
   assert.equal(run('/library/no-such-thing'), null);
   assert.equal(run('/elsewhere/book/x'), null, 'outside the base: left alone');
 });

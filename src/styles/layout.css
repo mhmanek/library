@@ -14,15 +14,13 @@ main{display:block;outline:none}
 .dek{margin:14px 0 0;max-width:62ch;font:400 19px/1.5 var(--f-read);color:var(--text)}
 @media (min-width:720px){.dek{font-size:20.5px}}
 
-.colophon{position:relative;margin-top:112px;padding-top:26px;font:400 12.5px/1.7 var(--f-mono);color:var(--muted);content-visibility:auto;contain-intrinsic-size:auto 320px}
+.colophon{position:relative;margin-top:112px;padding-top:26px;font:400 12.5px/1.7 var(--f-mono);color:var(--muted);content-visibility:auto;contain-intrinsic-size:auto 48px}
 .colophon .rail{position:absolute;top:0;left:0;right:0;height:2px;background:var(--rule)}
 .colophon a{color:var(--muted);text-decoration-color:var(--rule-hi)}
 .colophon a:hover{color:var(--text)}
 .col-l{list-style:none;display:grid;gap:6px;max-width:90ch}
-.col-sig{margin-top:30px;font:700 11px/1 var(--f-mono);letter-spacing:.14em;color:var(--rule-hi)}
 
 .nf-main{padding-top:56px}
 .nf-main .display{font-size:clamp(40px,6vw + 14px,76px)}
 .nf-act{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
 .nf-url{margin-top:40px;font:700 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.col-sig .i{display:inline-block;width:.45em;height:1.1em;vertical-align:-.2em;margin-left:1px}

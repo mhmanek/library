@@ -1,0 +1,20 @@
+/* Favourites: the ranked list, a small cover beside each title, byline and note. */
+.favs{list-style:none;display:grid;gap:0 48px;margin:36px 0 0;padding:0}
+@media (min-width:1024px){.favs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fv{display:grid;grid-template-columns:64px minmax(0,1fr);gap:18px;align-items:start;padding:26px 0;border-top:1px solid var(--rule)}
+@media (min-width:720px){.fv{grid-template-columns:84px minmax(0,1fr);gap:22px}}
+.fv-cv{display:block;margin-top:4px}
+.fv-cv img,.fv-ph{display:block;width:100%;height:auto;box-shadow:0 6px 18px rgb(0 0 0/.35)}
+.fv-ph{aspect-ratio:2/3;background:var(--sp)}
+.fv-t{font:700 24px/1.1 var(--f-display);letter-spacing:.005em;text-wrap:balance}
+.fv-t a{color:var(--text-strong);text-decoration:none}
+.fv-t a:hover{text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px}
+.fv-n{margin-right:10px;font:700 12px/1 var(--f-mono);letter-spacing:.08em;color:var(--muted);vertical-align:.3em}
+.fv-by{margin-top:5px;font:400 13px/1.45 var(--f-mono);color:var(--muted)}
+.fv-by a{color:inherit}
+.fv-note{margin-top:10px;max-width:62ch;font:400 17.5px/1.5 var(--f-read);color:var(--text)}
+.fv-note p+p{margin-top:.6em}
+.fv-note strong{font-weight:400;font-style:italic;color:var(--text-strong)}
+.fv-more{margin-top:8px;padding-top:22px;border-top:1px solid var(--rule);font:400 13px/1.5 var(--f-mono)}
+.fv-more a{color:var(--accent-text)}
+.fv-more .i{margin-left:5px;width:12px;height:12px}

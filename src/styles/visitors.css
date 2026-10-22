@@ -1,6 +1,7 @@
 /* Postcards. The visitor shelf pins approved recommendations up picture side out (the book's cover); turning
    one over shows the visitor's handwritten note, name and postmark. The returns slot is the same card being
-   written: message side up, the cover lands on the front, and it is posted into a brass plate. */
+   written, both sides laid out next to each other: the cover lands on the front as the visitor writes on
+   the back, and it is posted into a brass plate. */
 
 /* ---- Visitor shelf */
 .vgrid{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:34px 28px;margin:34px 0 0;padding:0}
@@ -11,18 +12,28 @@
 .ghost a.gh:hover{border-color:var(--gold);color:var(--accent-text)}
 .ghost .i{width:20px;height:20px}
 
-/* ---- The card: two faces in one grid cell, turned in 3D. At least 3:2, taller when the writing needs it. */
+/* ---- The card: on the shelf, two faces in one grid cell, turned in 3D; at least 3:2, taller when the writing
+   needs it. In the returns slot the two faces lie side by side (stacked on narrow screens), the same height. */
 .pc{position:relative;container-type:inline-size;perspective:1800px}
-.pc-flip{position:relative;display:grid;aspect-ratio:3/2;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.6,.2,1),translate .9s cubic-bezier(.5,0,.75,0)}
-.pc-side{grid-area:1/1;min-width:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);color:var(--paper-ink);box-shadow:var(--shadow)}
-.pc-side+.pc-side{transform:rotateY(180deg)}
-.pc.is-turned .pc-flip,.pc:has(.pc-tog:checked) .pc-flip{transform:rotateY(180deg)}
+.pc-flip{position:relative;display:grid;aspect-ratio:3/2;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.6,.2,1)}
+.pc-side{min-width:0;background:var(--paper);color:var(--paper-ink);box-shadow:var(--shadow)}
+.pc-flip>.pc-side{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.pc-flip>.pc-side+.pc-side{transform:rotateY(180deg)}
+.pc-faces{display:grid;grid-template-areas:"front" "back";gap:20px;transition:translate .9s cubic-bezier(.5,0,.75,0)}
+.pc-faces>.pc-back{grid-area:back}
+.pc-faces>.pc-front{grid-area:front;height:66.67cqi}
+@container (min-width:720px){
+  .pc-faces{grid-template-areas:"front back";grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px}
+  .pc-faces>.pc-front{height:auto}
+  .pc-faces .pc-cover{height:auto;max-height:84%;max-width:80%}
+}
+.pc:has(.pc-tog:checked) .pc-flip{transform:rotateY(180deg)}
 
 /* Picture side: the cover over a blurred copy of itself, a white border, a printed caption. */
 .pc-front{display:grid;grid-template-rows:minmax(0,1fr) auto;padding:10px 10px 0;background:#fdfaf1}
 .pc-pic-wrap{display:contents}
 /* The blur sits at 70% over a mid-blue, so even an all-black cover stands out from its own backdrop. */
-.pc-pic{position:relative;display:grid;place-items:center;min-height:0;overflow:hidden;background:radial-gradient(circle at 50% 40%,#4a5f96,#22386b 75%)}
+.pc-pic{position:relative;display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);place-items:center;min-height:0;overflow:hidden;background:radial-gradient(circle at 50% 40%,#4a5f96,#22386b 75%)}
 .pc-blur{position:absolute;inset:-10%;width:120%;height:120%;max-width:none;object-fit:cover;opacity:.7;filter:blur(16px) saturate(1.25)}
 .pc-cover{position:relative;width:auto;height:84%;max-width:72%;object-fit:contain;box-shadow:0 0 0 1px rgb(255 255 255/.22),0 12px 26px rgb(0 0 0/.5)}
 .pc-ph{display:flex;flex-direction:column;justify-content:space-between;height:84%;aspect-ratio:2/3;max-width:72%;padding:16% 9% 10%;background:linear-gradient(90deg,rgb(0 0 0/.4),transparent 14%),#0f1d42;outline:1px solid rgb(217 180 90/.6);outline-offset:-6px;box-shadow:0 12px 26px rgb(0 0 0/.5);color:#d9b45a;text-align:center;overflow:hidden}
@@ -37,7 +48,7 @@
 
 /* Message side: divided back, stamp and postmark top right, the address on ruled lines, ink in blue-black. */
 .pc-back{position:relative;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);grid-template-areas:"msg corner" "msg to";grid-template-rows:auto 1fr;align-content:start;padding:18px 22px 20px;background:linear-gradient(rgb(255 255 255/.4),transparent 45%) var(--paper)}
-.pc--compose .pc-back{grid-template-areas:"print print" "msg corner" "msg to" "msg email";grid-template-rows:auto auto auto 1fr}
+.pc--compose .pc-back{grid-template-areas:"print print" "msg corner" "msg to";grid-template-rows:auto auto 1fr}
 .pc-print{grid-area:print;margin-bottom:10px;text-align:center;font:700 14px/1 var(--f-display);letter-spacing:.6em;text-indent:.6em;text-transform:uppercase;color:var(--paper-muted)}
 .pc-addr{display:contents}
 .pc-msg{grid-area:msg;min-width:0;padding-right:20px;border-right:1px solid rgb(11 22 52/.3)}
@@ -74,13 +85,12 @@
 .pc--wall:has(.pc-tog:focus-visible){outline:3px solid var(--focus);outline-offset:6px}
 
 /* ---- The returns slot: the card being written, then posted into the brass plate. */
-.returns{position:relative;max-width:760px;margin:40px 0 0;padding-bottom:4px}
+.returns{position:relative;margin:40px 0 0;padding-bottom:4px}
 .returns.is-posting{overflow:hidden}
 .rec-wrap{position:relative;z-index:3}
 .returns.is-posting .rec-wrap{z-index:1}
-.returns.is-posting .pc-flip{translate:0 125%}
+.returns.is-posting .pc-faces{translate:0 125%}
 .returns.is-posting :is(.pc-under,.errsum){visibility:hidden}
-.pc--compose .pc-front{cursor:pointer}
 .pc--compose .pc-mark{opacity:0}
 .pc--compose.is-marked .pc-mark{opacity:1}
 .fld{position:relative;margin-top:8px}
@@ -92,7 +102,6 @@
 .fld input::placeholder,.fld textarea::placeholder{color:var(--paper-muted);opacity:.85}
 .fld input:focus-visible,.fld textarea:focus-visible{outline:2px solid #0b1634;outline-offset:3px}
 .fld [aria-invalid=true]{border-bottom-color:#9a3a28}
-.pc-addr>.fld{grid-area:email;align-self:end;margin-top:14px;padding-left:20px}
 .hint,.count-n{margin-top:3px;font:400 11px/1.4 var(--f-mono);color:var(--paper-muted)}
 .count-n{text-align:right}
 .ferr{margin-top:4px;font:700 12px/1.4 var(--f-mono);color:#9a3a28}
@@ -107,18 +116,24 @@
 .lb b{display:block;font:700 16px/1.15 var(--f-display);letter-spacing:.01em}
 .lb .bd{padding:3px 6px 2px;border:2px solid #0b1634;font:700 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
 .lb .lb-note{display:block;grid-column:1/-1;cursor:default;font-style:italic}
-.chosen{display:flex;align-items:center;gap:8px;margin-top:4px;font:700 10.5px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--paper-muted)}
-.chosen .linkish{display:grid;place-items:center;width:28px;height:28px;color:#0b1634}
+.lb .lb-own{border-top:1px solid rgb(11 22 52/.2)}
+.lb .lb-own .nc{background:repeating-linear-gradient(-45deg,#22386b 0 4px,#2c4580 4px 8px)}
+.cvs{min-width:0;margin-inline:0;padding:0;border:0}
+.cvs legend{padding:0;font:700 10px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-muted)}
+.cvs-row{display:flex;gap:10px;overflow-x:auto;padding:6px 4px 8px;scrollbar-width:thin}
+.cv{position:relative;flex:none;cursor:pointer}
+.cv input{position:absolute;width:1px;height:1px;opacity:0}
+.cv img{display:block;width:40px;height:60px;object-fit:cover;background:#22386b;outline:2px solid transparent;outline-offset:2px;transition:outline-color .15s}
+.cv:hover img{outline-color:rgb(11 22 52/.35)}
+.cv input:checked+img{outline:3px solid #a8822e}
+.cv input:focus-visible+img{outline:3px solid #0b1634}
 .onshelf{margin-top:8px;padding:8px 10px;background:rgb(217 180 90/.35);border-left:3px solid #a8822e;font:italic 400 16px/1.4 var(--f-read);color:#0b1634}
 .pc-under{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-top:22px}
-.pc-under .i-turn{transition:rotate .4s}
-.pc.is-turned .pc-under .i-turn{rotate:180deg}
 .ts{order:2;flex-basis:100%}
 .ts:empty{display:none}
 .rec-act{display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;margin-left:auto}
 .small{font:400 11.5px/1.4 var(--f-mono);color:var(--muted)}
 .rec-msg{order:3;flex-basis:100%}
-[data-fld=rec-title]:has(.chosen:not([hidden])) .hint{display:none}
 .postcard,.thanks{position:relative;z-index:1;padding:24px 28px 30px;background:var(--paper);color:var(--paper-ink);box-shadow:var(--shadow)}
 .icard-h{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgb(11 22 52/.3);font:700 13px/1 var(--f-display);letter-spacing:.5em;text-transform:uppercase;color:var(--paper-muted)}
 .postcard p{font:400 23px/1.4 var(--f-hand);color:var(--pen)}
@@ -133,13 +148,13 @@
 .slot-txt{font:700 13px/1 var(--f-display);letter-spacing:.3em;text-transform:uppercase;color:#0b1634}
 .prefer{margin-top:22px;font:400 13px/1.5 var(--f-mono);color:var(--muted)}
 
-/* Narrow cards. The one being written moves its address up beside the stamp; pinned-up ones drop the address
-   and keep the note. */
-@container (max-width:560px){
-  .pc--compose .pc-back{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"print corner" "to corner" "msg msg" "email email";grid-template-rows:auto 1fr auto auto;padding:16px 16px 18px}
+/* Narrow cards. The one being written (narrow, or sharing the row with its picture side) moves its address up
+   beside the stamp; pinned-up ones drop the address and keep the note. */
+@container (max-width:560px) or (min-width:720px){
+  .pc--compose .pc-back{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"print corner" "to corner" "msg msg";grid-template-rows:auto 1fr auto;padding:16px 16px 18px}
   .pc--compose .pc-print{margin:4px 0 0;text-align:left;letter-spacing:.4em;text-indent:0}
   .pc--compose .pc-msg{margin-top:14px;padding:10px 0 0;border-right:0;border-top:1px solid rgb(11 22 52/.3)}
-  .pc--compose :is(.pc-to,.pc-addr>.fld){padding-left:0}
+  .pc--compose .pc-to{padding-left:0}
 }
 @container (max-width:400px){
   .pc--wall .pc-back{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"msg corner";grid-template-rows:1fr;padding:14px 14px 16px}
@@ -151,6 +166,9 @@
   .pc-note[data-size=l]{font-size:14px}
   .pc-sig{padding-left:12%;font-size:19px}
   .pc-cap-t{font-size:15px}
+  .pc--compose .pc-to span{font-size:16.5px}
+  .pc--compose .pc-to span+span{padding-left:12px}
+  .pc--compose .pc-to span+span+span{padding-left:20px}
 }
 @media (prefers-reduced-motion:no-preference){
   .returns.is-received .slot{animation:light-flicker 1s steps(1,end) 1}

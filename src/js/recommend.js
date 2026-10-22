@@ -1,5 +1,6 @@
-// The returns slot, loaded lazily: a postcard whose front becomes the chosen book's cover while the visitor
-// writes on the back. An ARIA 1.2 combobox over Open Library, "already on my shelf" from match.json,
+// The returns slot, loaded lazily: a postcard whose front, laid beside the back, becomes the chosen book's
+// cover while the visitor writes. An ARIA 1.2 combobox over Open Library (always ending with the title as
+// typed, so any book can be posted), "already on my shelf" from match.json,
 // Turnstile on first focus, validation, the POST to the Worker, and a mailto fallback for every failure
 // (some school and office networks block *.workers.dev). Without a Worker the card goes out by email.
 import {findInIndex} from '../shared/match.js';
@@ -16,14 +17,42 @@ const MSG = {
   rate: 'That’s a lot of recommendations for one day. Thank you! The slot reopens tomorrow.',
   jammed: 'The returns slot is jammed (some school and office networks block it).',
   blocked: 'Heads up: this network seems to block the returns slot. The email button below always works.',
-  wait: 'One moment…', ol: 'Open Library isn’t answering. Type the title and author yourself.',
+  wait: 'One moment…', ol: 'Suggestions aren’t loading right now. Type the title and author yourself.',
   mailed: 'Your email app should open with the card written out. Nothing opened? Write to the address below.',
 };
+// Study guides and knock-off summaries crowd out the book itself.
+const JUNK = /^(summary|study guide|workbook|companion workbook|sparknotes|cliffsnotes)\b|\b(summary (of|and|&)|analysis of|study guide (for|to)|workbook for)\b/i;
+const fold = s => s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+// What Open Library is asked for: Solr syntax stripped out, and the word still being typed matched as a
+// prefix, so "harry pot" already finds Harry Potter.
+export function olQuery(text) {
+  const words = String(text).replace(/[+\-&|!(){}[\]^"~*?:\\/]/g, ' ').toLowerCase().split(/\s+/).filter(Boolean);
+  if (!words.length) return '';
+  const last = words[words.length - 1];
+  if (!/\s$/.test(text) && last.length >= 2) words[words.length - 1] = `${last}*`;
+  return words.join(' ');
+}
+
+// Junk dropped, one entry per title and author (the first, or the first with a cover), at most eight.
+export function cleanDocs(docs) {
+  const out = [], seen = new Map();
+  for (const d of docs) {
+    if (JUNK.test(d.title)) continue;
+    const key = `${fold(d.title)}|${fold(d.author)}`;
+    const at = seen.get(key);
+    if (at !== undefined) { if (!out[at].coverId && d.coverId) out[at] = d; continue; }
+    seen.set(key, out.length);
+    out.push(d);
+  }
+  return out.slice(0, 8);
+}
+
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
 
-export function mailtoFor(email, {title = '', author = '', note = '', name = ''} = {}) {
+export function mailtoFor(email, {title = '', author = '', note = '', name = '', from = ''} = {}) {
   const subject = title ? `Book recommendation: ${title}` : 'Book recommendation';
-  const body = title ? `${title}${author ? ` by ${author}` : ''}\n\n${note}${name ? `\n\n— ${name}` : ''}` : '';
+  const body = title ? `${title}${author ? ` by ${author}` : ''}\n\n${note}${name ? `\n\n— ${name}` : ''}${from ? `\n${from}` : ''}` : '';
   return `mailto:${email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ''}`;
 }
 
@@ -51,12 +80,12 @@ export function initRecommend(boot) {
   const live = form.dataset.mode === 'post' && Boolean(boot.worker && boot.siteKey);
   const $ = sel => form.querySelector(sel);
   const title = $('#rec-title'), author = $('#rec-author'), note = $('#rec-note'), name = $('#rec-name'), email = $('#rec-email');
-  const back = $('[data-back]'), front = $('[data-front]'), pic = $('[data-pic]'), cap = $('[data-cap]'), corner = $('[data-stamp]'), turner = $('[data-turn]');
-  const list = $('#rec-list'), status = $('[data-lb-status]'), chosen = $('[data-chosen]'), onshelf = $('[data-onshelf]');
+  const pic = $('[data-pic]'), cap = $('[data-cap]'), corner = $('[data-stamp]');
+  const list = $('#rec-list'), status = $('[data-lb-status]'), onshelf = $('[data-onshelf]');
+  const coverBox = $('[data-covers]'), coverRow = coverBox.lastElementChild;
   const submit = $('[data-submit]'), msg = $('[data-msg]'), errsum = $('[data-errsum]');
   const returns = form.closest('.returns'), wrap = form.parentElement, thanks = wrap.querySelector('[data-thanks]');
   const shownAt = performance.now(), submitLabel = submit.firstElementChild.textContent;
-  const turnLabels = [turner.lastElementChild.textContent, turner.dataset.unturn];
   let selection = null, options = [], active = -1, index = null, token = null, widget = null, tsLoading = null;
 
   // ---- match.json: is it already on one of my shelves?
@@ -76,24 +105,16 @@ export function initRecommend(boot) {
     const key = cover ? `c${cover}` : `p${t}\n${a}`;
     if (pic.dataset.key === key) return;
     pic.dataset.key = key;
-    pic.replaceChildren(pictureEl({coverId: cover, title: t, author: a}));
+    pic.replaceChildren(pictureEl({coverId: cover, title: t, author: a, large: true}));
     const old = corner.querySelector('.pc-stamp');
     if ((old.dataset.cover ?? '') !== String(cover ?? '')) { const st = stampEl({coverId: cover}); st.dataset.cover = String(cover ?? ''); old.replaceWith(st); }
   }
-  function turn(on) {
-    form.classList.toggle('is-turned', on);
-    back.inert = on; front.inert = !on;
-    turner.setAttribute('aria-pressed', String(on));
-    turner.lastElementChild.textContent = turnLabels[on ? 1 : 0];
-  }
-  turner.addEventListener('click', () => turn(!form.classList.contains('is-turned')));
-  front.addEventListener('click', () => turn(false));
 
   // ---- Open Library client: debounce, ≥1 s between requests, abort stale, 3 s timeout, circuit breaker.
   const cache = new Map();
   let lastReq = 0, failures = 0, pausedUntil = 0, debounce = 0, inflight = null;
   async function search(q) {
-    const key = q.toLowerCase();
+    const key = olQuery(q);
     if (cache.has(key)) { const v = cache.get(key); cache.delete(key); cache.set(key, v); return v; }
     if (Date.now() < pausedUntil) throw new Error('paused');
     const wait = lastReq + MIN_GAP - Date.now();
@@ -103,14 +124,14 @@ export function initRecommend(boot) {
     const timer = setTimeout(() => ctrl.abort(new DOMException('timeout', 'TimeoutError')), TIMEOUT);
     lastReq = Date.now();
     try {
-      const url = `${OL}?q=${encodeURIComponent(q)}&fields=key,title,author_name,first_publish_year,cover_i,edition_count&limit=8`;
+      const url = `${OL}?q=${encodeURIComponent(key)}&fields=key,title,author_name,first_publish_year,cover_i,edition_count&limit=20`;
       const res = await fetch(url, {signal: ctrl.signal, credentials: 'omit'});
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const docs = ((await res.json()).docs ?? []).filter(d => typeof d.title === 'string').map(d => ({
+      const docs = cleanDocs(((await res.json()).docs ?? []).filter(d => typeof d.title === 'string').map(d => ({
         title: d.title.slice(0, 200), author: (Array.isArray(d.author_name) ? d.author_name[0] : '')?.slice(0, 120) ?? '',
         year: Number.isInteger(d.first_publish_year) ? d.first_publish_year : null, coverId: Number.isInteger(d.cover_i) ? d.cover_i : null,
         olWork: /^\/works\/(OL\d+W)$/.exec(d.key ?? '')?.[1] ?? null,
-      }));
+      })));
       failures = 0;
       cache.set(key, docs);
       if (cache.size > 20) cache.delete(cache.keys().next().value);
@@ -134,14 +155,24 @@ export function initRecommend(boot) {
     if (li?.id) { title.setAttribute('aria-activedescendant', li.id); li.scrollIntoView({block: 'nearest'}); }
     else title.removeAttribute('aria-activedescendant');
   }
-  async function render(docs) {
+  // The suggestions, then the title exactly as typed: whatever the book, it is always on the list.
+  async function render(docs, typed) {
     const idx = await loadIndex();
-    options = docs;
-    list.replaceChildren(...docs.map((d, i) => {
+    options = [...docs, {own: true, title: typed}];
+    list.replaceChildren(...options.map((d, i) => {
       const li = el('li');
       li.id = `rec-opt-${i}`;
       li.setAttribute('role', 'option');
       li.setAttribute('aria-selected', 'false');
+      li.addEventListener('pointerdown', e => { e.preventDefault(); choose(i); });
+      if (d.own) {
+        li.className = 'lb-own';
+        li.append(el('span', 'nc'));
+        const tx = el('span');
+        tx.append(el('b', '', `“${typed}”`), docs.length ? 'Not listed? Recommend it as typed' : 'Recommend it as typed');
+        li.append(tx, el('span'));
+        return li;
+      }
       if (d.coverId) {
         const img = new Image(32, 48);
         img.alt = ''; img.loading = 'lazy'; img.src = `https://covers.openlibrary.org/b/id/${d.coverId}-S.jpg`;
@@ -152,11 +183,10 @@ export function initRecommend(boot) {
       li.append(tx);
       const badge = badgeFor(findInIndex({title: d.title, author: d.author, olWork: d.olWork}, idx));
       li.append(badge ? el('span', 'bd', badge) : el('span'));
-      li.addEventListener('pointerdown', e => { e.preventDefault(); choose(i); });
       return li;
     }));
-    setExpanded(docs.length > 0);
-    status.textContent = docs.length ? `${docs.length} suggestion${docs.length === 1 ? '' : 's'}` : 'No suggestions';
+    setExpanded(true);
+    status.textContent = docs.length ? `${docs.length} suggestion${docs.length === 1 ? '' : 's'}` : 'No suggestions; you can recommend it as typed';
   }
   function note1(text) {
     list.replaceChildren(el('li', 'lb-note', text));
@@ -166,16 +196,53 @@ export function initRecommend(boot) {
   function choose(i) {
     const d = options[i];
     if (!d) return;
+    setExpanded(false);
+    if (d.own) { unchoose(); author.focus(); return; }
     title.value = d.title;
     if (d.author) author.value = d.author;
-    selection = d;
-    chosen.hidden = false;
-    chosen.firstElementChild.textContent = `Cover from Open Library${d.year ? ` · ${d.year}` : ''}`;
-    setExpanded(false);
+    selection = {...d};
     drawFront();
     checkShelf();
+    showCovers(selection);
   }
-  function unchoose() { selection = null; chosen.hidden = true; drawFront(); }
+  function unchoose() { selection = null; coverBox.hidden = true; coverRow.replaceChildren(); drawFront(); }
+
+  // ---- Covers: the chosen book's other covers on Open Library (the work's own, topped up from its editions),
+  // so the visitor can pick the edition they mean. At most 12; nothing shows unless there is a choice.
+  const coverCache = new Map();
+  async function coversFor(olWork) {
+    if (coverCache.has(olWork)) return coverCache.get(olWork);
+    const get = async url => { const r = await fetch(url, {credentials: 'omit', signal: AbortSignal.timeout(5000)}); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); };
+    const ids = new Set();
+    const add = list => { for (const id of Array.isArray(list) ? list : []) if (Number.isInteger(id) && id > 0) ids.add(id); };
+    try {
+      add((await get(`https://openlibrary.org/works/${olWork}.json`)).covers);
+      if (ids.size < 6) for (const e of (await get(`https://openlibrary.org/works/${olWork}/editions.json?limit=50`)).entries ?? []) add(e.covers);
+    } catch { /* whatever arrived is enough */ }
+    const out = [...ids];
+    coverCache.set(olWork, out);
+    return out;
+  }
+  async function showCovers(sel) {
+    coverBox.hidden = true;
+    coverRow.replaceChildren();
+    if (!sel.olWork) return;
+    const all = [...new Set([sel.coverId, ...await coversFor(sel.olWork)].filter(Boolean))].slice(0, 12);
+    if (selection !== sel) return;
+    if (!sel.coverId && all.length) { sel.coverId = all[0]; drawFront(); }
+    if (all.length < 2) return;
+    coverRow.replaceChildren(...all.map((id, k) => {
+      const label = el('label', 'cv'), radio = el('input');
+      radio.type = 'radio'; radio.name = 'cover'; radio.value = String(id); radio.checked = id === sel.coverId;
+      radio.setAttribute('aria-label', `Cover ${k + 1} of ${all.length}`);
+      radio.addEventListener('change', () => { if (radio.checked && selection === sel) { sel.coverId = id; drawFront(); } });
+      const img = new Image(40, 60);
+      img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.src = `https://covers.openlibrary.org/b/id/${id}-S.jpg`;
+      label.append(radio, img);
+      return label;
+    }));
+    coverBox.hidden = false;
+  }
 
   title.addEventListener('input', () => {
     if (selection && title.value !== selection.title) unchoose(); else drawFront();
@@ -183,7 +250,7 @@ export function initRecommend(boot) {
     const q = title.value.trim();
     if (q.length < 3) { setExpanded(false); return; }
     debounce = setTimeout(async () => {
-      try { const docs = await search(q); if (title.value.trim() === q && document.activeElement === title) render(docs); }
+      try { const docs = await search(title.value); if (title.value.trim() === q && document.activeElement === title) render(docs, q); }
       catch (err) { if (err?.name !== 'AbortError' && Date.now() < pausedUntil) note1(MSG.ol); }
     }, DEBOUNCE);
   });
@@ -198,7 +265,6 @@ export function initRecommend(boot) {
   title.addEventListener('blur', () => { setTimeout(() => setExpanded(false), 120); checkShelf(); });
   author.addEventListener('change', checkShelf);
   author.addEventListener('input', drawFront);
-  $('[data-unchoose]').addEventListener('click', () => { unchoose(); title.focus(); });
   const counter = $('[data-count-n]');
   note.addEventListener('input', () => { counter.textContent = String(note.value.length); });
 
@@ -261,7 +327,6 @@ export function initRecommend(boot) {
     const keys = Object.keys(errors);
     errsum.hidden = !keys.length;
     if (!keys.length) return;
-    turn(false);
     errsum.textContent = keys.length === 1 ? errors[keys[0]] : `${keys.length} things to fix before this card can go in the slot.`;
     fields[keys[0]].focus();
   }
@@ -274,7 +339,7 @@ export function initRecommend(boot) {
     }
     msg.hidden = !text;
   }
-  const values = () => ({title: title.value.trim(), author: author.value.trim(), note: note.value.trim(), name: name.value.trim()});
+  const values = () => ({title: title.value.trim(), author: author.value.trim(), note: note.value.trim(), name: name.value.trim(), from: email.value.trim()});
   const busy = on => { submit.setAttribute('aria-disabled', String(on)); submit.firstElementChild.textContent = on ? 'Posting…' : submitLabel; };
 
   let sending = false;
@@ -310,8 +375,7 @@ export function initRecommend(boot) {
     } finally { sending = false; busy(false); }
   });
 
-  // ---- Success: the postmark thumps onto the stamp, the card turns to its picture side and drops into the
-  // slot, the plate glints.
+  // ---- Success: the postmark thumps onto the stamp, the card drops into the slot, the plate glints.
   function received(who) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const d = new Date(), today = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
@@ -328,12 +392,11 @@ export function initRecommend(boot) {
     };
     if (reduce) { finish(); return; }
     form.classList.add('is-marked');
-    setTimeout(() => turn(true), 500);
-    setTimeout(() => returns.classList.add('is-posting'), 1450);
-    setTimeout(finish, 2400);
+    setTimeout(() => returns.classList.add('is-posting'), 700);
+    setTimeout(finish, 1650);
   }
   thanks.querySelector('[data-again]').addEventListener('click', () => {
-    form.reset(); unchoose(); turn(false); form.classList.remove('is-marked'); onshelf.hidden = true; counter.textContent = '0'; showErrors({}); showMsg('');
+    form.reset(); unchoose(); form.classList.remove('is-marked'); onshelf.hidden = true; counter.textContent = '0'; showErrors({}); showMsg('');
     token = null;
     if (widget !== null) window.turnstile?.reset(widget);
     thanks.hidden = true; form.hidden = false; returns.classList.remove('is-received');

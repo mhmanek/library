@@ -4,7 +4,7 @@
 import {formatDay} from './format.js';
 
 export const PC = {
-  to: ['Malhar', "Malhar's Library", 'Chicago, Illinois'], toLabel: "Addressed to Malhar, Malhar's Library, Chicago",
+  to: ["Malhar's Library", 'The University of Chicago', 'Earth'], toLabel: "Addressed to Malhar's Library, The University of Chicago, Earth",
   stampTop: 'Library post', stampValue: '11/10', front: 'Your book', frontBy: 'goes on the front',
   town: 'Chicago', office: 'Library', noNote: 'No message, just the book.', anon: 'a visitor', by: 'Recommended by',
   turn: 'Turn over the postcard for ',
@@ -26,11 +26,12 @@ function img(src, cls, w, h) {
   return i;
 }
 
-export function pictureEl({coverId = null, title = '', author = ''} = {}) {
+// large: the card being written shows its cover big, so it starts from Open Library's large size.
+export function pictureEl({coverId = null, title = '', author = '', large = false} = {}) {
   const pic = el('span', 'pc-pic');
   if (coverId) {
-    const big = img(coverUrl(coverId), 'pc-cover', 120, 180);
-    big.srcset = `${coverUrl(coverId)} 1x, ${coverUrl(coverId, 'L')} 2x`;
+    const big = img(coverUrl(coverId, large ? 'L' : 'M'), 'pc-cover', 120, 180);
+    if (!large) big.srcset = `${coverUrl(coverId)} 1x, ${coverUrl(coverId, 'L')} 2x`;
     pic.append(img(coverUrl(coverId), 'pc-blur'), big);
   } else {
     const ph = el('span', 'pc-ph');

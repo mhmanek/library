@@ -62,7 +62,7 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
   const images = await cachedImages({root, srcDir: SRC, derived, catalog, siteUrl});
   const ogImage = `${siteUrl}/og.png?v=${hash(images['og.png'])}`;
 
-  const page = renderPage({catalog, config, wall, index, assets, csp, boot, canonical: `${siteUrl}/`, ogImage});
+  const page = renderPage({catalog, derived, config, wall, index, assets, csp, boot, canonical: `${siteUrl}/`, ogImage});
   if (/<base[\s>]/i.test(page)) throw new Error('index.html must not contain a <base> element (it breaks the relative URLs)');
   await write('index.html', page);
   await write('404.html', renderNotFound({base, css: assets.css, siteUrl}));

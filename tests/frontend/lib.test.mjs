@@ -1,10 +1,13 @@
-// Pure browser libraries (format, wall merge, postcards, recommend messages) and the build's derive step.
+// Pure browser libraries (format, wall merge, postcards, recommend messages) and the build's derive and
+// sanitise steps.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {formatDay, formatNumber, joinNames} from '../../src/js/lib/format.js';
 import {mergeWall, cleanItem} from '../../src/js/lib/wall-merge.js';
 import {spineWidth, spineHeight, bindings, displaySurname, deriveCatalog, viewModel} from '../../src/build/derive.mjs';
-import {badgeFor, shelfMessage, mailtoFor} from '../../src/js/recommend.js';
+import {safeFragment} from '../../src/build/sanitize.mjs';
+import {unsafeHtml} from '../../lib/schema.mjs';
+import {badgeFor, shelfMessage, mailtoFor, olQuery, cleanDocs} from '../../src/js/recommend.js';
 import {sample} from './helpers.mjs';
 
 test('format: numbers and names', () => {
@@ -71,6 +74,15 @@ test('derive: bindings, surnames, favourites order and review dedupe', async () 
   assert.ok(viewModel(b).review);
 });
 
+test('sanitise: allowlist only, safe links, escaped text', () => {
+  const out = safeFragment('<p onclick="x()">Hi <script>alert(1)</script><a href="javascript:alert(1)">bad</a> <a href="https://ok.org" target="_blank">ok</a> <em>e</em> <b>b</b> <img src=x onerror=alert(1)> 1 < 2 & 3</p><style>p{}</style>', {block: true});
+  assert.equal(out, '<p>Hi bad <a href="https://ok.org" rel="noopener">ok</a> <em>e</em> <strong>b</strong>  1 &lt; 2 &amp; 3</p>');
+  assert.deepEqual(unsafeHtml(out), []);
+  assert.equal(safeFragment('<p>a</p>'), 'a', 'inline mode drops blocks');
+  assert.equal(safeFragment('<a href="mailto:m@x.org">m</a>'), '<a href="mailto:m@x.org" rel="noopener">m</a>');
+  assert.equal(safeFragment('<a href=" java\tscript:alert(1)">x</a>'), 'x');
+});
+
 test('browser helpers: recommend messages', () => {
   assert.equal(badgeFor({s: 'read', r: 5, f: null}), 'Read · 5★');
   assert.equal(badgeFor({s: 'read', r: 5, f: '1:4'}), 'Nº 4');
@@ -80,6 +92,18 @@ test('browser helpers: recommend messages', () => {
   const m = mailtoFor('m@x.org', {title: 'Dune & more', author: 'Herbert', note: 'Spice', name: 'Ana'});
   assert.ok(m.startsWith('mailto:m@x.org?subject=Book%20recommendation%3A%20Dune%20%26%20more&body='));
   assert.ok(decodeURIComponent(m).includes('— Ana'));
+});
+
+test('browser helpers: book search matches the word being typed as a prefix, minus junk and repeats', () => {
+  assert.equal(olQuery('Harry Pot'), 'harry pot*');
+  assert.equal(olQuery('harry potter '), 'harry potter', 'a finished word is matched whole');
+  assert.equal(olQuery('Totto-chan: "the" (sequel) a'), 'totto chan the sequel a', 'Solr syntax is stripped; one letter is no prefix');
+  assert.equal(olQuery('  '), '');
+  const d = (title, author, coverId = null) => ({title, author, coverId, year: null, olWork: null});
+  const out = cleanDocs([d('Atomic Habits', 'James Clear'), d('Summary of Atomic Habits by James Clear', 'X'), d('Companion Workbook : Atomic Habits', 'Y'),
+    d('A Macat Analysis of Daniel Kahneman\'s Thinking, Fast and Slow', 'Z'), d('Atomic habits', 'James  Clear', 7), d('Atomic Habits Journal', 'W')]);
+  assert.deepEqual(out.map(x => [x.title, x.coverId]), [['Atomic habits', 7], ['Atomic Habits Journal', null]], 'the repeat with a cover wins');
+  assert.equal(cleanDocs(Array.from({length: 20}, (_, i) => d(`Book ${i}`, 'A'))).length, 8);
 });
 
 test('postcards: a stable tilt, note sizes, Open Library cover URLs', async () => {

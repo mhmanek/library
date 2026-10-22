@@ -1,11 +1,11 @@
 # Malhar's Library
 
-Links to my favourite books, Goodreads and Margins, and a postcard for recommending me a book, at **https://mhmanek.github.io/library/**. It rebuilds itself: once a day a GitHub Action reads my Goodreads shelves and the favourites post on my Substack, [Mr Philomath](https://www.malharmanek.com/p/books), commits whatever changed and redeploys the site. Visitors can recommend a book; it reaches me privately and goes on the Visitor shelf only once I approve it.
+My favourite books with their covers and my notes, links to Goodreads and Margins, and a postcard for recommending me a book, at **https://mhmanek.github.io/library/**. It rebuilds itself: once a day a GitHub Action reads my Goodreads shelves and the favourites post on my Substack, [Mr Philomath](https://www.malharmanek.com/p/books), commits whatever changed and redeploys the site. Visitors can recommend a book; it reaches me privately and goes on the Visitor shelf only once I approve it.
 
 ## What I do day to day
 
 - **Log books on Goodreads.** The site links to my profile and still reads all four shelves, so the recommend form and the visitor postcards can say whether I've read a book already. Margins has no export or API (and its Terms forbid scraping), so Goodreads is the source; Margins can re-import from Goodreads whenever I like.
-- **Edit the Substack post** to change the favourites. The site links to it, and reads it so a visitor's postcard is stamped "A favourite" when it should be.
+- **Edit the Substack post** to change the favourites. The site shows the ranked ones with my notes, links to the post for the rest, and stamps a visitor's postcard "A favourite" when it should be.
 - **Approve recommendations.** Each one arrives as an issue in the private repo `mhmanek/library-inbox` and GitHub emails me. Label it `approved` to shelve it (it appears within about 15 minutes), `spam` to bin it.
 
 Updates are not instant: GitHub's schedules often start hours late. To refresh now: **Actions → Sync and deploy → Run workflow**, or `gh workflow run sync.yml -R mhmanek/library`.
