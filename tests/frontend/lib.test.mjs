@@ -89,13 +89,15 @@ test('browser helpers: recommend messages', () => {
   assert.equal(badgeFor({s: 'to-read', r: 0, f: null}), 'Antilibrary');
   assert.match(shelfMessage({s: 'did-not-finish', r: 0, f: null}), /gave up/);
   assert.match(shelfMessage({s: 'to-read', r: 0, f: null}), /antilibrary/);
+  assert.equal(shelfMessage({s: 'read', r: 5, f: null}), '');
   const m = mailtoFor('m@x.org', {title: 'Dune & more', author: 'Herbert', note: 'Spice', name: 'Ana'});
   assert.ok(m.startsWith('mailto:m@x.org?subject=Book%20recommendation%3A%20Dune%20%26%20more&body='));
   assert.ok(decodeURIComponent(m).includes('— Ana'));
 });
 
 test('browser helpers: book search matches the word being typed as a prefix, minus junk and repeats', () => {
-  assert.equal(olQuery('Harry Pot'), 'harry pot*');
+  assert.equal(olQuery('Harry Pot'), 'harry (pot OR pot*)');
+  assert.equal(olQuery('dune'), '(dune OR dune*)', 'the whole word keeps the ranking a bare prefix loses');
   assert.equal(olQuery('harry potter '), 'harry potter', 'a finished word is matched whole');
   assert.equal(olQuery('Totto-chan: "the" (sequel) a'), 'totto chan the sequel a', 'Solr syntax is stripped; one letter is no prefix');
   assert.equal(olQuery('  '), '');

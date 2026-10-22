@@ -25,7 +25,7 @@ function field({id, label, hint = '', input}) {
 function composer(live) {
   return html`<form class="pc pc--compose" id="rec-form" novalidate data-rec data-mode="${live ? 'post' : 'mail'}" aria-labelledby="rec-head">
 <h3 class="sr-only" id="rec-head">${R.cardHead}</h3>
-<div class="errsum" tabindex="-1" hidden data-errsum role="alert"></div>
+<div class="errsum sr-only" tabindex="-1" hidden data-errsum role="alert"></div>
 <div class="pc-faces">
 <div class="pc-side pc-back">
 <p class="pc-print" aria-hidden="true">${R.print}</p>
@@ -36,7 +36,7 @@ ${field({id: 'rec-title', label: R.book, input: html`<div class="combo"><input i
 ${field({id: 'rec-author', label: R.author, input: html`<input id="rec-author" name="author" type="text" maxlength="120" autocomplete="off">`})}
 ${field({id: 'rec-note', label: R.note, input: html`<textarea id="rec-note" name="note" maxlength="280" rows="4" placeholder="${R.notePh}" aria-describedby="rec-note-count"></textarea><p class="count-n" id="rec-note-count"><span data-count-n>0</span> / 280</p>`})}
 ${field({id: 'rec-name', label: R.name, input: html`<input id="rec-name" name="name" type="text" maxlength="40" autocomplete="name" placeholder="${R.namePh}">`})}
-${field({id: 'rec-email', label: R.email, hint: R.emailHint, input: html`<input id="rec-email" name="email" type="email" maxlength="120" autocomplete="email" aria-describedby="rec-email-hint">`})}
+${field({id: 'rec-email', label: R.email, input: html`<input id="rec-email" name="email" type="email" maxlength="120" autocomplete="email">`})}
 </div>
 <div class="pc-addr">
 ${address()}

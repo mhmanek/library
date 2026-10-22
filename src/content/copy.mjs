@@ -23,7 +23,7 @@ export const COPY = {
     cardHead: 'Postcard: recommend me a book',
     print: 'Post card', book: 'Book recommendation', cover: 'Cover', author: 'By',
     note: 'Message', notePh: 'Dear Malhar, you have to read this because…', name: 'Signed', namePh: 'your name',
-    email: 'Your email', emailHint: 'optional; only so I can reply, never shown',
+    email: 'Your email',
     submit: 'Post it', submitMail: 'Post it by email', posting: 'Posting…',
     small: 'Spam-checked by Cloudflare Turnstile.', smallMail: 'Opens your email app with the card written out.',
     plate: 'Book return · Postcards',

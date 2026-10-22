@@ -26,13 +26,15 @@ function img(src, cls, w, h) {
   return i;
 }
 
-// large: the card being written shows its cover big, so it starts from Open Library's large size.
+// large: the card being written shows its cover big, from Open Library's large size (one download for the
+// cover and its blur), loaded at once because it is swapped in only when ready.
 export function pictureEl({coverId = null, title = '', author = '', large = false} = {}) {
   const pic = el('span', 'pc-pic');
   if (coverId) {
-    const big = img(coverUrl(coverId, large ? 'L' : 'M'), 'pc-cover', 120, 180);
-    if (!large) big.srcset = `${coverUrl(coverId)} 1x, ${coverUrl(coverId, 'L')} 2x`;
-    pic.append(img(coverUrl(coverId), 'pc-blur'), big);
+    const big = img(coverUrl(coverId, large ? 'L' : 'M'), 'pc-cover', 120, 180), blur = img(coverUrl(coverId, large ? 'L' : 'M'), 'pc-blur');
+    if (large) big.loading = blur.loading = 'eager';
+    else big.srcset = `${coverUrl(coverId)} 1x, ${coverUrl(coverId, 'L')} 2x`;
+    pic.append(blur, big);
   } else {
     const ph = el('span', 'pc-ph');
     ph.append(el('b', '', title || PC.front), el('i', '', author || PC.frontBy));

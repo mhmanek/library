@@ -24,13 +24,13 @@ const MSG = {
 const JUNK = /^(summary|study guide|workbook|companion workbook|sparknotes|cliffsnotes)\b|\b(summary (of|and|&)|analysis of|study guide (for|to)|workbook for)\b/i;
 const fold = s => s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
-// What Open Library is asked for: Solr syntax stripped out, and the word still being typed matched as a
-// prefix, so "harry pot" already finds Harry Potter.
+// What Open Library is asked for: Solr syntax stripped, the word being typed matched whole or as a prefix
+// ("harry pot" finds Harry Potter; a bare "dune*" would lose the ranking and put Jane Eyre first).
 export function olQuery(text) {
   const words = String(text).replace(/[+\-&|!(){}[\]^"~*?:\\/]/g, ' ').toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return '';
   const last = words[words.length - 1];
-  if (!/\s$/.test(text) && last.length >= 2) words[words.length - 1] = `${last}*`;
+  if (!/\s$/.test(text) && last.length >= 2) words[words.length - 1] = `(${last} OR ${last}*)`;
   return words.join(' ');
 }
 
@@ -65,7 +65,6 @@ export function badgeFor(hit) {
 export function shelfMessage(hit) {
   if (!hit) return '';
   if (hit.f?.startsWith('1:')) return `That’s my Nº ${hit.f.slice(2)}!`;
-  if (hit.s === 'read') return `Good taste: I’ve read this one${hit.r ? ` (${Math.floor(hit.r)}★)` : ''}. Recommend it anyway, or pick another?`;
   if (hit.s === 'to-read') return 'Already in my antilibrary. Your card bumps it up the pile.';
   if (hit.s === 'did-not-finish') return 'I gave up on this one. Convince me in the note?';
   if (hit.s === 'currently-reading') return 'It’s on my desk right now!';
@@ -86,28 +85,40 @@ export function initRecommend(boot) {
   const submit = $('[data-submit]'), msg = $('[data-msg]'), errsum = $('[data-errsum]');
   const returns = form.closest('.returns'), wrap = form.parentElement, thanks = wrap.querySelector('[data-thanks]');
   const shownAt = performance.now(), submitLabel = submit.firstElementChild.textContent;
-  let selection = null, options = [], active = -1, index = null, token = null, widget = null, tsLoading = null;
+  let selection = null, options = [], active = -1, index = null, loaded = null, token = null, widget = null, tsLoading = null;
+  let filled = '', shelfSeq = 0, wanted = ''; // the author the last suggestion filled in; the front being drawn
 
-  // ---- match.json: is it already on one of my shelves?
-  const loadIndex = () => (index ??= fetch('data/match.json', {credentials: 'omit'}).then(r => (r.ok ? r.json() : [])).catch(() => []));
-  const lookup = async (t, a, olWork) => findInIndex({title: t, author: a, olWork}, await loadIndex());
+  // ---- match.json: is it already on one of my shelves? Answered at once when loaded; stale answers dropped.
+  const loadIndex = () => (index ??= fetch('data/match.json', {credentials: 'omit'}).then(r => (r.ok ? r.json() : [])).catch(() => []).then(v => (loaded = v)));
   async function checkShelf() {
-    const hit = title.value.trim() ? await lookup(title.value, author.value, selection?.olWork ?? null) : null;
-    const m = shelfMessage(hit);
-    onshelf.textContent = m;
-    onshelf.hidden = !m;
+    const seq = ++shelfSeq, t = title.value.trim();
+    const m = shelfMessage(t ? findInIndex({title: t, author: author.value, olWork: selection?.olWork ?? null}, loaded ?? await loadIndex()) : null);
+    if (seq === shelfSeq) { onshelf.textContent = m; onshelf.hidden = !m; }
   }
+  const clearShelf = () => { shelfSeq++; onshelf.hidden = true; };
 
   // ---- The picture side follows the book: its cover once chosen from Open Library, else a cloth placeholder.
+  // A new cover replaces the old only once loaded, so the front never goes blank; a broken one, the placeholder.
+  const broken = new Set();
+  function setStamp(cover) {
+    const old = corner.querySelector('.pc-stamp'), id = String(cover ?? '');
+    if ((old.dataset.cover ?? '') !== id) { const st = stampEl({coverId: cover}); st.dataset.cover = id; old.replaceWith(st); }
+  }
   function drawFront() {
-    const t = title.value.trim(), a = author.value.trim(), cover = selection?.coverId ?? null;
+    const t = title.value.trim(), a = author.value.trim();
+    const cover = selection?.coverId && !broken.has(selection.coverId) ? selection.coverId : null;
     cap.textContent = t ? `${t}${a ? ` · ${a}` : ''}` : PC.front;
     const key = cover ? `c${cover}` : `p${t}\n${a}`;
-    if (pic.dataset.key === key) return;
-    pic.dataset.key = key;
-    pic.replaceChildren(pictureEl({coverId: cover, title: t, author: a, large: true}));
-    const old = corner.querySelector('.pc-stamp');
-    if ((old.dataset.cover ?? '') !== String(cover ?? '')) { const st = stampEl({coverId: cover}); st.dataset.cover = String(cover ?? ''); old.replaceWith(st); }
+    if (wanted === key) return;
+    wanted = key;
+    const next = pictureEl({coverId: cover, title: t, author: a, large: true});
+    const show = () => { if (wanted !== key) return; delete pic.dataset.loading; pic.replaceChildren(next); setStamp(cover); };
+    const big = next.querySelector('.pc-cover');
+    if (!big) { show(); return; }
+    pic.dataset.loading = '';
+    Promise.race([Promise.all([...next.querySelectorAll('img')].map(i => i.decode())), new Promise(r => setTimeout(r, 6000))])
+      .then(() => { if (big.complete && big.naturalWidth < 10) throw new Error('no cover'); show(); })
+      .catch(() => { broken.add(cover); if (wanted === key) { wanted = ''; drawFront(); } });
   }
 
   // ---- Open Library client: debounce, ≥1 s between requests, abort stale, 3 s timeout, circuit breaker.
@@ -148,23 +159,31 @@ export function initRecommend(boot) {
     title.setAttribute('aria-expanded', String(open));
     if (!open) { active = -1; title.removeAttribute('aria-activedescendant'); }
   }
-  function highlight(k) {
+  // One highlight, moved by keys or pointer; the list scrolls, never the page.
+  function highlight(k, scroll = true) {
     active = k;
     [...list.children].forEach((li, i) => li.setAttribute('aria-selected', String(i === k)));
     const li = list.children[k];
-    if (li?.id) { title.setAttribute('aria-activedescendant', li.id); li.scrollIntoView({block: 'nearest'}); }
-    else title.removeAttribute('aria-activedescendant');
+    if (!li?.id) { title.removeAttribute('aria-activedescendant'); return; }
+    title.setAttribute('aria-activedescendant', li.id);
+    if (scroll) list.scrollTop = Math.min(li.offsetTop, Math.max(list.scrollTop, li.offsetTop + li.offsetHeight - list.clientHeight));
   }
+  // Pressing the list keeps focus in the title; choosing waits for the click, so a finger scrolling it picks nothing.
+  const optionAt = e => { const li = e.target.closest?.('li[data-i]'); return li ? Number(li.dataset.i) : -1; };
+  list.addEventListener('mousedown', e => e.preventDefault());
+  list.addEventListener('click', e => { const i = optionAt(e); if (i >= 0) choose(i); });
+  list.addEventListener('pointermove', e => { const i = optionAt(e); if (i >= 0 && i !== active && e.pointerType === 'mouse') highlight(i, false); });
   // The suggestions, then the title exactly as typed: whatever the book, it is always on the list.
   async function render(docs, typed) {
     const idx = await loadIndex();
+    if (title.value.trim() !== typed || document.activeElement !== title) return;
     options = [...docs, {own: true, title: typed}];
+    list.scrollTop = 0;
     list.replaceChildren(...options.map((d, i) => {
       const li = el('li');
       li.id = `rec-opt-${i}`;
+      li.dataset.i = String(i);
       li.setAttribute('role', 'option');
-      li.setAttribute('aria-selected', 'false');
-      li.addEventListener('pointerdown', e => { e.preventDefault(); choose(i); });
       if (d.own) {
         li.className = 'lb-own';
         li.append(el('span', 'nc'));
@@ -185,10 +204,12 @@ export function initRecommend(boot) {
       li.append(badge ? el('span', 'bd', badge) : el('span'));
       return li;
     }));
+    highlight(-1);
     setExpanded(true);
     status.textContent = docs.length ? `${docs.length} suggestion${docs.length === 1 ? '' : 's'}` : 'No suggestions; you can recommend it as typed';
   }
   function note1(text) {
+    options = [];
     list.replaceChildren(el('li', 'lb-note', text));
     setExpanded(true);
     status.textContent = text;
@@ -199,7 +220,9 @@ export function initRecommend(boot) {
     setExpanded(false);
     if (d.own) { unchoose(); author.focus(); return; }
     title.value = d.title;
-    if (d.author) author.value = d.author;
+    // An authorless suggestion clears the author the last one filled in, not one typed by hand.
+    if (d.author || author.value === filled) author.value = d.author;
+    filled = d.author;
     selection = {...d};
     drawFront();
     checkShelf();
@@ -208,29 +231,34 @@ export function initRecommend(boot) {
   function unchoose() { selection = null; coverBox.hidden = true; coverRow.replaceChildren(); drawFront(); }
 
   // ---- Covers: the chosen book's other covers on Open Library (the work's own, topped up from its editions),
-  // so the visitor can pick the edition they mean. At most 12; nothing shows unless there is a choice.
-  const coverCache = new Map();
-  async function coversFor(olWork) {
-    if (coverCache.has(olWork)) return coverCache.get(olWork);
-    const get = async url => { const r = await fetch(url, {credentials: 'omit', signal: AbortSignal.timeout(5000)}); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); };
-    const ids = new Set();
-    const add = list => { for (const id of Array.isArray(list) ? list : []) if (Number.isInteger(id) && id > 0) ids.add(id); };
-    try {
-      add((await get(`https://openlibrary.org/works/${olWork}.json`)).covers);
-      if (ids.size < 6) for (const e of (await get(`https://openlibrary.org/works/${olWork}/editions.json?limit=50`)).entries ?? []) add(e.covers);
-    } catch { /* whatever arrived is enough */ }
-    const out = [...ids];
-    coverCache.set(olWork, out);
-    return out;
+  // so the visitor can pick the edition they mean. At most 12, shown only if there is a choice; blanks hold
+  // the row open while they load, so the card grows once.
+  const coverCache = new Map(), coversReady = new Set();
+  function coversFor(olWork) {
+    if (!coverCache.has(olWork)) coverCache.set(olWork, (async () => {
+      const get = async url => { const r = await fetch(url, {credentials: 'omit', signal: AbortSignal.timeout(5000)}); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); };
+      const ids = new Set();
+      const add = list => { for (const id of Array.isArray(list) ? list : []) if (Number.isInteger(id) && id > 0) ids.add(id); };
+      try {
+        add((await get(`https://openlibrary.org/works/${olWork}.json`)).covers);
+        if (ids.size < 6) for (const e of (await get(`https://openlibrary.org/works/${olWork}/editions.json?limit=50`)).entries ?? []) add(e.covers);
+      } catch { /* whatever arrived is enough */ }
+      coversReady.add(olWork);
+      return [...ids];
+    })());
+    return coverCache.get(olWork);
   }
   async function showCovers(sel) {
-    coverBox.hidden = true;
     coverRow.replaceChildren();
-    if (!sel.olWork) return;
+    if (!sel.olWork) { coverBox.hidden = true; return; }
+    if (!coversReady.has(sel.olWork)) {
+      coverRow.replaceChildren(...Array.from({length: 6}, () => el('span', 'cv cv--wait')));
+      coverBox.hidden = false;
+    }
     const all = [...new Set([sel.coverId, ...await coversFor(sel.olWork)].filter(Boolean))].slice(0, 12);
     if (selection !== sel) return;
     if (!sel.coverId && all.length) { sel.coverId = all[0]; drawFront(); }
-    if (all.length < 2) return;
+    if (all.length < 2) { coverBox.hidden = true; coverRow.replaceChildren(); return; }
     coverRow.replaceChildren(...all.map((id, k) => {
       const label = el('label', 'cv'), radio = el('input');
       radio.type = 'radio'; radio.name = 'cover'; radio.value = String(id); radio.checked = id === sel.coverId;
@@ -245,28 +273,40 @@ export function initRecommend(boot) {
   }
 
   title.addEventListener('input', () => {
+    clearShelf();
+    if (!title.value.trim() && author.value === filled) author.value = filled = ''; // starting over
     if (selection && title.value !== selection.title) unchoose(); else drawFront();
     clearTimeout(debounce);
     const q = title.value.trim();
-    if (q.length < 3) { setExpanded(false); return; }
+    if (q.length < 3) { options = []; list.replaceChildren(); setExpanded(false); return; }
     debounce = setTimeout(async () => {
       try { const docs = await search(title.value); if (title.value.trim() === q && document.activeElement === title) render(docs, q); }
       catch (err) { if (err?.name !== 'AbortError' && Date.now() < pausedUntil) note1(MSG.ol); }
     }, DEBOUNCE);
   });
   title.addEventListener('keydown', e => {
-    const open = !list.hidden && options.length;
+    if (e.isComposing) return;
+    const open = !list.hidden && options.length > 0;
     if (e.key === 'ArrowDown') { e.preventDefault(); if (!open && options.length) setExpanded(true); highlight(Math.min(options.length - 1, active + 1)); }
     else if (e.key === 'ArrowUp' && open) { e.preventDefault(); highlight(Math.max(0, active - 1)); }
-    else if (e.key === 'Enter' && open && active >= 0) { e.preventDefault(); choose(active); }
-    else if (e.key === 'Escape') { if (!list.hidden) { e.preventDefault(); setExpanded(false); } else if (title.value) { e.preventDefault(); title.value = ''; unchoose(); } }
+    // Enter takes the highlighted suggestion, else the title as typed.
+    else if (e.key === 'Enter' && open) { e.preventDefault(); choose(active >= 0 ? active : options.length - 1); }
+    else if (e.key === 'Escape' && !list.hidden) { e.preventDefault(); setExpanded(false); }
     else if (e.key === 'Tab') setExpanded(false);
   });
-  title.addEventListener('blur', () => { setTimeout(() => setExpanded(false), 120); checkShelf(); });
+  title.addEventListener('blur', () => { setTimeout(() => { if (document.activeElement !== title) setExpanded(false); }, 120); checkShelf(); });
   author.addEventListener('change', checkShelf);
   author.addEventListener('input', drawFront);
   const counter = $('[data-count-n]');
   note.addEventListener('input', () => { counter.textContent = String(note.value.length); });
+
+  // Enter never posts a half-written card: it moves to the next line, then to the button.
+  form.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || e.defaultPrevented || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+    e.preventDefault();
+    const order = [title, author, note, name, email];
+    (e.target.type === 'radio' ? author : order[order.indexOf(e.target) + 1] ?? submit).focus();
+  });
 
   // ---- Turnstile, injected on the first focus inside the form.
   function loadTurnstile() {
@@ -330,6 +370,8 @@ export function initRecommend(boot) {
     errsum.textContent = keys.length === 1 ? errors[keys[0]] : `${keys.length} things to fix before this card can go in the slot.`;
     fields[keys[0]].focus();
   }
+  // A field loses its error as soon as it is edited.
+  for (const [k, input] of Object.entries(fields)) input.addEventListener('input', () => { if (input.getAttribute('aria-invalid') === 'true') { setError(k, ''); errsum.hidden = true; } });
   function showMsg(text, {mail = false} = {}) {
     msg.replaceChildren(text);
     if (mail) {
@@ -382,13 +424,20 @@ export function initRecommend(boot) {
     const day = corner.querySelector('time');
     day.textContent = formatDay(today); day.dateTime = today;
     const finish = () => {
+      if (!reduce) wrap.style.height = `${wrap.offsetHeight}px`;
       form.hidden = true;
       returns.classList.remove('is-posting');
       returns.classList.add('is-received');
       thanks.querySelector('[data-stamp-text]').textContent = `Received ${formatDay(today)}`;
       thanks.querySelector('[data-thanks-text]').textContent = `Thank you${who ? `, ${who}` : ''}. It’s in the slot. I read every card; the ones I shelve go on the visitor shelf.`;
       thanks.hidden = false;
-      thanks.focus();
+      if (reduce) { thanks.focus(); return; }
+      // The card's space closes up smoothly, rather than the page jumping.
+      thanks.focus({preventScroll: true});
+      const to = thanks.offsetHeight;
+      wrap.style.transition = 'height .5s cubic-bezier(.3,.6,.2,1)';
+      wrap.style.height = `${to}px`;
+      setTimeout(() => { wrap.style.height = wrap.style.transition = ''; thanks.scrollIntoView({block: 'nearest', behavior: 'smooth'}); }, 550);
     };
     if (reduce) { finish(); return; }
     form.classList.add('is-marked');
@@ -396,10 +445,10 @@ export function initRecommend(boot) {
     setTimeout(finish, 1650);
   }
   thanks.querySelector('[data-again]').addEventListener('click', () => {
-    form.reset(); unchoose(); form.classList.remove('is-marked'); onshelf.hidden = true; counter.textContent = '0'; showErrors({}); showMsg('');
+    form.reset(); unchoose(); form.classList.remove('is-marked'); clearShelf(); filled = ''; counter.textContent = '0'; showErrors({}); showMsg('');
     token = null;
     if (widget !== null) window.turnstile?.reset(widget);
-    thanks.hidden = true; form.hidden = false; returns.classList.remove('is-received');
+    thanks.hidden = true; form.hidden = false; returns.classList.remove('is-received'); wrap.style.height = '';
     title.focus();
   });
 
