@@ -8,7 +8,7 @@ import {pathToFileURL} from 'node:url';
 import {loadConfig} from '../lib/config.mjs';
 import {readJson} from '../lib/json.mjs';
 import {loadData, buildCatalog} from '../lib/catalog.mjs';
-import {validateBooks, validateWall} from '../lib/schema.mjs';
+import {validateBooks, validateWall, validateWantToRead} from '../lib/schema.mjs';
 
 // "/library", "library/", "//library//" -> "/library/"; "" or "/" -> "/".
 export const normalizeBase = b => { const parts = String(b ?? '/').split('/').filter(Boolean); return parts.length ? `/${parts.join('/')}/` : '/'; };
@@ -24,6 +24,9 @@ export async function build({root = process.cwd(), out = 'site', base, siteUrl, 
   const wall = await readJson(join(root, 'data', 'wall.json'), {items: []});
   const wallErrors = validateWall(wall);
   if (wallErrors.length) throw new Error(`data/wall.json is invalid:\n  ${wallErrors.slice(0, 20).join('\n  ')}`);
+  const wantToRead = await readJson(join(root, 'data', 'manual', 'want-to-read.json'), {items: []});
+  const wantErrors = validateWantToRead(wantToRead);
+  if (wantErrors.length) throw new Error(`data/manual/want-to-read.json is invalid:\n  ${wantErrors.slice(0, 20).join('\n  ')}`);
 
   const b = normalizeBase(base ?? config.site.base);
   const url = String(siteUrl ?? (dev ? `http://localhost:8080${b.replace(/\/$/, '')}` : config.site.url)).replace(/\/+$/, '');
@@ -35,8 +38,8 @@ export async function build({root = process.cwd(), out = 'site', base, siteUrl, 
     throw new Error(`src/build/site.mjs does not exist yet: the site templates (frontend) are not built. The catalog itself is fine (${catalog.books.length} books).`);
   }
   const {buildSite} = await import(pathToFileURL(sitePath).href);
-  if (typeof buildSite !== 'function') throw new Error('src/build/site.mjs must export buildSite({catalog, wall, config, root, outDir, base, siteUrl, buildDate, dev})');
-  return buildSite({catalog, wall, config, root, outDir: resolve(root, out), base: b, siteUrl: url, buildDate: buildDateOf(date), dev});
+  if (typeof buildSite !== 'function') throw new Error('src/build/site.mjs must export buildSite({catalog, wall, wantToRead, config, root, outDir, base, siteUrl, buildDate, dev})');
+  return buildSite({catalog, wall, wantToRead, config, root, outDir: resolve(root, out), base: b, siteUrl: url, buildDate: buildDateOf(date), dev});
 }
 
 export function parseArgs(argv) {

@@ -5,12 +5,16 @@ import {formatNumber as n} from '../js/lib/format.js';
 
 export const COPY = {
   title: "Malhar's Library",
-  description: 'My favourite books, my Goodreads and Margins shelves, and a postcard for recommending me a book.',
+  description: 'My favourite books, what I want to read next, my Goodreads and Margins shelves, and a postcard for recommending me a book.',
   ogAlt: (f) => `Malhar's Library: ${n(f.ranked)} favourite books, and a postcard to recommend one`,
   skip: 'Skip to the library',
 
   links: {label: 'Elsewhere', goodreads: 'Goodreads', margins: 'Margins'},
   favourites: {tab: 'Favourites', display: 'My favourite books', more: 'More favourites on Mr Philomath'},
+  wantToRead: {
+    tab: 'Want to read', display: 'What I want to read', pdf: 'PDF',
+    kinds: {book: 'Book', paper: 'Paper', essay: 'Essay', article: 'Article', notes: 'Lecture notes', talk: 'Talk'},
+  },
   visitors: {
     tab: 'Visitor shelf', display: 'Postcards from visitors',
     dek: "Books people have posted through the returns slot, and I've shelved. Turn a card over to read what they wrote. Thank you.",

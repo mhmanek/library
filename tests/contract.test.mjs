@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {validateBooks, validateWall, unsafeHtml} from '../lib/schema.mjs';
+import {validateBooks, validateWall, validateWantToRead, unsafeHtml} from '../lib/schema.mjs';
 import {fold, slug, shortTitle, surname, markers, similarity} from '../src/shared/normalize.js';
 import {sameWork, findInIndex} from '../src/shared/match.js';
 import {contrast, hexToOklch, oklchToHex} from '../lib/color-math.mjs';
@@ -21,6 +21,16 @@ test('sample catalog is sorted the way the contract says', async () => {
     || (b.dateAdded ?? '').localeCompare(a.dateAdded ?? '') || (sortKey(a.title) < sortKey(b.title) ? -1 : sortKey(a.title) > sortKey(b.title) ? 1 : 0)
     || (a.id < b.id ? -1 : 1));
   assert.deepEqual(sample.books.map(b => b.id), sorted.map(b => b.id));
+});
+
+test('want-to-read: any kind of reading, typos and bad links rejected', () => {
+  const paper = {kind: 'paper', title: 'A Rosetta Stone', authors: ['John C. Baez', 'Mike Stay'], year: 2009, url: 'https://math.ucr.edu/home/baez/rosetta.pdf', note: null};
+  assert.deepEqual(validateWantToRead({items: [paper, {kind: 'essay', title: 'It from Qubit', authors: ['David Deutsch']}]}), [], 'year, url and note may be left out');
+  assert.deepEqual(validateWantToRead({items: []}), []);
+  assert.ok(validateWantToRead({}).length);
+  for (const bad of [{kind: 'poem'}, {title: ' '}, {authors: []}, {authors: ['']}, {year: '2009'}, {url: 'http://x.org/a.pdf'}, {url: 'javascript:alert(1)'}, {note: 'x'.repeat(501)}, {author: 'Baez'}]) {
+    assert.ok(validateWantToRead({items: [{...paper, ...bad}]}).length, JSON.stringify(bad));
+  }
 });
 
 test('validator rejects unsafe HTML and emails on the wall', () => {

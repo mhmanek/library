@@ -16,9 +16,9 @@ export const config = async (overrides = {}) => {
   return {...c, ...overrides, site: {...c.site, ...overrides.site}, visitorShelf: {...c.visitorShelf, ...overrides.visitorShelf}, margins: {...c.margins, ...overrides.margins}};
 };
 
-export async function buildFixture({catalog, wall, cfg, base = '/library/', siteUrl = 'https://mhmanek.github.io/library', dev = false} = {}) {
+export async function buildFixture({catalog, wall, wantToRead, cfg, base = '/library/', siteUrl = 'https://mhmanek.github.io/library', dev = false} = {}) {
   const outDir = await mkdtemp(join(tmpdir(), 'library-site-'));
-  const result = await buildSite({catalog: catalog ?? await sample(), wall: wall ?? await sampleWall(), config: cfg ?? await config(), root: ROOT, outDir, base, siteUrl, buildDate: '20261011', dev, coversDir: COVERS});
+  const result = await buildSite({catalog: catalog ?? await sample(), wall: wall ?? await sampleWall(), wantToRead, config: cfg ?? await config(), root: ROOT, outDir, base, siteUrl, buildDate: '20261011', dev, coversDir: COVERS});
   const html = await readFile(join(outDir, 'index.html'), 'utf8');
   return {outDir, html, ...result};
 }

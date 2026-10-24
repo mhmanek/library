@@ -10,7 +10,7 @@ import {COPY} from '../content/copy.mjs';
 export const forwardScript = base => `(function(b){var p=location.pathname;if(p.indexOf(b)!==0)return;`
   + `var r=decodeURIComponent(p.slice(b.length)).replace(/\\/+$/,'');`
   + `if(/^book\\/[a-z0-9-]+$/.test(r)){location.replace(b);return}`
-  + `if(/^(favourites|visitors|recommend)$/.test(r))location.replace(b+'#'+r)})(${JSON.stringify(base)})`;
+  + `if(/^(favourites|want-to-read|visitors|recommend)$/.test(r))location.replace(b+'#'+r)})(${JSON.stringify(base)})`;
 
 export function renderNotFound({base, css, siteUrl}) {
   const script = forwardScript(base);

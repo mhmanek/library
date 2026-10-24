@@ -5,7 +5,7 @@ import {readFile, writeFile, mkdir, rm, copyFile, access} from 'node:fs/promises
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {gzipSync} from 'node:zlib';
-import {validateBooks} from '../../lib/schema.mjs';
+import {validateBooks, validateWantToRead} from '../../lib/schema.mjs';
 import {shortTitle, surnames} from '../shared/normalize.js';
 import {deriveCatalog} from './derive.mjs';
 import {buildCss, buildJs, copyFonts, hash} from './assets.mjs';
@@ -28,7 +28,7 @@ const todayUtc = () => new Date().toISOString().slice(0, 10).replace(/-/g, '');
 const exists = p => access(p).then(() => true, () => false);
 const gz = s => gzipSync(s, {level: 9}).length;
 
-export async function buildSite({catalog, wall = {items: []}, config, root = process.cwd(), outDir, base, siteUrl, buildDate, dev = false, coversDir}) {
+export async function buildSite({catalog, wall = {items: []}, wantToRead = {items: []}, config, root = process.cwd(), outDir, base, siteUrl, buildDate, dev = false, coversDir}) {
   base ??= config.site.base;
   siteUrl = (siteUrl ?? config.site.url).replace(/\/+$/, '');
   outDir ??= join(root, 'site');
@@ -38,6 +38,9 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
   const problems = validateBooks(catalog);
   if (problems.length) throw new Error(`buildSite: catalog fails the books.json contract:\n  ${problems.slice(0, 8).join('\n  ')}`);
   wall = {items: Array.isArray(wall?.items) ? wall.items : []};
+  const wantProblems = validateWantToRead(wantToRead);
+  if (wantProblems.length) throw new Error(`buildSite: want-to-read list is invalid:\n  ${wantProblems.slice(0, 8).join('\n  ')}`);
+  const reading = wantToRead.items.map(r => ({kind: r.kind, title: r.title.trim(), authors: r.authors.map(a => a.trim()), year: r.year ?? null, url: r.url ?? null, note: r.note?.trim() || null}));
 
   const files = [];
   const write = async (rel, data) => { const p = join(outDir, rel); await mkdir(dirname(p), {recursive: true}); await writeFile(p, data); files.push(rel); };
@@ -62,7 +65,7 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
   const images = await cachedImages({root, srcDir: SRC, derived, catalog, siteUrl});
   const ogImage = `${siteUrl}/og.png?v=${hash(images['og.png'])}`;
 
-  const page = renderPage({catalog, derived, config, wall, index, assets, csp, boot, canonical: `${siteUrl}/`, ogImage});
+  const page = renderPage({catalog, derived, config, wall, reading, index, assets, csp, boot, canonical: `${siteUrl}/`, ogImage});
   if (/<base[\s>]/i.test(page)) throw new Error('index.html must not contain a <base> element (it breaks the relative URLs)');
   await write('index.html', page);
   await write('404.html', renderNotFound({base, css: assets.css, siteUrl}));
@@ -88,7 +91,7 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
   const report = {
     gzip: {html: gz(page), css: gz(css), js: gz(jsText.join('\n')), books: gz(books), match: gz(JSON.stringify(index))},
     raw: {html: page.length, css: css.length, books: books.length},
-    counts: {items: derived.favourites.length},
+    counts: {items: derived.favourites.length, reading: reading.length},
     missingCovers, warnings: [],
   };
   if (report.gzip.html > BUDGET.html) report.warnings.push(`index.html is ${(report.gzip.html / 1024).toFixed(1)} KB gzipped (budget 130)`);
@@ -102,6 +105,6 @@ export async function buildSite({catalog, wall = {items: []}, config, root = pro
 export function formatReport(report) {
   const kb = b => `${(b / 1024).toFixed(1)} KB`;
   const g = report.gzip;
-  return [`site: ${report.counts.items} favourites · gzip html ${kb(g.html)} · css ${kb(g.css)} · js ${kb(g.js)} · books.json ${kb(g.books)} · match.json ${kb(g.match)}`,
+  return [`site: ${report.counts.items} favourites · ${report.counts.reading ?? 0} to read · gzip html ${kb(g.html)} · css ${kb(g.css)} · js ${kb(g.js)} · books.json ${kb(g.books)} · match.json ${kb(g.match)}`,
     ...report.warnings.map(w => `  warning: ${w}`)].join('\n');
 }

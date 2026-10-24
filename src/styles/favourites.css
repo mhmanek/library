@@ -1,4 +1,5 @@
-/* Favourites: the ranked list, a small cover beside each title, byline and note. */
+/* Favourites: the ranked list, a small cover beside each title, byline and note. The want-to-read list
+   shares the grid and the type, without covers. */
 .favs{list-style:none;display:grid;gap:0 48px;margin:36px 0 0;padding:0}
 @media (min-width:1024px){.favs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .fv{display:grid;grid-template-columns:64px minmax(0,1fr);gap:18px;align-items:start;padding:26px 0;border-top:1px solid var(--rule)}
@@ -15,6 +16,8 @@
 .fv-note{margin-top:10px;max-width:62ch;font:400 17.5px/1.5 var(--f-read);color:var(--text)}
 .fv-note p+p{margin-top:.6em}
 .fv-note strong{font-weight:400;font-style:italic;color:var(--text-strong)}
+.wr{padding:26px 0;border-top:1px solid var(--rule)}
+.wr-k{margin-bottom:9px;font:700 11px/1.2 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-text)}
 .fv-more{margin-top:8px;padding-top:22px;border-top:1px solid var(--rule);font:400 13px/1.5 var(--f-mono)}
 .fv-more a{color:var(--accent-text)}
 .fv-more .i{margin-left:5px;width:12px;height:12px}

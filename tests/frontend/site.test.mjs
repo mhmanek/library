@@ -52,7 +52,7 @@ test('untrusted text is escaped everywhere; sanitised notes keep their links', a
 test('the page: links elsewhere, the ranked favourites, then postcards; the form or the email', async () => {
   const cat = await sample();
   const base = await buildFixture();
-  assert.deepEqual([...base.html.matchAll(/<section id="([a-z]+)"/g)].map(m => m[1]), ['favourites', 'visitors', 'recommend']);
+  assert.deepEqual([...base.html.matchAll(/<section id="([a-z-]+)"/g)].map(m => m[1]), ['favourites', 'visitors', 'recommend'], 'no want-to-read section while the list is empty');
   const links = /<nav class="links" aria-label="Elsewhere">([\s\S]*?)<\/nav>/.exec(base.html)[1];
   assert.deepEqual([...links.matchAll(/<a href="([^"]+)"/g)].map(m => m[1]), [cat.sources.goodreads.profileUrl], 'Goodreads; no Margins link without a profile link');
   assert.ok(!links.includes('still to go'), 'no shelf counts');
@@ -79,6 +79,30 @@ test('the page: links elsewhere, the ranked favourites, then postcards; the form
   const nums = [...on.html.matchAll(/<span class="n" aria-hidden="true">(\d+)<\/span>/g)].map(m => +m[1]);
   assert.deepEqual(nums, nums.map((_, i) => i + 1), 'section numbers are contiguous');
   for (const r of [base, on]) await rm(r.outDir, {recursive: true, force: true});
+});
+
+test('want to read: books, papers and essays in file order, plain text, numbered with the rest', async () => {
+  const items = [
+    {kind: 'paper', title: 'Physics, Topology, Logic and Computation: A Rosetta Stone', authors: ['John C. Baez', 'Mike Stay'], year: 2009, url: 'https://math.ucr.edu/home/baez/rosetta.pdf', note: null},
+    {kind: 'book', title: 'The Beginning of Infinity', authors: ['David Deutsch'], note: 'Before the <em>essays</em>.'},
+    {kind: 'essay', title: '<script>alert(1)</script>', authors: ['"><img src=x onerror=alert(1)>'], year: 2002, url: 'https://x.org/a?b="><script>'},
+  ];
+  const {html, outDir} = await buildFixture({wantToRead: {items}});
+  assert.deepEqual([...html.matchAll(/<section id="([a-z-]+)"/g)].map(m => m[1]), ['favourites', 'want-to-read', 'visitors', 'recommend']);
+  const list = /<ul class="favs wtr">([\s\S]*?)<\/ul>/.exec(html)[1];
+  assert.deepEqual([...list.matchAll(/<p class="wr-k">([^<]*)<\/p>/g)].map(m => m[1]), ['Paper · 2009 · PDF', 'Book', 'Essay · 2002']);
+  assert.ok(list.includes('<a href="https://math.ucr.edu/home/baez/rosetta.pdf">Physics, Topology, Logic and Computation: A Rosetta Stone</a>'));
+  assert.ok(list.includes('<p class="fv-by">John C. Baez and Mike Stay</p>'));
+  assert.ok(list.includes('<h3 class="fv-t">The Beginning of Infinity</h3>'), 'no link without a url');
+  assert.ok(list.includes('<p class="fv-note">Before the &lt;em&gt;essays&lt;/em&gt;.</p>'), 'notes are plain text');
+  assert.ok(!html.includes('<script>alert') && !/<img src=x/.test(html), 'everything is escaped');
+  assert.ok(list.includes('href="https://x.org/a?b=&quot;&gt;&lt;script&gt;"'), 'the link stays one attribute');
+  const nums = [...html.matchAll(/<span class="n" aria-hidden="true">(\d+)<\/span>/g)].map(m => +m[1]);
+  assert.deepEqual(nums, [1, 2, 3, 4]);
+  const {errors} = await checkSite(outDir);
+  assert.deepEqual(errors, []);
+  await assert.rejects(buildFixture({wantToRead: {items: [{...items[0], kind: 'poem'}]}}), /want-to-read list is invalid/);
+  await rm(outDir, {recursive: true, force: true});
 });
 
 test('accessibility basics: one h1, landmarks, unique ids, alt on every img, named buttons', async () => {
@@ -129,6 +153,7 @@ test('404: base-absolute assets, its own script hash, and the forwarder', async 
   assert.equal(run('/library/book/anathem-stephenson/'), '/library/');
   assert.equal(run('/library/recommend'), '/library/#recommend');
   assert.equal(run('/library/favourites'), '/library/#favourites');
+  assert.equal(run('/library/want-to-read'), '/library/#want-to-read');
   assert.equal(run('/library/antilibrary'), null, 'the old shelves are gone: a plain 404');
   assert.equal(run('/library/no-such-thing'), null);
   assert.equal(run('/elsewhere/book/x'), null, 'outside the base: left alone');

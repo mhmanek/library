@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "kind": "paper",
+      "title": "Physics, Topology, Logic and Computation: A Rosetta Stone",
+      "authors": ["John C. Baez", "Mike Stay"],
+      "year": 2009,
+      "url": "https://math.ucr.edu/home/baez/rosetta.pdf",
+      "note": null
+    },
+    {
+      "kind": "paper",
+      "title": "Quantum theory, the Church-Turing principle and the universal quantum computer",
+      "authors": ["David Deutsch"],
+      "year": 1985,
+      "url": "https://www.daviddeutsch.org.uk/wp-content/deutsch85.pdf",
+      "note": null
+    },
+    {
+      "kind": "essay",
+      "title": "It from Qubit",
+      "authors": ["David Deutsch"],
+      "year": 2002,
+      "url": "https://www.daviddeutsch.org.uk/wp-content/ItFromQubit.pdf",
+      "note": null
+    },
+    {
+      "kind": "notes",
+      "title": "Lecture Notes on Quantum Algorithms",
+      "authors": ["Andrew M. Childs"],
+      "year": 2025,
+      "url": "https://www.cs.umd.edu/~amchilds/qa/qa.pdf",
+      "note": null
+    },
+    {
+      "kind": "book",
+      "title": "Surviving as a Quantum Computer in a Classical World",
+      "authors": ["Daniel Gottesman"],
+      "year": 2026,
+      "url": "https://www.cs.umd.edu/~dgottesm/QECCbook-2026.pdf",
+      "note": null
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import sharp from 'sharp';
 import {loadConfig} from '../../lib/config.mjs';
 import {loadData, assemble, catalogFrom} from '../../lib/catalog.mjs';
-import {validateBooks, validateWall} from '../../lib/schema.mjs';
+import {validateBooks, validateWall, validateWantToRead} from '../../lib/schema.mjs';
 
 const ROOT = new URL('../../', import.meta.url);
 const exists = p => access(p).then(() => true, () => false);
@@ -21,6 +21,11 @@ test('environment: sharp encodes WebP; the lockfile carries the Linux binaries C
   const lock = await readFile(new URL('package-lock.json', ROOT), 'utf8');
   for (const p of ['@img/sharp-linux-x64', '@img/sharp-libvips-linux-x64', '@img/sharp-win32-x64']) assert.ok(lock.includes(`"node_modules/${p}"`), p);
   await loadConfig(fileURLToPath(ROOT));
+});
+
+test('the committed want-to-read list is valid', async () => {
+  const path = new URL('data/manual/want-to-read.json', ROOT);
+  if (await exists(path)) assert.deepEqual(validateWantToRead(JSON.parse(await readFile(path, 'utf8'))), []);
 });
 
 test('committed data builds a valid catalog', {skip: !hasData && 'no committed data yet'}, async () => {

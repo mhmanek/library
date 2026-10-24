@@ -16,10 +16,11 @@ Tests: root `npm test` runs `tests/**/*.test.mjs` (node:test). The Worker has it
 ## Build interface
 
 - `lib/catalog.mjs` (pipeline): `loadData(root) -> Promise<Data>` and `buildCatalog(data, config) -> Catalog`, pure and offline. `Catalog` is exactly the `books.json` object below.
-- `src/build/site.mjs` (frontend): `buildSite({catalog, wall, config, root, outDir, base, siteUrl, buildDate, dev}) -> Promise<{files, report}>`. It writes **everything** under `outDir` (default `site/`): `index.html`, `404.html`, `data/books.json`, `data/match.json`, `data/wall.json`, the referenced covers copied from `root/covers/`, CSS/JS/fonts/favicons/og.png.
+- `src/build/site.mjs` (frontend): `buildSite({catalog, wall, wantToRead, config, root, outDir, base, siteUrl, buildDate, dev}) -> Promise<{files, report}>`. It writes **everything** under `outDir` (default `site/`): `index.html`, `404.html`, `data/books.json`, `data/match.json`, `data/wall.json`, the referenced covers copied from `root/covers/`, CSS/JS/fonts/favicons/og.png.
   - `wall` is the parsed `data/wall.json` (`{items: []}` when absent).
+  - `wantToRead` is the parsed `data/manual/want-to-read.json` (`{items: []}` when absent); see "Want to read" below.
   - `base` is the URL path prefix with leading and trailing slash (`/library/`, or `/` on a custom domain). `siteUrl` has no trailing slash. `buildDate` is `YYYYMMDD` (UTC).
-- `scripts/build.mjs` (pipeline) exports `build({root, out, base, siteUrl, dev, now})` and runs it when invoked directly: `node scripts/build.mjs [--base /library/] [--site-url URL] [--out site] [--dev] [--now ISO]`. It calls `loadConfig`, `loadData`, `buildCatalog`, reads `data/wall.json`, then `buildSite`. CI passes `--base "$BASE_PATH/"` and `--site-url "$BASE_URL"` from actions/configure-pages.
+- `scripts/build.mjs` (pipeline) exports `build({root, out, base, siteUrl, dev, now})` and runs it when invoked directly: `node scripts/build.mjs [--base /library/] [--site-url URL] [--out site] [--dev] [--now ISO]`. It calls `loadConfig`, `loadData`, `buildCatalog`, reads `data/wall.json` and `data/manual/want-to-read.json` (each checked by its validator in `lib/schema.mjs`), then `buildSite`. CI passes `--base "$BASE_PATH/"` and `--site-url "$BASE_URL"` from actions/configure-pages.
 - `scripts/serve.mjs` (frontend) imports `build` from `scripts/build.mjs`. Until the pipeline exists it can build from `tests/fixtures/catalog-sample.json` with `--fixture`.
 
 ## URLs
@@ -105,6 +106,12 @@ Read stats use `shelf === "read"` books only (never `fav-` entries). There are d
   A filled honeypot, `t < 3000`, or the same title from the same visitor within 10 minutes gets a fake `200 {ok: true}`. A missing/wrong Content-Type, malformed JSON or a body over 8 KB is `400 {error: "invalid", fields: ["body"]}` (show a general error). Unknown paths `404 {error: "not_found"}`, wrong methods `405 {error: "method"}`. `WallItem.date` is the issue's creation day in America/Chicago.
 - CORS: the Worker echoes an allowed `Origin` (`https://mhmanek.github.io`, `http://localhost:8080`), `Access-Control-Allow-Methods: GET, POST, OPTIONS`, `Access-Control-Allow-Headers: Content-Type`, `Access-Control-Max-Age: 86400`, `Vary: Origin`. `GET /health` -> `{ok: true}`.
 - Covers for visitor recs are Open Library thumbnails hotlinked by the browser: `https://covers.openlibrary.org/b/id/{coverId}-M.jpg`.
+
+## Want to read
+
+`data/manual/want-to-read.json` is written by hand and never by the sync: `{"items": [ReadingItem]}`, shown in file order as its own section after the favourites, and only while it has items.
+
+`ReadingItem = {kind: "book" | "paper" | "essay" | "article" | "notes" | "talk", title: string (≤ 300), authors: string[] (≥ 1), year?: integer | null, url?: "https://…" | null, note?: string (≤ 500) | null}`. All plain text (escaped, never HTML). `year`, `url` and `note` may be left out; any other key is an error, so a typo fails the build instead of vanishing. `validateWantToRead()` in `lib/schema.mjs` checks it. It is not part of `books.json` or `match.json`.
 
 ## match.json (site build output, used by the recommend form)
 
