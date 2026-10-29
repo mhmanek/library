@@ -1,4 +1,4 @@
 {
   "syncedAt": "2026-10-27T16:39:39Z",
-  "sources": {"goodreads":{"changedAt":"2026-10-27T16:39:39Z","failingSince":"2026-10-28T17:10:34Z","notifiedAt":null},"substack":{"changedAt":"2026-10-11T18:07:39Z","failingSince":null,"notifiedAt":null},"wall":{"changedAt":null,"failingSince":null,"notifiedAt":null}}
+  "sources": {"goodreads":{"changedAt":"2026-10-27T16:39:39Z","failingSince":"2026-10-28T17:10:34Z","notifiedAt":"2026-10-29T17:26:33Z"},"substack":{"changedAt":"2026-10-11T18:07:39Z","failingSince":null,"notifiedAt":null},"wall":{"changedAt":null,"failingSince":null,"notifiedAt":null}}
 }
